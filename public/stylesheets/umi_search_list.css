@@ -5,13 +5,11 @@
 	text-align: right;
 	margin-bottom: 20px;
 }
-.searchType {
-	color: #000000;
-}
-.searchType-selected {
-	pointer-events: none;
-	cursor: default;
-	text-decoration: none;
+.searchType-name {
+	border: none;
+	font-weight: bold;
+	font-size: 24px;
+	background: #eeecdd;
 }
 .searchJoken-box {
 	width: 60%;
@@ -20,13 +18,6 @@
 	border-style: solid;
 	border-width: 1px;
 	margin-bottom: 20px;
-}
-.searchJoken-title {
-	font-size: 30px;
-	font-weight: bold;
-}
-.searchJoken-hidden {
-	display: none;
 }
 .searchJoken-input-box {
 	margin-left: 20px;
@@ -53,7 +44,7 @@
 }
 .searchResult-table {
 	border-collapse: collapse;
-	width: 90%;
+	width: 95%;
 	margin: 0 auto;
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -68,21 +59,34 @@
 	border-width: 1px;
 }
 .searchResult-table-no-header {
-	width: 80px;
+	min-width: 60px;
+	width: 60px;
 }
 .searchResult-table-name-header {
+	min-width: 100px;
 	width: 100px;
 }
 .searchResult-table-busho-header {
+	min-width: 100px;
 	width: 300px;
 }
 .searchResult-table-yakushoku-header {
-	width: 100px;
+	min-width: 80px;
+	width: 80px;
+}
+.searchResult-table-keiyakusaki-header {
+	min-width: 100px;
 }
 .searchResult-table-email-header {
+	min-width: 100px;
 	width: 300px;
 }
+.searchResult-table-telno-header {
+	min-width: 100px;
+	width: 120px;
+}
 .searchResult-table-detail-header {
+	min-width: 50px;
 	width: 50px;
 }
 .searchResult-table-detail-body {
