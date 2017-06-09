@@ -11,7 +11,7 @@ $(function() {
 		// ここでDB検索して一覧に項目を割り当てるというのをjavascriptだけでやるのかな
 		// JSPは使わないんだよね
 		// formのsubmitも行わないと思うので、処理は空っぽにしておく
-
+		
 	});
 
 	$('.detail-button').click(function(){
