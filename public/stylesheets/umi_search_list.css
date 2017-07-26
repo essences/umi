@@ -1,0 +1,97 @@
+.searchTypeLine {
+	background: #d5d4cd;
+	border-style: solid;
+	border-width: 1px;
+	text-align: right;
+	margin-bottom: 20px;
+}
+.searchType-name {
+	border: none;
+	font-weight: bold;
+	font-size: 24px;
+	background: #eeecdd;
+}
+.searchJoken-box {
+	width: 60%;
+	margin: 0 auto;
+	background: #eeecdd;
+	border-style: solid;
+	border-width: 1px;
+	margin-bottom: 20px;
+}
+.searchJoken-input-box {
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+.searchJoken-input-joken {
+	margin-right: 20px;
+}
+.searchJoken-input-sort {
+}
+.searchJoken-button-box {
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+.searchResult-box {
+	border-style: solid;
+	border-width: 1px;
+}
+.searchResult-count-box {
+	border-style: solid;
+	border-width: 0px;
+	border-bottom-width: 1px;
+	text-align: center;
+}
+.searchResult-table {
+	border-collapse: collapse;
+	width: 95%;
+	margin: 0 auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.searchResult-table th {
+	background: #a8a8a8;
+	border-style: solid;
+	border-width: 1px;
+}
+.searchResult-table td {
+	border-style: solid;
+	border-width: 1px;
+}
+.searchResult-table-no-header {
+	min-width: 60px;
+	width: 60px;
+}
+.searchResult-table-name-header {
+	min-width: 100px;
+	width: 100px;
+}
+.searchResult-table-busho-header {
+	min-width: 100px;
+	width: 300px;
+}
+.searchResult-table-yakushoku-header {
+	min-width: 80px;
+	width: 80px;
+}
+.searchResult-table-keiyakusaki-header {
+	min-width: 100px;
+}
+.searchResult-table-email-header {
+	min-width: 100px;
+	width: 300px;
+}
+.searchResult-table-telno-header {
+	min-width: 100px;
+	width: 120px;
+}
+.searchResult-table-detail-header {
+	min-width: 50px;
+	width: 50px;
+}
+.searchResult-table-detail-body {
+	text-align: center;
+}
+.detail-button {
+	font-size: 1px;
+}

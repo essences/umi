@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<title>
+<%=title%>
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_search_list.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_search_list.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<img src="../../images/image01.gif">
+
+<form method="get" name="searchForm" id="searchForm" action="list">
+
+<div class="searchTypeLine"></div>
+
+<div class="searchJoken-box">
+	<select id="searchType-name" class="searchType-name">
+		<option value="01">名前で検索する</option>
+		<option value="02">入社年で検索する</option>
+		<option value="03">契約先で検索する</option>
+	</select>
+	<input type="hidden" name="searchType" id="searchType" value="01">
+	<hr>
+	<div class="searchJoken-input-box">
+		<label>検索条件</label>
+		<input type="text" name="searchJoken" class="searchJoken-input-joken" id="searchJoken-input-text">
+		<label>並び順</label>
+		<select name="searchSort" class="searchJoken-input-sort">
+			<option value="01">名前</option>
+			<option value="02">社員No.</option>
+		</select>
+		<br>
+	</div>
+	<div class="searchJoken-button-box">
+		<input type="submit" name="searchButton" id="searchButton" value="検索する" >
+	</div>
+</div>
+
+</form>
+
+
+<div class="searchResult-box">
+	<div class="searchResult-count-box">
+		検索結果<label id="searchResult-count"><%= result.length %></label>件です
+	</div>
+	<table class="searchResult-table">
+		<tr>
+			<th class="searchResult-table-no-header">No.</th>
+			<th class="searchResult-table-name-header">名前</th>
+			<th class="searchResult-table-busho-header">部署</th>
+			<th class="searchResult-table-yakushoku-header">役職</th>
+			<th class="searchResult-table-keiyakusaki-header">契約先/常駐先</th>
+			<th class="searchResult-table-email-header">メールアドレス</th>
+			<th class="searchResult-table-telno-header">電話番号</th>
+			<th class="searchResult-table-detail-header">詳細</th>
+		</tr>
+<% for(var i = 0; i < result.length; i++) {%>
+		<tr>
+			<td><%= result[i].EMPLOYEE_NO%></td>
+			<td><%= result[i].EMPLOYEE_FAMILY_NAME%> <%= result[i].EMPLOYEE_FIRST_NAME%></td>
+			<td>第1事業本部システム2部システム開発課</td>
+			<td>主任</td>
+			<td>架空の株式会社/泉岳寺</td>
+			<td><%= result[i].EMAIL%></td>
+			<td>09012345678</td>
+			<td class="searchResult-table-detail-body"><input type="button" class="detail-button" data-key="00001"></td>
+		</tr>
+<% }%>
+	</table>
+
+</div>
+
+
+</body>
+</html>
