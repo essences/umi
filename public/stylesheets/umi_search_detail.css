@@ -1,0 +1,54 @@
+.base-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+.base-table td {
+	border-style: solid;
+	border-width: 1px;
+}
+.base-table-col1 {
+	width: 150px;
+	background-color: #e3e8e3;
+}
+.base-table-col2 {
+	width: 350px;
+}
+.base-table-col3 {
+	background-color: #e3e8e3;
+}
+.hidden {
+	visibility: hidden;
+}
+
+.personal-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+.personal-table td {
+	border-style: solid;
+	border-width: 1px;
+}
+.personal-table-col1 {
+	width: 150px;
+	background-color: #e3e8e3;
+}
+.personal-table-col2 {
+	width: 150px;
+}
+.personal-table-col3 {
+	width: 150px;
+	background-color: #e3e8e3;
+}
+
+.qualify-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+.qualify-table td {
+	border-style: solid;
+	border-width: 1px;
+}
+.qualify-table-col1 {
+	width: 150px;
+	background-color: #e3e8e3;
+}
