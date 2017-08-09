@@ -39,6 +39,28 @@ router.get('/', function(req, res, next) {
 //	where
 //	BASE.EMPLOYEE_NO = 'XXXX'
 
+//	var whereStr = "where ";
+//	var searchJokenArr = req.searchJoken.split(" ");
+//	if (req.searchType == '01') {
+//		// 名前で検索
+//		var tmpWhereStr = "";
+//		for (var i=0; i<searchJokenArr.length; i++) {
+//			tmpWhereStr = "or BASE.EMPLOYEE_FAMILY_NAME like '" + searchJokenArr[i] + "%' ";
+//			tmpWhereStr = "or BASE.EMPLOYEE_FIRST_NAME like '" + searchJokenArr[i] + "%' ";
+//			tmpWhereStr = "or BASE.EMPLOYEE_FAMILY_NAME_KANA like '" + searchJokenArr[i] + "%' ";
+//			tmpWhereStr = "or BASE.EMPLOYEE_FIRST_NAME_KANA like '" + searchJokenArr[i] + "%' ";
+//		}
+//		if (tmpWhereStr.length > 0) {
+//			// 最初のorの文字列分を削除する
+//			tmpWhereStr.substring(3, searchJokenArr.length -1);
+//		}
+//	} else if (req.searchType == '02') {
+//		// 入社年で検索
+//	} else if (req.searchType == '03') {
+//		// 契約先で検索
+//	}
+
+
 	connection.query(query, function(err, rows) {
 		console.dir(rows[0]);
 		res.render('list',
