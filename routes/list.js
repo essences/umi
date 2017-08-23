@@ -7,9 +7,18 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
 	console.log("【INFO】list start");
 	console.dir(req);
+	
+	// 検索条件が指定されないときは、空配列を画面に返却する
+	if(!req.searchJoken) {
+		res.render('list',
+		{
+			title: '一覧画面',
+			result: []
+		});
+	}
 
 	var query = 'SELECT EMPLOYEE_NO FROM MST_EMPLOYEE_BASE';
-
+	
 // //	一覧画面項目を取るSQL
 // //	select
 // //	lpad(BASE.EMPLOYEE_NO, 5, '0') as EMPLOYEE_NO,
@@ -61,8 +70,18 @@ router.get('/', function(req, res, next) {
 //		}
 //	} else if (req.searchType == '02') {
 //		// 入社年で検索
+//		var plusYear = parseInt(req.seqrchJoken, 10) + 1;
+//		var tmpWhereStr = " BASE.EMPLOY_DATE between STR_TO_DATE('" + req.seqrchJoken + "', '%Y') and STR_TO_DATE('" + plusYear + "', '%Y')";
 //	} else if (req.searchType == '03') {
 //		// 契約先で検索
+//		var searchJokenArr = req.searchJoken.split(" ");
+//		var tmpWhereStr = " BASE.CLIENT_CD like '%" + searchJokenArr[0] + "%';
+//		if (searchJokenArr.length > 1) {
+//			tmpWhereStr = " and BASE.WORK_PLACE_CD like '" + searchJokenArr[1] + "%';
+//		}
+//	}
+//	if (tmpWhereStr) {
+//		whereStr = whereStr + tmpWhereStr;
 //	}
 
 
