@@ -101,7 +101,7 @@ router.get('/', function(req, res, next) {
 	order by SEQ_NO asc
 	*/
 
-	console.dir(query);
+	console.dir(detail_query);
 	connection.query(detail_query, function(err, rows) {
 		console.dir(rows);
 		res.render('detail',
