@@ -8,6 +8,13 @@ router.get('/', function(req, res, next) {
 	console.log("【INFO】list start");
 	console.dir(req.query);
 
+	if (!req.query.searchJoken) {
+		req.query.searchJoken = "";
+	}
+	if (!req.query.searchType) {
+		req.query.searchType = "01";
+	}
+
 	//	一覧画面項目を取るSQL
 	var query =
 		"select " +
@@ -103,7 +110,8 @@ router.get('/', function(req, res, next) {
 		res.render('list',
 		{
 			title: '一覧画面',
-			result: rows
+			result: rows,
+			query: req.query
 		});
 	});
 });
