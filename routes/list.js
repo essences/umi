@@ -49,9 +49,9 @@ router.get('/', function(req, res, next) {
 		"on BASE.CLIENT_CD = WORK.CLIENT_CD " +
 		"and BASE.WORK_PLACE_CD = WORK.WORK_PLACE_CD " +
 		"INNER JOIN MST_EMPLOYEE_PERSONAL PERSONAL " +
-		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO"
+		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO "
 
-	var whereStr = " where ";
+	var whereStr = "where ";
 	var searchJokenArr = req.query.searchJoken.split(" ");
 	if (req.query.searchType == '01') {
 		// 名前で検索
@@ -69,17 +69,30 @@ router.get('/', function(req, res, next) {
 	} else if (req.query.searchType == '02') {
 		// 入社年で検索
 		var plusYear = parseInt(req.query.searchJoken, 10) + 1;
-		var tmpWhereStr = " BASE.EMPLOY_DATE between STR_TO_DATE('" + req.query.searchJoken + "', '%Y') and STR_TO_DATE('" + plusYear + "', '%Y')";
+		var tmpWhereStr = "BASE.EMPLOY_DATE between STR_TO_DATE('" + req.query.searchJoken + "', '%Y') and STR_TO_DATE('" + plusYear + "', '%Y') ";
 	} else if (req.query.searchType == '03') {
 		// 契約先で検索
 		var searchJokenArr = req.query.searchJoken.split(" ");
-		var tmpWhereStr = " CLIENT.CLIENT_NAME like '%" + searchJokenArr[0] + "%'";
+		var tmpWhereStr = "CLIENT.CLIENT_NAME like '%" + searchJokenArr[0] + "%' ";
 		if (searchJokenArr.length > 1) {
-			tmpWhereStr += " and WORK.WORK_PLACE_NAME like '" + searchJokenArr[1] + "%'";
+			tmpWhereStr += "and WORK.WORK_PLACE_NAME like '" + searchJokenArr[1] + "%' ";
 		}
 	}
+
+	var orderStr = "order by ";
+	if (req.query.searchSort == '01') {
+		// 社員No順
+		orderStr += "BASE.EMPLOYEE_NO asc ";
+	} else if (req.query.searchSort == '02') {
+		// 名前順
+		orderStr += "BASE.EMPLOYEE_FAMILY_NAME_KANA asc, ";
+		orderStr += "BASE.EMPLOYEE_FIRST_NAME_KANA asc ";
+	}
+
 	if (req.query.searchJoken) {
-		query += whereStr + tmpWhereStr;
+		query += whereStr + tmpWhereStr + orderStr;
+	} else {
+		query += orderStr;
 	}
 	console.dir(query);
 
