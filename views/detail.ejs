@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>
-<%= title%>
+UMI
 </title>
 <link rel="stylesheet" type="text/css" href="../../stylesheets/umi_search_list.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
@@ -12,12 +12,12 @@
 <body>
 
 <!-- 会社ロゴ -->
-<img src="../../images/image01.gif">
+<img src="img/image01.gif">
 
 <hr>
 
 所属：
-<label><%= result.COMPANY_NAME%></label>
+<label>セントラルソフト</label>
 ｜
 区分：
 <label>社員</label>
@@ -26,36 +26,36 @@
 	<table border="1">
 		<tr>
 			<td>社員No</td>
-			<td><%= result.EMPLOYEE_NO%></td>
-			<td rowspan="9"><img src="../../images/shainPhoto/<%= result.EMPLOYEE_NO%>.jpg"></td>
+			<td>00001</td>
+			<td rowspan="9"><img src="img/photo/00001.jpg"></td>
 		</tr>
 		<tr>
 			<td>名前</td>
-			<td><%= result.EMPLOYEE_FAMILY_NAME%> <%= result.EMPLOYEE_FIRST_NAME%></td>
+			<td>山田 太郎</td>
 		</tr>
 		<tr>
 			<td>フリガナ</td>
-			<td><%= result.EMPLOYEE_FAMILY_NAME_KANA%> <%= result.EMPLOYEE_FIRST_NAME_KANA%></td>
+			<td>ヤマダ タロウ</td>
 		</tr>
 		<tr>
 			<td>部署</td>
-			<td><%= result.GROUP_NAME%><%= result.DEPT_NAME%><%= result.SECTION_NAME%></td>
+			<td>第1事業本部システム2部システム開発課</td>
 		</tr>
 		<tr>
 			<td>役職</td>
-			<td><%= result.POSITION%>(XXXX年XX月昇格)</td>
+			<td>課長(XXXX年XX月昇格)</td>
 		</tr>
 		<tr>
 			<td>契約先</td>
-			<td><%= result.CLIENT_NAME%></td>
+			<td>架空の株式会社</td>
 		</tr>
 		<tr>
 			<td>出向先</td>
-			<td><%= result.WORK_PLACE_NAME%></td>
+			<td>泉岳寺</td>
 		</tr>
 		<tr>
 			<td>メールアドレス</td>
-			<td><%= result.EMAIL%></td>
+			<td>taro.yamada@central-soft.co.jp</td>
 		</tr>
 		<tr>
 			<td>入社年月日</td>
@@ -76,13 +76,13 @@
 		</tr>
 		<tr>
 			<td>住所</td>
-			<td colspan="3"><%= result.ADDRESS%></td>
+			<td colspan="3">東京都千代田区岩本町2-4-3 太陽生命神田ビル8F</td>
 		</tr>
 		<tr>
 			<td>電話番号</td>
-			<td><%= result.TEL_NO%></td>
+			<td></td>
 			<td>携帯番号</td>
-			<td><%= result.CELL_TEL_NO%></td>
+			<td>09099999999</td>
 		</tr>
 		<tr>
 			<td>郵便番号(実家)</td>
@@ -90,31 +90,27 @@
 		</tr>
 		<tr>
 			<td>住所(実家)</td>
-			<td colspan="3"><%= result.ADDRESS_HOME%></td>
+			<td colspan="3">東京都千代田区岩本町2-4-3 太陽生命神田ビル8F</td>
 		</tr>
 		<tr>
 			<td>電話番号(実家)</td>
-			<td colspan="3"><%= result.TEL_NO_HOME%></td>
+			<td colspan="3">0358220601</td>
 		</tr>
 	</table>
 
 	<table border="1">
 		<tr>
 			<td>最終学歴</td>
-			<td><%= result.EDUCATION%></td>
+			<td>大学卒業(4年)</td>
 		</tr>
 		<tr>
 			<td>出身校/学科</td>
-			<td><%= result.SCHOOL%>/<%= result.COURSE%></td>
+			<td>国立○○大学○○学部○○学科</td>
 		</tr>
-
-<% for(var i = 0; i < qualify.length; i++) {%>
 		<tr>
-			<td><%= qualify[i].QUALIFY_NAME%></td>
-			<td>XXXX年XX月取得</td>
+			<td>出身校/学科</td>
+			<td>国立○○大学○○学部○○学科</td>
 		</tr>
-<% }%>
-
 	</table>
 
 </div>
