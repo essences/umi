@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 	console.log("【INFO】detail start");
 
 	// 詳細社員情報 検索SQL
-	var detail_query = "select " +
+	var detailQuery = "select " +
 		"COMPANY.COMPANY_NAME, " +
 		"BASE.EMPLOYEE_TYPE, " +
 		"lpad(BASE.EMPLOYEE_NO, 5, '0') as EMPLOYEE_NO, " +
@@ -75,41 +75,57 @@ router.get('/', function(req, res, next) {
 		"where " +
 		"BASE.EMPLOYEE_NO = '00001'";
 
-	/**
-	詳細SQL_情報処理国家資格の一覧を取得する用
-	select
-	NATIONAL.QUALIFY_NAME,
-	NATIONAL_HISTORY.ACQUIRE_DATE
-	from
-	MST_NATIONAL_QUALIFY NATIONAL
-	LEFT OUTER JOIN TRN_NATIONAL_QUALIFY_HISTORY NATIONAL_HISTORY
-	on NATIONAL.QUALIFICATION_CD = NATIONAL_HISTORY.QUALIFICATION_CD
-	where
-	NATIONAL_HISTORY.EMPLOYEE_NO = 'XXXX'
-	order by NATIONAL.ORDER asc
-	*/
+	// 情報処理国家資格 検索SQL
+	var qualifyQquery = "select " +
+		"NATIONAL.QUALIFY_NAME, " +
+		"NATIONAL_HISTORY.ACQUIRE_DATE " +
+		"from " +
+		"MST_NATIONAL_QUALIFY NATIONAL " +
+		"LEFT OUTER JOIN TRN_NATIONAL_QUALIFY_HISTORY NATIONAL_HISTORY " +
+		"on NATIONAL.QUALIFICATION_CD = NATIONAL_HISTORY.QUALIFICATION_CD " +
+		"where " +
+		"NATIONAL_HISTORY.EMPLOYEE_NO = '00001' " +
+		"order by NATIONAL.ORDER asc";
 
-	/**
-	詳細SQL_その他資格を取得した一覧用
-	select
-	QUALIFY_NAME,
-	ACQUIRE_DATE
-	from
-	TRN_SUB_QUALIFY_HISTORY
-	where
-	EMPLOYEE_NO = 'XXXX'
-	order by SEQ_NO asc
-	*/
+	// その他資格 検索SQL
+	var subQualifyQuery = "select " +
+		"QUALIFY_NAME, " +
+		"ACQUIRE_DATE " +
+		"from " +
+		"TRN_SUB_QUALIFY_HISTORY " +
+		"where " +
+		"EMPLOYEE_NO = '00001' " +
+		"order by SEQ_NO asc ";
 
-	console.dir(detail_query);
-	connection.query(detail_query, function(err, rows) {
+	// 資格情報格納用
+	var qualify = [];
+	
+	console.dir(qualifyQquery);
+	// 情報処理国家資格 の取得
+	connection.query(qualifyQquery, function(err, rows) {
+		console.dir(rows);
+		qualify = rows;
+	});
+
+	console.dir(subQualifyQuery);
+	// その他資格情報の取得
+	connection.query(subQualifyQuery, function(err, rows) {
+		console.dir(rows);
+		qualify = qualify.concat(rows);
+	});
+
+	console.dir(detailQuery);
+	// 詳細社員情報の取得
+	connection.query(detailQuery, function(err, rows) {
 		console.dir(rows);
 		res.render('detail',
 		{
 			title: '詳細画面',
-			result: rows[0]
+			result: rows[0],
+			qualify:qualify
 		});
 	});
+
 });
 
 module.exports = router;

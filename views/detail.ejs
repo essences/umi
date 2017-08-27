@@ -107,6 +107,14 @@
 			<td>出身校/学科</td>
 			<td><%= result.SCHOOL%>/<%= result.COURSE%></td>
 		</tr>
+
+<% for(var i = 0; i < qualify.length; i++) {%>
+		<tr>
+			<td><%= qualify[i].QUALIFY_NAME%></td>
+			<td>XXXX年XX月取得</td>
+		</tr>
+<% }%>
+
 	</table>
 
 </div>
