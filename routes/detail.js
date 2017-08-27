@@ -76,7 +76,7 @@ router.get('/', function(req, res, next) {
 		"INNER JOIN TRN_EDUCATION_BACKGROUND EDUCATION " +
 		"on BASE.EMPLOYEE_NO = EDUCATION.EMPLOYEE_NO " +
 		"where " +
-		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "'";
+		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "';";
 
 	// 情報処理国家資格 検索SQL
 	var qualifyQquery = "select " +
@@ -88,7 +88,7 @@ router.get('/', function(req, res, next) {
 		"on NATIONAL.QUALIFICATION_CD = NATIONAL_HISTORY.QUALIFICATION_CD " +
 		"where " +
 		"NATIONAL_HISTORY.EMPLOYEE_NO = '" + req.query.shainNo + "' " +
-		"order by NATIONAL.ORDER asc";
+		"order by NATIONAL.ORDER asc;";
 
 	// その他資格 検索SQL
 	var subQualifyQuery = "select " +
@@ -98,15 +98,14 @@ router.get('/', function(req, res, next) {
 		"TRN_SUB_QUALIFY_HISTORY " +
 		"where " +
 		"EMPLOYEE_NO = '" + req.query.shainNo + "' " +
-		"order by SEQ_NO asc ";
+		"order by SEQ_NO asc;";
 
 	// 資格情報格納用
 	var qualify = [];
-	
+
 	console.dir(qualifyQquery);
 	// 情報処理国家資格 の取得
 	connection.query(qualifyQquery, function(err, rows) {
-		console.dir(rows);
 		for (let row of rows) {
 			row.acquireYear = row.ACQUIRE_DATE.substring(0, 4);
 			row.acquireMonth = row.ACQUIRE_DATE.substring(4);
@@ -117,7 +116,6 @@ router.get('/', function(req, res, next) {
 	console.dir(subQualifyQuery);
 	// その他資格情報の取得
 	connection.query(subQualifyQuery, function(err, rows) {
-		console.dir(rows);
 		for (let row of rows) {
 			row.acquireYear = row.ACQUIRE_DATE.substring(0, 4);
 			row.acquireMonth = row.ACQUIRE_DATE.substring(4);
@@ -128,7 +126,6 @@ router.get('/', function(req, res, next) {
 	console.dir(detailQuery);
 	// 詳細社員情報の取得
 	connection.query(detailQuery, function(err, rows) {
-		console.dir(rows);
 		var personalData = rows[0];
 
 		// 雇用形態（区分）
