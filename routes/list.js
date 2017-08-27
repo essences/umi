@@ -59,10 +59,10 @@ router.get('/', function(req, res, next) {
 		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO "
 
 	var whereStr = "where ";
+	var tmpWhereStr = "";
 	var searchJokenArr = req.query.searchJoken.split(" ");
 	if (req.query.searchType == '01') {
 		// 名前で検索
-		var tmpWhereStr = "";
 		for (var i=0; i<searchJokenArr.length; i++) {
 			tmpWhereStr += "or BASE.EMPLOYEE_FAMILY_NAME like '" + searchJokenArr[i] + "%' ";
 			tmpWhereStr += "or BASE.EMPLOYEE_FIRST_NAME like '" + searchJokenArr[i] + "%' ";
@@ -76,11 +76,11 @@ router.get('/', function(req, res, next) {
 	} else if (req.query.searchType == '02') {
 		// 入社年で検索
 		var plusYear = parseInt(req.query.searchJoken, 10) + 1;
-		var tmpWhereStr = "BASE.EMPLOY_DATE between STR_TO_DATE('" + req.query.searchJoken + "', '%Y') and STR_TO_DATE('" + plusYear + "', '%Y') ";
+		tmpWhereStr = "BASE.EMPLOY_DATE between STR_TO_DATE('" + req.query.searchJoken + "', '%Y') and STR_TO_DATE('" + plusYear + "', '%Y') ";
 	} else if (req.query.searchType == '03') {
 		// 契約先で検索
 		var searchJokenArr = req.query.searchJoken.split(" ");
-		var tmpWhereStr = "CLIENT.CLIENT_NAME like '%" + searchJokenArr[0] + "%' ";
+		tmpWhereStr = "CLIENT.CLIENT_NAME like '%" + searchJokenArr[0] + "%' ";
 		if (searchJokenArr.length > 1) {
 			tmpWhereStr += "and WORK.WORK_PLACE_NAME like '" + searchJokenArr[1] + "%' ";
 		}
