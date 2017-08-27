@@ -6,6 +6,7 @@ var router = express.Router();
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	console.log("【INFO】detail start");
+	console.dir(req.query);
 
 	// 詳細社員情報 検索SQL
 	var detailQuery = "select " +
@@ -73,7 +74,7 @@ router.get('/', function(req, res, next) {
 		"INNER JOIN TRN_EDUCATION_BACKGROUND EDUCATION " +
 		"on BASE.EMPLOYEE_NO = EDUCATION.EMPLOYEE_NO " +
 		"where " +
-		"BASE.EMPLOYEE_NO = '00001'";
+		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "'";
 
 	// 情報処理国家資格 検索SQL
 	var qualifyQquery = "select " +
@@ -84,7 +85,7 @@ router.get('/', function(req, res, next) {
 		"LEFT OUTER JOIN TRN_NATIONAL_QUALIFY_HISTORY NATIONAL_HISTORY " +
 		"on NATIONAL.QUALIFICATION_CD = NATIONAL_HISTORY.QUALIFICATION_CD " +
 		"where " +
-		"NATIONAL_HISTORY.EMPLOYEE_NO = '00001' " +
+		"NATIONAL_HISTORY.EMPLOYEE_NO = '" + req.query.shainNo + "' " +
 		"order by NATIONAL.ORDER asc";
 
 	// その他資格 検索SQL
@@ -94,7 +95,7 @@ router.get('/', function(req, res, next) {
 		"from " +
 		"TRN_SUB_QUALIFY_HISTORY " +
 		"where " +
-		"EMPLOYEE_NO = '00001' " +
+		"EMPLOYEE_NO = '" + req.query.shainNo + "' " +
 		"order by SEQ_NO asc ";
 
 	// 資格情報格納用
@@ -122,7 +123,7 @@ router.get('/', function(req, res, next) {
 		{
 			title: '詳細画面',
 			result: rows[0],
-			qualify:qualify
+			qualify: qualify
 		});
 	});
 
