@@ -144,6 +144,13 @@ router.get('/', function(req, res, next) {
 
 		// 入社して何年目か
 
+		// 性別
+		if (personalData.GENDER === '0') {
+			personalData.gender = "男性";
+		} else {
+			personalData.gender = "女性";
+		}
+
 		// 生年月日
 		personalData.birthDate = getYearMonthDay(personalData.BIRTH_DATE);
 
@@ -154,13 +161,6 @@ router.get('/', function(req, res, next) {
 
 		// 郵便番号（緊急連絡先）
 		personalData.zipHome = createZipCode(personalData.ZIP_HOME);
-
-		// 性別
-		if (personalData.GENDER === '0') {
-			personalData.gender = "男性";
-		} else {
-			personalData.gender = "女性";
-		}
 
 		res.render('detail',
 		{
@@ -173,10 +173,10 @@ router.get('/', function(req, res, next) {
 });
 
 /** 
-	年月日 取得
-	@param {Date} date
-	@return {Obj} 年月日オブジェクト
-*/
+ * 年月日 取得
+ * @param {Date} date
+ * @return {Obj} 年月日オブジェクト
+ */
 var getYearMonthDay = function (date) {
 	return {
 		year: date.getFullYear(),
@@ -186,10 +186,10 @@ var getYearMonthDay = function (date) {
 };
 
 /** 
-	郵便番号 作成
-	@param {string} zipCode
-	@return {string} 郵便番号
-*/
+ * 郵便番号 作成
+ * @param {string} zipCode
+ * @return {string} 郵便番号
+ */
 var createZipCode = function (zipCode) {
 	return zipCode.slice(0, 3) + '-' + zipCode.slice(3, zipCode.length);
 };
