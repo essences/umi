@@ -4,17 +4,11 @@
 <title>
 <%= title%>
 </title>
-<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_search_list.css">
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_search_detail.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../../javascripts/umi_search_list.js"></script>
 <meta charset="UTF-8">
 </head>
 <body>
-
-<!-- 会社ロゴ -->
-<img src="../../images/image01.gif">
-
-<hr>
 
 所属：
 <label><%= result.COMPANY_NAME%></label>
@@ -46,7 +40,7 @@
 			<td><%= result.POSITION%>(XXXX年XX月昇格)</td>
 		</tr>
 		<tr>
-			<td>契約先</td>
+			<td>常駐先</td>
 			<td><%= result.CLIENT_NAME%></td>
 		</tr>
 		<tr>
@@ -85,15 +79,15 @@
 			<td><%= result.CELL_TEL_NO%></td>
 		</tr>
 		<tr>
-			<td>郵便番号(実家)</td>
+			<td>郵便番号(緊急)</td>
 			<td colspan="3">101-0032</td>
 		</tr>
 		<tr>
-			<td>住所(実家)</td>
+			<td>住所(緊急)</td>
 			<td colspan="3"><%= result.ADDRESS_HOME%></td>
 		</tr>
 		<tr>
-			<td>電話番号(実家)</td>
+			<td>電話番号(緊急)</td>
 			<td colspan="3"><%= result.TEL_NO_HOME%></td>
 		</tr>
 	</table>

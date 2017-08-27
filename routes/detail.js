@@ -104,21 +104,18 @@ router.get('/', function(req, res, next) {
 	console.dir(qualifyQquery);
 	// 情報処理国家資格 の取得
 	connection.query(qualifyQquery, function(err, rows) {
-		console.dir(rows);
 		qualify = rows;
 	});
 
 	console.dir(subQualifyQuery);
 	// その他資格情報の取得
 	connection.query(subQualifyQuery, function(err, rows) {
-		console.dir(rows);
 		qualify = qualify.concat(rows);
 	});
 
 	console.dir(detailQuery);
 	// 詳細社員情報の取得
 	connection.query(detailQuery, function(err, rows) {
-		console.dir(rows);
 		res.render('detail',
 		{
 			title: '詳細画面',
