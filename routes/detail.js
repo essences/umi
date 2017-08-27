@@ -105,6 +105,10 @@ router.get('/', function(req, res, next) {
 	// 情報処理国家資格 の取得
 	connection.query(qualifyQquery, function(err, rows) {
 		console.dir(rows);
+		for (let row of rows) {
+			row.acquireYear = row.ACQUIRE_DATE.substring(0, 4);
+			row.acquireMonth = row.ACQUIRE_DATE.substring(4);
+		}
 		qualify = rows;
 	});
 
@@ -112,6 +116,10 @@ router.get('/', function(req, res, next) {
 	// その他資格情報の取得
 	connection.query(subQualifyQuery, function(err, rows) {
 		console.dir(rows);
+		for (let row of rows) {
+			row.acquireYear = row.ACQUIRE_DATE.substring(0, 4);
+			row.acquireMonth = row.ACQUIRE_DATE.substring(4);
+		}
 		qualify = qualify.concat(rows);
 	});
 
@@ -119,14 +127,72 @@ router.get('/', function(req, res, next) {
 	// 詳細社員情報の取得
 	connection.query(detailQuery, function(err, rows) {
 		console.dir(rows);
+		var personalData = rows[0];
+
+		// 雇用形態（区分）
+		if (personalData.EMPLOYEE_TYPE === '0') {
+			personalData.employeeType = "社員";
+		} else {
+			personalData.employeeType = "契約社員";
+		}
+
+		// 役職：昇格年月
+		personalData.upgradeDate = getYearMonthDay(personalData.UPGRADE_DATE);
+
+		// 入社年月日
+		personalData.employDate = getYearMonthDay(personalData.EMPLOY_DATE);
+
+		// 入社して何年目か
+
+		// 生年月日
+		personalData.birthDate = getYearMonthDay(personalData.BIRTH_DATE);
+
+		// 年齢
+
+		// 郵便番号
+		personalData.zip = createZipCode(personalData.ZIP);
+
+		// 郵便番号（緊急連絡先）
+		personalData.zipHome = createZipCode(personalData.ZIP_HOME);
+
+		// 性別
+		if (personalData.GENDER === '0') {
+			personalData.gender = "男性";
+		} else {
+			personalData.gender = "女性";
+		}
+
 		res.render('detail',
 		{
 			title: '詳細画面',
-			result: rows[0],
+			result: personalData,
 			qualify: qualify
 		});
 	});
 
 });
+
+/** 
+	年月日 取得
+	@param {Date} date
+	@return {Obj} 年月日オブジェクト
+*/
+var getYearMonthDay = function (date) {
+	return {
+		year: date.getFullYear(),
+		month: date.getMonth() + 1,
+		day:date.getDate()
+	};
+};
+
+/** 
+	郵便番号 作成
+	@param {string} zipCode
+	@return {string} 郵便番号
+*/
+var createZipCode = function (zipCode) {
+	return zipCode.slice(0, 3) + '-' + zipCode.slice(3, zipCode.length);
+};
+
 
 module.exports = router;

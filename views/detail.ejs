@@ -20,7 +20,7 @@
 <label><%= result.COMPANY_NAME%></label>
 ｜
 区分：
-<label>社員</label>
+<label><%= result.employeeType%></label>
 
 <div>
 	<table border="1">
@@ -43,7 +43,7 @@
 		</tr>
 		<tr>
 			<td>役職</td>
-			<td><%= result.POSITION%>(XXXX年XX月昇格)</td>
+			<td><%= result.POSITION%>(<%= result.upgradeDate.year%>年<%= result.upgradeDate.month%>月昇格)</td>
 		</tr>
 		<tr>
 			<td>契約先</td>
@@ -59,20 +59,20 @@
 		</tr>
 		<tr>
 			<td>入社年月日</td>
-			<td>XXXX年XX月XX日(XX年目)</td>
+			<td><%= result.employDate.year%>年<%= result.employDate.month%>月<%= result.employDate.day%>日(XX年目)</td>
 		</tr>
 	</table>
 
 	<table border="1">
 		<tr>
 			<td>性別</td>
-			<td>男</td>
+			<td><%= result.gender%></td>
 			<td>生年月日</td>
-			<td>XXXX年XX月XX日(XX歳)</td>
+			<td><%= result.birthDate.year%>年<%= result.birthDate.month%>月<%= result.birthDate.day%>日(XX歳)</td>
 		</tr>
 		<tr>
 			<td>郵便番号</td>
-			<td colspan="3">101-0032</td>
+			<td colspan="3"><%= result.zip%></td>
 		</tr>
 		<tr>
 			<td>住所</td>
@@ -86,7 +86,7 @@
 		</tr>
 		<tr>
 			<td>郵便番号(実家)</td>
-			<td colspan="3">101-0032</td>
+			<td colspan="3"><%= result.zipHome%></td>
 		</tr>
 		<tr>
 			<td>住所(実家)</td>
@@ -111,7 +111,7 @@
 <% for(var i = 0; i < qualify.length; i++) {%>
 		<tr>
 			<td><%= qualify[i].QUALIFY_NAME%></td>
-			<td>XXXX年XX月取得</td>
+			<td><%= qualify[i].acquireYear%>年<%= qualify[i].acquireMonth%>月取得</td>
 		</tr>
 <% }%>
 
