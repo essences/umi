@@ -17,7 +17,10 @@
 <label>社員</label>
 
 <div>
-	<table border="1">
+	<table class="base-table">
+		<colgroup class="base-table-col1"/>
+		<colgroup class="base-table-col2"/>
+		<colgroup class="base-table-col3"/>
 		<tr>
 			<td>社員No</td>
 			<td><%= result.EMPLOYEE_NO%></td>
@@ -55,9 +58,17 @@
 			<td>入社年月日</td>
 			<td>XXXX年XX月XX日(XX年目)</td>
 		</tr>
+		<tr class="hidden">
+			<td>退社年月日</td>
+			<td>XXXX年XX月XX日</td>
+		</tr>
 	</table>
 
-	<table border="1">
+	<table class="personal-table">
+		<colgroup class="personal-table-col1"/>
+		<colgroup class="personal-table-col2"/>
+		<colgroup class="personal-table-col3"/>
+		<colgroup class="personal-table-col4"/>
 		<tr>
 			<td>性別</td>
 			<td>男</td>
@@ -79,6 +90,10 @@
 			<td><%= result.CELL_TEL_NO%></td>
 		</tr>
 		<tr>
+			<td>業務中電話番号</td>
+			<td colspan="3"><%= result.WORKING_TEL_NO%></td>
+		</tr>
+		<tr>
 			<td>郵便番号(緊急)</td>
 			<td colspan="3">101-0032</td>
 		</tr>
@@ -92,7 +107,9 @@
 		</tr>
 	</table>
 
-	<table border="1">
+	<table class="qualify-table">
+		<colgroup class="qualify-table-col1"/>
+		<colgroup class="qualify-table-col2"/>
 		<tr>
 			<td>最終学歴</td>
 			<td><%= result.EDUCATION%></td>
