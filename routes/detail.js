@@ -1,5 +1,6 @@
 var express = require('express');
 var connection = require('../model/mysqlConnection');
+var moment = require("moment");
 
 var router = express.Router();
 
@@ -26,6 +27,7 @@ router.get('/', function(req, res, next) {
 		"PLACE.WORK_PLACE_NAME, " +
 		"BASE.EMAIL, " +
 		"BASE.EMPLOY_DATE, " +
+		"BASE.RETIREMENT_DATE, " +
 		"PERSONAL.GENDER, " +
 		"PERSONAL.BIRTH_DATE, " +
 		"PERSONAL.ZIP, " +
@@ -137,12 +139,21 @@ router.get('/', function(req, res, next) {
 		}
 
 		// 役職：昇格年月
-		personalData.upgradeDate = getYearMonthDay(personalData.UPGRADE_DATE);
+		if (personalData.UPGRADE_DATE !== null) {
+			personalData.upgradeDate = getYearMonthDay(personalData.UPGRADE_DATE);
+		}
 
 		// 入社年月日
 		personalData.employDate = getYearMonthDay(personalData.EMPLOY_DATE);
 
 		// 入社して何年目か
+		var today = moment();
+		personalData.entryYear = today.diff(moment(personalData.EMPLOY_DATE), 'year') + 1;
+
+		// 退社年月日
+		if (personalData.RETIREMENT_DATE !== null) {
+			personalData.retireDate = getYearMonthDay(personalData.RETIREMENT_DATE);
+		}
 
 		// 性別
 		if (personalData.GENDER === '0') {
@@ -155,12 +166,13 @@ router.get('/', function(req, res, next) {
 		personalData.birthDate = getYearMonthDay(personalData.BIRTH_DATE);
 
 		// 年齢
+		personalData.age = today.diff(moment(personalData.BIRTH_DATE), 'year');
 
 		// 郵便番号
-		personalData.zip = createZipCode(personalData.ZIP);
+		personalData.zip = formatZipCode(personalData.ZIP);
 
 		// 郵便番号（緊急連絡先）
-		personalData.zipHome = createZipCode(personalData.ZIP_HOME);
+		personalData.zipHome = formatZipCode(personalData.ZIP_HOME);
 
 		res.render('detail',
 		{
@@ -186,11 +198,11 @@ var getYearMonthDay = function (date) {
 };
 
 /** 
- * 郵便番号 作成
+ * 郵便番号 整形
  * @param {string} zipCode
  * @return {string} 郵便番号
  */
-var createZipCode = function (zipCode) {
+var formatZipCode = function (zipCode) {
 	return zipCode.slice(0, 3) + '-' + zipCode.slice(3, zipCode.length);
 };
 
