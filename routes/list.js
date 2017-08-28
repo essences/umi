@@ -56,7 +56,7 @@ router.get('/', function(req, res, next) {
 		"on BASE.CLIENT_CD = WORK.CLIENT_CD " +
 		"and BASE.WORK_PLACE_CD = WORK.WORK_PLACE_CD " +
 		"INNER JOIN MST_EMPLOYEE_PERSONAL PERSONAL " +
-		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO "
+		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO ";
 
 	var whereStr = "where ";
 	var tmpWhereStr = "";
@@ -71,7 +71,7 @@ router.get('/', function(req, res, next) {
 		}
 		if (tmpWhereStr.length > 0) {
 			// 最初のorの文字列分を削除する
-			tmpWhereStr = tmpWhereStr.substring(3, tmpWhereStr.length -1);
+			tmpWhereStr = tmpWhereStr.substring(3, tmpWhereStr.length);
 		}
 	} else if (req.query.searchType == '02') {
 		// 入社年で検索
