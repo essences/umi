@@ -1,5 +1,6 @@
 var express = require('express');
 var connection = require('../model/mysqlConnection');
+var moment = require("moment");
 
 var router = express.Router();
 
@@ -26,6 +27,7 @@ router.get('/', function(req, res, next) {
 		"PLACE.WORK_PLACE_NAME, " +
 		"BASE.EMAIL, " +
 		"BASE.EMPLOY_DATE, " +
+		"BASE.RETIREMENT_DATE, " +
 		"PERSONAL.GENDER, " +
 		"PERSONAL.BIRTH_DATE, " +
 		"PERSONAL.ZIP, " +
@@ -74,7 +76,7 @@ router.get('/', function(req, res, next) {
 		"INNER JOIN TRN_EDUCATION_BACKGROUND EDUCATION " +
 		"on BASE.EMPLOYEE_NO = EDUCATION.EMPLOYEE_NO " +
 		"where " +
-		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "'";
+		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "';";
 
 	// 情報処理国家資格 検索SQL
 	var qualifyQquery = "select " +
@@ -86,7 +88,7 @@ router.get('/', function(req, res, next) {
 		"on NATIONAL.QUALIFICATION_CD = NATIONAL_HISTORY.QUALIFICATION_CD " +
 		"where " +
 		"NATIONAL_HISTORY.EMPLOYEE_NO = '" + req.query.shainNo + "' " +
-		"order by NATIONAL.ORDER asc";
+		"order by NATIONAL.ORDER asc;";
 
 	// その他資格 検索SQL
 	var subQualifyQuery = "select " +
@@ -96,34 +98,110 @@ router.get('/', function(req, res, next) {
 		"TRN_SUB_QUALIFY_HISTORY " +
 		"where " +
 		"EMPLOYEE_NO = '" + req.query.shainNo + "' " +
-		"order by SEQ_NO asc ";
+		"order by SEQ_NO asc;";
 
 	// 資格情報格納用
 	var qualify = [];
-	
+
 	console.dir(qualifyQquery);
 	// 情報処理国家資格 の取得
 	connection.query(qualifyQquery, function(err, rows) {
+		for (let row of rows) {
+			row.acquireYear = row.ACQUIRE_DATE.substring(0, 4);
+			row.acquireMonth = row.ACQUIRE_DATE.substring(4);
+		}
 		qualify = rows;
 	});
 
 	console.dir(subQualifyQuery);
 	// その他資格情報の取得
 	connection.query(subQualifyQuery, function(err, rows) {
+		for (let row of rows) {
+			row.acquireYear = row.ACQUIRE_DATE.substring(0, 4);
+			row.acquireMonth = row.ACQUIRE_DATE.substring(4);
+		}
 		qualify = qualify.concat(rows);
 	});
 
 	console.dir(detailQuery);
 	// 詳細社員情報の取得
 	connection.query(detailQuery, function(err, rows) {
+		var personalData = rows[0];
+
+		// 雇用形態（区分）
+		if (personalData.EMPLOYEE_TYPE === '0') {
+			personalData.employeeType = "社員";
+		} else {
+			personalData.employeeType = "契約社員";
+		}
+
+		// 役職：昇格年月
+		if (personalData.UPGRADE_DATE !== null) {
+			personalData.upgradeDate = getYearMonthDay(personalData.UPGRADE_DATE);
+		}
+
+		// 入社年月日
+		personalData.employDate = getYearMonthDay(personalData.EMPLOY_DATE);
+
+		// 入社して何年目か
+		var today = moment();
+		personalData.entryYear = today.diff(moment(personalData.EMPLOY_DATE), 'year') + 1;
+
+		// 退社年月日
+		if (personalData.RETIREMENT_DATE !== null) {
+			personalData.retireDate = getYearMonthDay(personalData.RETIREMENT_DATE);
+		}
+
+		// 性別
+		if (personalData.GENDER === '0') {
+			personalData.gender = "男性";
+		} else {
+			personalData.gender = "女性";
+		}
+
+		// 生年月日
+		personalData.birthDate = getYearMonthDay(personalData.BIRTH_DATE);
+
+		// 年齢
+		personalData.age = today.diff(moment(personalData.BIRTH_DATE), 'year');
+
+		// 郵便番号
+		personalData.zip = formatZipCode(personalData.ZIP);
+
+		// 郵便番号（緊急連絡先）
+		personalData.zipHome = formatZipCode(personalData.ZIP_HOME);
+
 		res.render('detail',
 		{
 			title: '詳細画面',
-			result: rows[0],
+			result: personalData,
 			qualify: qualify
 		});
 	});
 
 });
+
+/** 
+ * 年月日 取得
+ * @param {Date} date
+ * @return {Obj} 年月日オブジェクト
+ */
+var getYearMonthDay = function (date) {
+	return {
+		year: date.getFullYear(),
+		month: date.getMonth() + 1,
+		day:date.getDate()
+	};
+};
+
+/** 
+ * 郵便番号 整形
+ * @param {string} zipCode
+ * @return {string} 郵便番号
+ */
+var formatZipCode = function (zipCode) {
+	return zipCode.slice(0, 3) + '-' + zipCode.slice(3, zipCode.length);
+};
+
 
 module.exports = router;

@@ -14,7 +14,7 @@
 <label><%= result.COMPANY_NAME%></label>
 ｜
 区分：
-<label>社員</label>
+<label><%= result.employeeType%></label>
 
 <div>
 	<table class="base-table">
@@ -24,7 +24,15 @@
 		<tr>
 			<td>社員No</td>
 			<td><%= result.EMPLOYEE_NO%></td>
-			<td rowspan="9"><img src="../../images/shainPhoto/<%= result.EMPLOYEE_NO%>.jpg"></td>
+<%
+var baseRowNum;
+if (result.retireDate) { 
+	baseRowNum = 10;
+} else {
+	baseRowNum = 9;
+}
+%>
+			<td rowspan="<%= baseRowNum%>"><img src="../../images/shainPhoto/<%= result.EMPLOYEE_NO%>.jpg"></td>
 		</tr>
 		<tr>
 			<td>名前</td>
@@ -40,7 +48,11 @@
 		</tr>
 		<tr>
 			<td>役職</td>
-			<td><%= result.POSITION%>(XXXX年XX月昇格)</td>
+			<td>
+<% if (result.POSITION) {%>
+			<%= result.POSITION%>(<%= result.upgradeDate.year%>年<%= result.upgradeDate.month%>月昇格)
+<% }%>
+			</td>
 		</tr>
 		<tr>
 			<td>常駐先</td>
@@ -56,12 +68,14 @@
 		</tr>
 		<tr>
 			<td>入社年月日</td>
-			<td>XXXX年XX月XX日(XX年目)</td>
+			<td><%= result.employDate.year%>年<%= result.employDate.month%>月<%= result.employDate.day%>日(<%= result.entryYear%>年目)</td>
 		</tr>
-		<tr class="hidden">
+<% if (result.retireDate) {%>
+		<tr>
 			<td>退社年月日</td>
-			<td>XXXX年XX月XX日</td>
+			<td><%= result.retireDate.year%>年<%= result.retireDate.month%>月<%= result.retireDate.day%>日</td>
 		</tr>
+<% }%>
 	</table>
 
 	<table class="personal-table">
@@ -71,13 +85,13 @@
 		<colgroup class="personal-table-col4"/>
 		<tr>
 			<td>性別</td>
-			<td>男</td>
+			<td><%= result.gender%></td>
 			<td>生年月日</td>
-			<td>XXXX年XX月XX日(XX歳)</td>
+			<td><%= result.birthDate.year%>年<%= result.birthDate.month%>月<%= result.birthDate.day%>日(<%= result.age%>歳)</td>
 		</tr>
 		<tr>
 			<td>郵便番号</td>
-			<td colspan="3">101-0032</td>
+			<td colspan="3"><%= result.zip%></td>
 		</tr>
 		<tr>
 			<td>住所</td>
@@ -122,7 +136,7 @@
 <% for(var i = 0; i < qualify.length; i++) {%>
 		<tr>
 			<td><%= qualify[i].QUALIFY_NAME%></td>
-			<td>XXXX年XX月取得</td>
+			<td><%= qualify[i].acquireYear%>年<%= qualify[i].acquireMonth%>月取得</td>
 		</tr>
 <% }%>
 
