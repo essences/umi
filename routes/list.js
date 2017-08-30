@@ -8,8 +8,16 @@ router.get('/', function(req, res, next) {
 	console.log("【INFO】list start");
 	console.dir(req.query);
 
+	// 検索条件がない場合は初期表示
 	if (!req.query.searchJoken) {
 		req.query.searchJoken = "";
+		res.render('list',
+		{
+			title: '一覧画面',
+			result: [],
+			query: req.query
+		});
+		return;
 	}
 	if (!req.query.searchType) {
 		req.query.searchType = "01";
@@ -75,11 +83,9 @@ router.get('/', function(req, res, next) {
 		}
 	} else if (req.query.searchType == '02') {
 		// 入社年で検索
-		var plusYear = parseInt(req.query.searchJoken, 10) + 1;
-		tmpWhereStr = "BASE.EMPLOY_DATE between STR_TO_DATE('" + req.query.searchJoken + "', '%Y') and STR_TO_DATE('" + plusYear + "', '%Y') ";
+		tmpWhereStr = "BASE.EMPLOY_DATE between STR_TO_DATE('" + req.query.searchJoken + "0101', '%Y%m%d') and STR_TO_DATE('" + req.query.searchJoken + "1231', '%Y%m%d') ";
 	} else if (req.query.searchType == '03') {
 		// 契約先で検索
-		var searchJokenArr = req.query.searchJoken.split(" ");
 		tmpWhereStr = "CLIENT.CLIENT_NAME like '%" + searchJokenArr[0] + "%' ";
 		if (searchJokenArr.length > 1) {
 			tmpWhereStr += "and WORK.WORK_PLACE_NAME like '" + searchJokenArr[1] + "%' ";
@@ -101,9 +107,14 @@ router.get('/', function(req, res, next) {
 	} else {
 		query += orderStr;
 	}
-	console.dir(query);
+	console.log(query);
 
 	connection.query(query, function(err, rows) {
+		// エラー発生時はエラーハンドラをコールバックする
+		if (err) {
+			return next(err);
+		}
+
 		if (!rows) {
 			rows = [];
 		}
