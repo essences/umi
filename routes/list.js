@@ -17,6 +17,7 @@ router.get('/', function(req, res, next) {
 			result: [],
 			query: req.query
 		});
+		return;
 	}
 	if (!req.query.searchType) {
 		req.query.searchType = "01";
@@ -85,7 +86,6 @@ router.get('/', function(req, res, next) {
 		tmpWhereStr = "BASE.EMPLOY_DATE between STR_TO_DATE('" + req.query.searchJoken + "0101', '%Y%m%d') and STR_TO_DATE('" + req.query.searchJoken + "1231', '%Y%m%d') ";
 	} else if (req.query.searchType == '03') {
 		// 契約先で検索
-		searchJokenArr = req.query.searchJoken.split(" ");
 		tmpWhereStr = "CLIENT.CLIENT_NAME like '%" + searchJokenArr[0] + "%' ";
 		if (searchJokenArr.length > 1) {
 			tmpWhereStr += "and WORK.WORK_PLACE_NAME like '" + searchJokenArr[1] + "%' ";
