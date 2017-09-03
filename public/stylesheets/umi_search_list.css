@@ -49,6 +49,9 @@
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
+.searchResult-table tr.resigned {
+	background: #ccbfaf;
+}
 .searchResult-table th {
 	background: #a8a8a8;
 	border-style: solid;
