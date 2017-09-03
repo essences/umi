@@ -95,3 +95,7 @@
 .detail-button {
 	font-size: 1px;
 }
+.searchResult-table img.email {
+	vertical-align: middle;
+	height: 18px;
+}
