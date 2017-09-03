@@ -1,5 +1,8 @@
 $(function() {
 
+	// 初期状態で検索条件にカーソルを当てる
+	$('#searchJoken-input-text').focus();
+
 	$('#searchType-name').change(function(){
 		// 検索タイプを設定する
 		$('#searchType').val(this.value);
