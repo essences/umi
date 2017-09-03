@@ -7,6 +7,7 @@ $(function() {
 
 	$('#searchButton').click(function(){
 		// 検索ボタン押下時の処理
+		$('#searchType-name').change();
 	});
 
 	$('.detail-button').click(function(){

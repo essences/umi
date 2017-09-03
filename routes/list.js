@@ -19,16 +19,6 @@ router.get('/', function(req, res, next) {
 		return;
 	}
 
-	if (!req.query.searchJoken) {
-		req.query.searchJoken = "";
-	}
-	if (!req.query.searchType) {
-		req.query.searchType = "01";
-	}
-	if (!req.query.searchSort) {
-		req.query.searchSort = "01";
-	}
-
 	//	一覧画面項目を取るSQL
 	var query =
 		"select " +
