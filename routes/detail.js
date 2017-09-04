@@ -4,6 +4,10 @@ var moment = require("moment");
 
 var router = express.Router();
 
+// 和暦変換用
+const WarekiCreator = require('../public/javascripts/wareki.js');
+const warekiCreator = new WarekiCreator();
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	console.log("【INFO】detail start");
@@ -181,7 +185,7 @@ router.get('/', function(req, res, next) {
 
 });
 
-/** 
+/**
  * 年月日 取得
  * @param {Date} date
  * @return {Obj} 年月日オブジェクト
@@ -190,11 +194,12 @@ var getYearMonthDay = function (date) {
 	return {
 		year: date.getFullYear(),
 		month: date.getMonth() + 1,
-		day:date.getDate()
+		day: date.getDate(),
+		wareki: warekiCreator.getWareki(date)
 	};
 };
 
-/** 
+/**
  * 郵便番号 整形
  * @param {string} zipCode
  * @return {string} 郵便番号
