@@ -20,6 +20,13 @@ module.exports = class WarekiCreator {
 	constructor () {
 	};
 
+	convertFirstYear(year) {
+		if (year == 1) {
+			return '元';
+		} else {
+			return year;
+		}
+	};
 
 	getWareki(dateObj) {
 		const year = dateObj.getFullYear();
@@ -32,7 +39,7 @@ module.exports = class WarekiCreator {
 			let eraFirstDateObj = new Date(eraData.firstDate);
 			if (dateObj - eraFirstDateObj >= 0) {
 				let eraYear = year - eraFirstDateObj.getFullYear() + 1;
-				wareki = `${eraData.text}${eraYear}年${month}月${date}日`;
+				wareki = `${eraData.text}${this.convertFirstYear(eraYear)}年${month}月${date}日`;
 				break;
 			}
 		}
