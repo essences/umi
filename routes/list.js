@@ -8,9 +8,8 @@ router.get('/', function(req, res, next) {
 	console.log("【INFO】list start");
 	console.dir(req.query);
 
-	// 検索条件がない場合は初期表示
-	if (!req.query.searchJoken) {
-		req.query.searchJoken = "";
+	// 初期表示時は検索しない、検索条件なしのときは全件検索する
+	if (!req.query.searchJoken && req.query.searchJoken != "") {
 		res.render('list',
 		{
 			title: '一覧画面',
@@ -18,9 +17,6 @@ router.get('/', function(req, res, next) {
 			query: req.query
 		});
 		return;
-	}
-	if (!req.query.searchType) {
-		req.query.searchType = "01";
 	}
 
 	//	一覧画面項目を取るSQL
