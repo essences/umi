@@ -1,4 +1,4 @@
-const eraDataList=
+var eraDataList=
 	[{
 		text:'平成',
 		firstDate:'1989-01-08',
@@ -29,9 +29,9 @@ module.exports = class WarekiCreator {
 	};
 
 	getWareki(dateObj) {
-		const year = dateObj.getFullYear();
-		const month = dateObj.getMonth() + 1;
-		const date = dateObj.getDate();
+		var year = dateObj.getFullYear();
+		var month = dateObj.getMonth() + 1;
+		var date = dateObj.getDate();
 
 		var wareki;
 		for (let i = 0; i < eraDataList.length; i++) {

@@ -5,8 +5,8 @@ var moment = require("moment");
 var router = express.Router();
 
 // 和暦変換用
-const WarekiCreator = require('../public/javascripts/wareki.js');
-const warekiCreator = new WarekiCreator();
+var WarekiCreator = require('../public/javascripts/wareki.js');
+var warekiCreator = new WarekiCreator();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
