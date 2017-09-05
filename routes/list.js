@@ -30,10 +30,7 @@ router.get('/', function(req, res, next) {
 		"CLIENT.CLIENT_NAME, " +
 		"WORK.WORK_PLACE_NAME, " +
 		"CASE PERSONAL.WORKING_TEL_NO WHEN '' THEN PERSONAL.CELL_TEL_NO ELSE PERSONAL.WORKING_TEL_NO END as CELL_TEL_NO, " +
-		"BASE.EMAIL, " +
-		"BASE.DELETE_FLG ";
-
-	var fromStr =
+		"BASE.EMAIL " +
 		"from " +
 		"MST_EMPLOYEE_BASE BASE " +
 		"INNER JOIN MST_DEPT DEPT " +
@@ -101,33 +98,13 @@ router.get('/', function(req, res, next) {
 		orderStr += "BASE.EMPLOYEE_FIRST_NAME_KANA asc ";
 	}
 
-	var queryResigned = "select count(*) as COUNT ";
-	var resignedStr = "BASE.DELETE_FLG = '1' ";
-
 	if (req.query.searchJoken) {
-		query += fromStr + whereStr + tmpWhereStr + orderStr;
-		queryResigned += fromStr + whereStr + tmpWhereStr + "and " + resignedStr;
+		query += whereStr + tmpWhereStr + orderStr;
 	} else {
-		query += fromStr + orderStr;
-		queryResigned += fromStr + whereStr + resignedStr;
+		query += orderStr;
 	}
 	console.log(query);
 
-	// 退社人数を検索
-	var countResigned = 0;
-	connection.query(queryResigned, function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
-
-		if (rows) {
-			countResigned = rows[0];
-		}
-	});
-
-	console.log(countResigned);
-	// 全体検索
 	connection.query(query, function(err, rows) {
 		// エラー発生時はエラーハンドラをコールバックする
 		if (err) {
@@ -137,20 +114,11 @@ router.get('/', function(req, res, next) {
 		if (!rows) {
 			rows = [];
 		}
-
-		// 退社用のcssのclass定義を付与する
-		for (var i = 0; i < rows.length; i++) {
-			if (rows[i].DELETE_FLG === '1') {
-				rows[i].resigned = "resigned";
-			}
-		}
-
 		res.render('list',
 		{
 			title: '一覧画面',
 			result: rows,
-			query: req.query,
-			countResigned: countResigned
+			query: req.query
 		});
 	});
 });
