@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+<title>
+<%=title%>
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_search_list.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_search_list.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<img src="../../images/common/logo01.gif">
+
+<form method="post">
+	<div>
+	社員番号
+	<input type="text" name="shainNo" value="<%= query.shainNo%>">
+	</div>
+	<div>
+	パスワード
+	<input type="text" name="password">
+	</div>
+	<div>
+	<input type="submit" name="loginButton" value="ログインする">
+	</div>
+
+<% if (result.err) { %>
+	<div>
+	<%= result.err%>
+	</div>
+<% } %>
+
+</form>
+
+</body>
+</html>
