@@ -68,7 +68,7 @@
 }
 .searchResult-table-busho-header {
 	min-width: 100px;
-	width: 300px;
+	width: 180px;
 }
 .searchResult-table-yakushoku-header {
 	min-width: 80px;
@@ -79,7 +79,7 @@
 }
 .searchResult-table-email-header {
 	min-width: 100px;
-	width: 300px;
+	width: 350px;
 }
 .searchResult-table-telno-header {
 	min-width: 100px;
@@ -94,4 +94,8 @@
 }
 .detail-button {
 	font-size: 1px;
+}
+.searchResult-table img.email {
+	vertical-align: middle;
+	height: 18px;
 }

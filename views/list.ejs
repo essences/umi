@@ -12,7 +12,7 @@
 <body>
 
 <!-- 会社ロゴ -->
-<img src="../../images/image01.gif">
+<img src="../../images/common/logo01.gif">
 
 <form method="get" name="searchForm" id="searchForm" action="list">
 
@@ -65,7 +65,10 @@
 			<td><%= result[i].DEPT_NAME%></td>
 			<td><%= result[i].POSITION%></td>
 			<td><%= result[i].CLIENT_NAME%>/<%= result[i].WORK_PLACE_NAME%></td>
-			<td><%= result[i].EMAIL%></td>
+			<td>
+				<a href="mailto:<%= result[i].EMAIL%>"><img src="../../images/common/email.png" class="email"></a>
+				<%= result[i].EMAIL%>
+			</td>
 			<td><%= result[i].CELL_TEL_NO%></td>
 			<td class="searchResult-table-detail-body"><input type="button" class="detail-button" data-key="<%= result[i].EMPLOYEE_NO%>"></td>
 		</tr>
