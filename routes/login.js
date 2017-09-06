@@ -35,12 +35,10 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
 
 	// 入力チェック
-	let shainNo = req.body.shainNo;
-	let password = req.body.password;
-	console.log(shainNo);
-	console.log(password);
+	var shainNo = req.body.shainNo;
+	var password = req.body.password;
 	if (!shainNo || !password) {
-		let err = '社員No、パスワードが入力されていません。';
+		var err = '社員No、パスワードが入力されていません。';
 		res.render('login',
 				{
 					title: 'ログイン画面',
@@ -51,13 +49,61 @@ router.post('/', function(req, res, next) {
 	}
 
 	// ログイン認証
+	var zeroSuppressShainNo = shainNo.replace(/^0+([0-9]+.*)/, "$1");
+	var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = '" + shainNo + "' ";
+	var loginInfo;
+	connection.query(queryLogin, function(err, rows) {
+		// エラー発生時はエラーハンドラをコールバックする
+		if (err) {
+			return next(err);
+		}
+		if (rows.length == 0) {
+			var err = '社員No、または、パスワードが異なります。';
+			res.render('login',
+					{
+						title: 'ログイン画面',
+						query: req.body,
+						result: {'err': err}
+					});
+			return;
+		}
+
+		// 入力されたパスワードをハッシュ化する
+		var crypto = require("crypto");
+		var sha256 = crypto.createHash('sha256');
+		sha256.update(password)
+		var hashedPassword = sha256.digest('hex')
+
+		if (hashedPassword != rows[0].PASSWORD) {
+			// 認証エラー
+			var err = '社員No、または、パスワードが異なります。';
+			res.render('login',
+					{
+						title: 'ログイン画面',
+						query: req.body,
+						result: {'err': err}
+					});
+			return;
+		}
+
+		var currentDate = Date.now();
+
+		res.redirect('/list');
+	});
+
+
+
+
+
+
+
 	/**
 	 * 入力されたパスワードのsha256ハッシュ値がDBのパスと等しければ認証成功、
 	 * DBの最終ログイン日時を更新し、パスワードのハッシュと最終更新日時をさらにハッシュ化した値を自動ログイン情報として
 	 * Cookie(autoLoginInfo)に7日間セットする(社員No:さらなるハッシュ値)
+	 * さらにセッションにログイン情報をセット
 	 */
 
-	res.redirect('/list');
 });
 
 module.exports = router;
