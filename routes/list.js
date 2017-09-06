@@ -31,7 +31,10 @@ router.get('/', function(req, res, next) {
 		"CLIENT.CLIENT_NAME, " +
 		"WORK.WORK_PLACE_NAME, " +
 		"CASE PERSONAL.WORKING_TEL_NO WHEN '' THEN PERSONAL.CELL_TEL_NO ELSE PERSONAL.WORKING_TEL_NO END as CELL_TEL_NO, " +
-		"BASE.EMAIL " +
+		"BASE.EMAIL, " +
+		"BASE.DELETE_FLG ";
+
+	var fromStr =
 		"from " +
 		"MST_EMPLOYEE_BASE BASE " +
 		"INNER JOIN MST_DEPT DEPT " +
@@ -99,10 +102,15 @@ router.get('/', function(req, res, next) {
 		orderStr += "BASE.EMPLOYEE_FIRST_NAME_KANA asc ";
 	}
 
+	var queryResigned = "select count(*) as COUNT ";
+	var resignedStr = "BASE.DELETE_FLG = '1' ";
+
 	if (req.query.searchJoken) {
-		query += whereStr + tmpWhereStr + orderStr;
+		query += fromStr + whereStr + tmpWhereStr + orderStr;
+		queryResigned += fromStr + whereStr + tmpWhereStr + "and " + resignedStr;
 	} else {
-		query += orderStr;
+		query += fromStr + orderStr;
+		queryResigned += fromStr + whereStr + resignedStr;
 	}
 	console.log(query);
 
@@ -129,11 +137,20 @@ router.get('/', function(req, res, next) {
 		if (!rows) {
 			rows = [];
 		}
+
+		// 退社用のcssのclass定義を付与する
+		for (var i = 0; i < rows.length; i++) {
+			if (rows[i].DELETE_FLG === '1') {
+				rows[i].resigned = "resigned";
+			}
+		}
+
 		res.render('list',
 		{
 			title: '一覧画面',
 			result: rows,
-			query: req.query
+			query: req.query,
+			countResigned: countResigned
 		});
 	});
 });

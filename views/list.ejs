@@ -45,7 +45,7 @@
 
 <div class="searchResult-box">
 	<div class="searchResult-count-box">
-		検索結果<label id="searchResult-count"><%= result.length %></label>件です
+		検索結果<label id="searchResult-count"><%= result.length %></label>件です(退社<%= countResigned.COUNT%>件)
 	</div>
 	<table class="searchResult-table">
 		<tr>
@@ -59,7 +59,7 @@
 			<th class="searchResult-table-detail-header">詳細</th>
 		</tr>
 <% for(var i = 0; i < result.length; i++) {%>
-		<tr>
+		<tr class="<%= result[i].resigned%>">
 			<td><%= result[i].EMPLOYEE_NO%></td>
 			<td><%= result[i].EMPLOYEE_FAMILY_NAME%> <%= result[i].EMPLOYEE_FIRST_NAME%></td>
 			<td><%= result[i].DEPT_NAME%></td>
