@@ -14,7 +14,8 @@ router.get('/', function(req, res, next) {
 		{
 			title: '一覧画面',
 			result: [],
-			query: req.query
+			query: req.query,
+			countResigned: { COUNT : 0 }
 		});
 		return;
 	}
@@ -78,7 +79,7 @@ router.get('/', function(req, res, next) {
 		}
 		if (tmpWhereStr.length > 0) {
 			// 最初のorの文字列分を削除する
-			tmpWhereStr = tmpWhereStr.substring(3, tmpWhereStr.length);
+			tmpWhereStr = "(" + tmpWhereStr.substring(3, tmpWhereStr.length) + ") ";
 		}
 	} else if (req.query.searchType == '02') {
 		// 入社年で検索
@@ -114,7 +115,7 @@ router.get('/', function(req, res, next) {
 	console.log(query);
 
 	// 退社人数を検索
-	var countResigned = 0;
+	var countResigned;
 	connection.query(queryResigned, function(err, rows) {
 		// エラー発生時はエラーハンドラをコールバックする
 		if (err) {
@@ -126,7 +127,6 @@ router.get('/', function(req, res, next) {
 		}
 	});
 
-	console.log(countResigned);
 	// 全体検索
 	connection.query(query, function(err, rows) {
 		// エラー発生時はエラーハンドラをコールバックする
