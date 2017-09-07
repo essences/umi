@@ -3,6 +3,10 @@ var connection = require('../model/mysqlConnection');
 
 var router = express.Router();
 
+/**
+ * ログイン画面の初期表示
+ * 自動ログインを試みる
+ */
 router.get('/', function(req, res, next) {
 
 	// ログイン済みのCookieがあれば自動ログインを試みる
@@ -32,6 +36,9 @@ router.get('/', function(req, res, next) {
 	});
 });
 
+/**
+ * ログイン画面のログイン処理
+ */
 router.post('/', function(req, res, next) {
 
 	// 入力チェック
@@ -50,9 +57,9 @@ router.post('/', function(req, res, next) {
 
 	// ログイン認証
 	var zeroSuppressShainNo = shainNo.replace(/^0+([0-9]+.*)/, "$1");
-	var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = '" + shainNo + "' ";
+	var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = ? ";
 	var loginInfo;
-	connection.query(queryLogin, function(err, rows) {
+	connection.query(queryLogin, [zeroSuppressShainNo], function(err, rows) {
 		// エラー発生時はエラーハンドラをコールバックする
 		if (err) {
 			return next(err);
@@ -86,16 +93,34 @@ router.post('/', function(req, res, next) {
 			return;
 		}
 
-		var currentDate = Date.now();
+		// 現在日時で最終ログイン日時を更新
+		var currentDate = new Date(Date.now()).toLocaleString();
+		var lastLoginUpdateQuery = "update mst_login_user set LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
+		connection.query(lastLoginUpdateQuery, [currentDate, zeroSuppressShainNo], function(err, rows) {
+			// エラー発生時はエラーハンドラをコールバックする
+			if (err) {
+				connection.rollback(function() {
+					return next(err);
+				});
+			}
+			//コミットする
+			connection.commit(function(err) {
+				if (err) {
+					connection.rollback(function() {
+						return next(err);
+					});
+				}
 
-		res.redirect('/list');
+				// Cookieとセッションにログイン情報をセットする
+				setCookie(res, zeroSuppressShainNo, hashedPassword, currentDate);
+				setSession();
+
+				// 認証OK：一覧画面に遷移する
+				res.redirect('/list');
+			});
+		});
+
 	});
-
-
-
-
-
-
 
 	/**
 	 * 入力されたパスワードのsha256ハッシュ値がDBのパスと等しければ認証成功、
@@ -105,5 +130,18 @@ router.post('/', function(req, res, next) {
 	 */
 
 });
+
+/**
+ * ログイン情報をCookieに格納する
+ * 社員ID:ハッシュ化パスワードと最終更新日時をさらにハッシュ化した値
+ */
+function setCookie(res, zeroSuppressShainNo, hashedPassword, currentDate) {
+	// TODO 7日間のみ、最終更新日時とのハッシュ化
+	res.cookie('autoLoginInfo', zeroSuppressShainNo + ":" + hashedPassword);
+}
+
+function setSession() {
+	console.log("aaaaaaaaaaa");
+}
 
 module.exports = router;
