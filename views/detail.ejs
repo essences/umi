@@ -26,7 +26,7 @@
 			<td><%= result.EMPLOYEE_NO%></td>
 <%
 var baseRowNum;
-if (result.retireDate) { 
+if (result.retireDate) {
 	baseRowNum = 10;
 } else {
 	baseRowNum = 9;
@@ -68,12 +68,12 @@ if (result.retireDate) {
 		</tr>
 		<tr>
 			<td>入社年月日</td>
-			<td><%= result.employDate.year%>年<%= result.employDate.month%>月<%= result.employDate.day%>日(<%= result.entryYear%>年目)</td>
+			<td title="<%= result.employDate.wareki%>"><%= result.employDate.year%>年<%= result.employDate.month%>月<%= result.employDate.day%>日(<%= result.entryYear%>年目)</td>
 		</tr>
 <% if (result.retireDate) {%>
 		<tr>
 			<td>退社年月日</td>
-			<td><%= result.retireDate.year%>年<%= result.retireDate.month%>月<%= result.retireDate.day%>日</td>
+			<td title="<%= result.retireDate.wareki%>"><%= result.retireDate.year%>年<%= result.retireDate.month%>月<%= result.retireDate.day%>日</td>
 		</tr>
 <% }%>
 	</table>
@@ -87,7 +87,7 @@ if (result.retireDate) {
 			<td>性別</td>
 			<td><%= result.gender%></td>
 			<td>生年月日</td>
-			<td><%= result.birthDate.year%>年<%= result.birthDate.month%>月<%= result.birthDate.day%>日(<%= result.age%>歳)</td>
+			<td title="<%= result.birthDate.wareki%>"><%= result.birthDate.year%>年<%= result.birthDate.month%>月<%= result.birthDate.day%>日(<%= result.age%>歳)</td>
 		</tr>
 		<tr>
 			<td>郵便番号</td>
