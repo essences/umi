@@ -10,23 +10,49 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
 
 	// ログイン済みのCookieがあれば自動ログインを試みる
-	let autoLoginInfo = req.cookies.autoLoginInfo;
+	var autoLoginInfo = req.cookies.autoLoginInfo;
 	if (autoLoginInfo) {
 		// 自動ログイン情報（社員No:パスワードハッシュ値と最終ログイン日時をさらにハッシュ化したもの）
-		let autoLoginArr = autoLoginInfo.split(':');
+		var autoLoginArr = autoLoginInfo.split(':');
 		if (autoLoginArr && autoLoginArr.length == 2) {
-			let autoLoginUser = autoLoginArr[0];
-			let autoLoginPass = autoLoginArr[1];
+			var autoLoginUser = autoLoginArr[0];
+			var autoLoginPass = autoLoginArr[1];
 
-			/**
-			 * ログインユーザマスタにアクセスしてDBのパスと最終ログイン日時を取得、
-			 * その2つのsha256ハッシュ値がCookieのパスと等しければ認証成功
-			 */
+			// ログインマスタからハッシュ化パスワードと最終更新日時を取得
+			// その2つをハッシュ化したものとCokkieのものと比較して自動認証を行う
+			var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = ? ";
+			connection.query(queryLogin, [autoLoginUser], function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					return next(err);
+				}
+				if (rows.length == 1) {
+					if (autoLoginPass == hash256(rows[0].PASSWORD + new Date(rows[0].LAST_LOGIN).toLocaleString())) {
+						// 自動ログイン成功、ログイン情報をセッションに格納する
+						setSession(res, autoLoginUser, rows[0].WRITABLE);
 
-			res.redirect('/list');
+						res.redirect('list');
+						return;
+					}
+				} else {
+					nextLogin(req, res);
+					return;
+				}
+			});
+		} else {
+			nextLogin(req, res);
+			return;
 		}
+	} else {
+		nextLogin(req, res);
+		return;
 	}
+});
 
+/**
+ * ログイン画面に遷移する
+ */
+function nextLogin(req, res) {
 	// 初期表示
 	res.render('login',
 	{
@@ -34,7 +60,7 @@ router.get('/', function(req, res, next) {
 		query: req.query,
 		result: {}
 	});
-});
+}
 
 /**
  * ログイン画面のログイン処理
@@ -76,10 +102,7 @@ router.post('/', function(req, res, next) {
 		}
 
 		// 入力されたパスワードをハッシュ化する
-		var crypto = require("crypto");
-		var sha256 = crypto.createHash('sha256');
-		sha256.update(password)
-		var hashedPassword = sha256.digest('hex')
+		var hashedPassword = hash256(password);
 
 		if (hashedPassword != rows[0].PASSWORD) {
 			// 認証エラー
@@ -96,7 +119,7 @@ router.post('/', function(req, res, next) {
 		// 現在日時で最終ログイン日時を更新
 		var currentDate = new Date(Date.now()).toLocaleString();
 		var lastLoginUpdateQuery = "update mst_login_user set LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
-		connection.query(lastLoginUpdateQuery, [currentDate, zeroSuppressShainNo], function(err, rows) {
+		connection.query(lastLoginUpdateQuery, [currentDate, zeroSuppressShainNo], function(err, upresult) {
 			// エラー発生時はエラーハンドラをコールバックする
 			if (err) {
 				connection.rollback(function() {
@@ -113,7 +136,7 @@ router.post('/', function(req, res, next) {
 
 				// Cookieとセッションにログイン情報をセットする
 				setCookie(res, zeroSuppressShainNo, hashedPassword, currentDate);
-				setSession();
+				setSession(res, zeroSuppressShainNo, rows[0].WRITABLE);
 
 				// 認証OK：一覧画面に遷移する
 				res.redirect('/list');
@@ -121,27 +144,37 @@ router.post('/', function(req, res, next) {
 		});
 
 	});
-
-	/**
-	 * 入力されたパスワードのsha256ハッシュ値がDBのパスと等しければ認証成功、
-	 * DBの最終ログイン日時を更新し、パスワードのハッシュと最終更新日時をさらにハッシュ化した値を自動ログイン情報として
-	 * Cookie(autoLoginInfo)に7日間セットする(社員No:さらなるハッシュ値)
-	 * さらにセッションにログイン情報をセット
-	 */
-
 });
 
 /**
- * ログイン情報をCookieに格納する
- * 社員ID:ハッシュ化パスワードと最終更新日時をさらにハッシュ化した値
+ * 自動ログイン情報をCookieに格納する
+ * キー　autoLoginInfo
+ * 値　社員No:ハッシュ化されたパスワードと最終更新日時をさらにハッシュ化した値
+ * 有効期限　7日間
  */
 function setCookie(res, zeroSuppressShainNo, hashedPassword, currentDate) {
-	// TODO 7日間のみ、最終更新日時とのハッシュ化
-	res.cookie('autoLoginInfo', zeroSuppressShainNo + ":" + hashedPassword);
+	res.cookie('autoLoginInfo', zeroSuppressShainNo + ":" + hash256(hashedPassword + currentDate), {maxAge:7*24*60*60*1000});
 }
 
-function setSession() {
-	console.log("aaaaaaaaaaa");
+/**
+ * ログイン情報をセッションに格納する
+ * キー　loginInfo
+ * 値　社員No:0 or 1
+ * ※0:参照権限、1:更新権限
+ */
+function setSession(res, zeroSuppressShainNo, writable) {
+	res.cookie('loginInfo', zeroSuppressShainNo + ":" + writable);
+}
+
+/**
+ * 文字列をSHA256ハッシュする
+ * @param str
+ */
+function hash256(str) {
+	var crypto = require("crypto");
+	var sha256 = crypto.createHash('sha256');
+	sha256.update(str)
+	return sha256.digest('hex')
 }
 
 module.exports = router;
