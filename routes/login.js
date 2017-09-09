@@ -3,6 +3,9 @@ var connection = require('../model/mysqlConnection');
 
 var router = express.Router();
 
+var Hasher = require('./util/hash.js');
+var hasher = new Hasher();
+
 /**
  * ログイン画面の初期表示
  * 自動ログインを試みる
@@ -27,7 +30,7 @@ router.get('/', function(req, res, next) {
 					return next(err);
 				}
 				if (rows.length == 1) {
-					if (autoLoginPass == hash256(rows[0].PASSWORD + new Date(rows[0].LAST_LOGIN).toLocaleString())) {
+					if (autoLoginPass == hasher.hash256(rows[0].PASSWORD + new Date(rows[0].LAST_LOGIN).toLocaleString())) {
 						// 自動ログイン成功、ログイン情報をセッションに格納する
 						setSession(res, autoLoginUser, rows[0].WRITABLE);
 
@@ -82,51 +85,47 @@ router.post('/', function(req, res, next) {
 	}
 
 	// ログイン認証
-	var zeroSuppressShainNo = shainNo.replace(/^0+([0-9]+.*)/, "$1");
 	var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = ? ";
 	var loginInfo;
-	connection.query(queryLogin, [zeroSuppressShainNo], function(err, rows) {
+	connection.query(queryLogin, [shainNo], function(err, rows) {
 		// エラー発生時はエラーハンドラをコールバックする
 		if (err) {
 			return next(err);
 		}
 		if (rows.length == 0) {
 			var err = '社員No、または、パスワードが異なります。';
-			res.render('login',
-					{
-						title: 'ログイン画面',
-						query: req.body,
-						result: {'err': err}
-					});
+			res.render('login', {
+				title: 'ログイン画面',
+				query: req.body,
+				result: {'err': err}
+			});
 			return;
 		}
 
 		// 入力されたパスワードをハッシュ化する
-		var hashedPassword = hash256(password);
+		var hashedPassword = hasher.hash256(password);
 
 		if (hashedPassword != rows[0].PASSWORD) {
 			// 認証エラー
 			var err = '社員No、または、パスワードが異なります。';
-			res.render('login',
-					{
-						title: 'ログイン画面',
-						query: req.body,
-						result: {'err': err}
-					});
+			res.render('login', {
+				title: 'ログイン画面',
+				query: req.body,
+				result: {'err': err}
+			});
 			return;
 		}
 
 		// 現在日時で最終ログイン日時を更新
 		var currentDate = new Date(Date.now()).toLocaleString();
 		var lastLoginUpdateQuery = "update mst_login_user set LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
-		connection.query(lastLoginUpdateQuery, [currentDate, zeroSuppressShainNo], function(err, upresult) {
+		connection.query(lastLoginUpdateQuery, [currentDate, shainNo], function(err, upresult) {
 			// エラー発生時はエラーハンドラをコールバックする
 			if (err) {
 				connection.rollback(function() {
 					return next(err);
 				});
 			}
-			//コミットする
 			connection.commit(function(err) {
 				if (err) {
 					connection.rollback(function() {
@@ -135,11 +134,11 @@ router.post('/', function(req, res, next) {
 				}
 
 				// Cookieとセッションにログイン情報をセットする
-				setCookie(res, zeroSuppressShainNo, hashedPassword, currentDate);
-				setSession(res, zeroSuppressShainNo, rows[0].WRITABLE);
+				setCookie(res, shainNo, hashedPassword, currentDate);
+				setSession(res, shainNo, rows[0].WRITABLE);
 
 				// 認証OK：一覧画面に遷移する
-				res.redirect('/list');
+				res.redirect('list');
 			});
 		});
 
@@ -152,8 +151,8 @@ router.post('/', function(req, res, next) {
  * 値　社員No:ハッシュ化されたパスワードと最終更新日時をさらにハッシュ化した値
  * 有効期限　7日間
  */
-function setCookie(res, zeroSuppressShainNo, hashedPassword, currentDate) {
-	res.cookie('autoLoginInfo', zeroSuppressShainNo + ":" + hash256(hashedPassword + currentDate), {maxAge:7*24*60*60*1000});
+function setCookie(res, shainNo, hashedPassword, currentDate) {
+	res.cookie('autoLoginInfo', shainNo + ":" + hasher.hash256(hashedPassword + currentDate), {maxAge:7*24*60*60*1000});
 }
 
 /**
@@ -162,19 +161,8 @@ function setCookie(res, zeroSuppressShainNo, hashedPassword, currentDate) {
  * 値　社員No:0 or 1
  * ※0:参照権限、1:更新権限
  */
-function setSession(res, zeroSuppressShainNo, writable) {
-	res.cookie('loginInfo', zeroSuppressShainNo + ":" + writable);
-}
-
-/**
- * 文字列をSHA256ハッシュする
- * @param str
- */
-function hash256(str) {
-	var crypto = require("crypto");
-	var sha256 = crypto.createHash('sha256');
-	sha256.update(str)
-	return sha256.digest('hex')
+function setSession(res, shainNo, writable) {
+	res.cookie('loginInfo', shainNo + ":" + writable);
 }
 
 module.exports = router;

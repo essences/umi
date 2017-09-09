@@ -4,9 +4,7 @@
 <title>
 <%=title%>
 </title>
-<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_search_list.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../../javascripts/umi_search_list.js"></script>
 <meta charset="UTF-8">
 </head>
 <body>
@@ -20,11 +18,15 @@
 	<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="00001">
 	</div>
 	<div>
-	パスワード
-	<input type="text" name="password">
+	メールアドレス
+	<input type="text" name="email" value="<%= query.email%>" placeholder="XXXX@central-soft.co.jp">
 	</div>
 	<div>
-	<input type="submit" name="loginButton" value="ログインする">
+	生年月日
+	<input type="text" name="birthdate" value="<%= query.birthdate%>" placeholder="19870701">
+	</div>
+	<div>
+	<input type="submit" name="createInitPasswordButton" value="初期パスワードを発行する">
 	</div>
 
 <% if (result.err) { %>
@@ -32,12 +34,11 @@
 	<%= result.err%>
 	</div>
 <% } %>
-
-</form>
-<form method="get" action="/addLogin">
-	<input type="submit" name="loginButton" value="新しくユーザを作る">
-	<input type="submit" name="loginButton" value="パスワードを忘れた方">
-</form>
+<% if (result.pass) { %>
+	<div>
+	初期パスワード「<%= result.pass%>」
+	</div>
+<% } %>
 
 </body>
 </html>
