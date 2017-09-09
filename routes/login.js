@@ -36,6 +36,9 @@ router.get('/', function(req, res, next) {
 
 						res.redirect('list');
 						return;
+					} else {
+						nextLogin(req, res);
+						return;
 					}
 				} else {
 					nextLogin(req, res);
@@ -112,6 +115,15 @@ router.post('/', function(req, res, next) {
 				title: 'ログイン画面',
 				query: req.body,
 				result: {'err': err}
+			});
+			return;
+		}
+
+		// 初回ログイン時はパスワード変更画面に遷移する
+		if (!rows[0].LAST_LOGIN) {
+			res.render('changepassword', {
+				query: {'shainNo': shainNo},
+				result: {}
 			});
 			return;
 		}
