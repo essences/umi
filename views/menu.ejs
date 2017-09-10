@@ -4,7 +4,9 @@
 <title>
 メニュー画面
 </title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_menu.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_menu.js"></script>
 <meta charset="UTF-8">
 </head>
 <body>
@@ -12,18 +14,25 @@
 <!-- 会社ロゴ -->
 <img src="../../images/common/logo01.gif">
 
-<form method="get" action="/list">
-	<div>
-	<input type="submit" name="listButton" value="一覧画面表示">
-	</div>
-</form>
+<div class="line"></div>
 
-<form method="get" action="/setauth">
-	<div>
-	<input type="submit" name="setauthButton" value="更新権限設定">
-	</div>
-</form>
+<div class="read_frame">
+	<form method="get" action="/list">
+		<div>
+		<label class="read_title">参照機能</label>
+		<input type="submit" name="listButton" class="read_button" value="一覧画面表示">
+		</div>
+	</form>
+</div>
 
+<div class="write_frame">
+	<form method="get" id="writeForm" action="/setauth">
+		<div>
+		<label class="write_title">更新機能</label>
+		<input type="button" name="setauthButton" id="setauthButton" class="write_button" value="更新権限設定">
+		</div>
+	</form>
+</div>
 
 </body>
 </html>
