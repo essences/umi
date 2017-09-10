@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var login = require('./routes/login');
 var addlogin = require('./routes/addlogin');
 var changepassword = require('./routes/changepassword');
+var menu = require('./routes/menu');
+var setauth = require('./routes/setauth');
 var list = require('./routes/list');
 var detail = require('./routes/detail');
 
@@ -27,6 +29,8 @@ app.use('/', login);
 app.use('/login', login);
 app.use('/addlogin', addlogin);
 app.use('/changepassword', changepassword);
+app.use('/menu', menu);
+app.use('/setauth', setauth);
 app.use('/list', list);
 app.use('/detail', detail);
 

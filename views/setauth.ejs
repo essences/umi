@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+<title>
+更新権限設定画面
+</title>
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_set_auth.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<img src="../../images/common/logo01.gif">
+
+<form id="setauthForm" method="post" action="/setauth">
+	<div>
+		社員No
+		<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="00001">
+		<%= result.name%>
+	</div>
+	<div>
+	<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
+	<input type="button" name="setauthButton" id="setauthButton" value="更新権限にする">
+	</div>
+	<div>
+	<%= result.err%>
+	</div>
+	<div>
+	<%= result.msg%>
+	</div>
+</form>
+
+<form method="get" action="/menu">
+	<input type="submit" name="menuButton" value="メニューへ戻る">
+</form>
+
+</body>
+</html>

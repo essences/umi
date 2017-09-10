@@ -34,8 +34,15 @@ router.get('/', function(req, res, next) {
 						// 自動ログイン成功、ログイン情報をセッションに格納する
 						setSession(res, autoLoginUser, rows[0].WRITABLE);
 
-						res.redirect('list');
-						return;
+						if (rows[0].WRITABLE == '1') {
+							// 更新権限あり：メニュー画面に遷移する
+							res.redirect('menu');
+							return;
+						} else {
+							// 更新権限なし：一覧画面に遷移する
+							res.redirect('list');
+							return;
+						}
 					} else {
 						nextLogin(req, res);
 						return;
@@ -149,8 +156,15 @@ router.post('/', function(req, res, next) {
 				setCookie(res, shainNo, hashedPassword, currentDate);
 				setSession(res, shainNo, rows[0].WRITABLE);
 
-				// 認証OK：一覧画面に遷移する
-				res.redirect('list');
+				if (rows[0].WRITABLE == '1') {
+					// 更新権限あり：メニュー画面に遷移する
+					res.redirect('menu');
+					return;
+				} else {
+					// 更新権限なし：一覧画面に遷移する
+					res.redirect('list');
+					return;
+				}
 			});
 		});
 

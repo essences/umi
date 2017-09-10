@@ -11,12 +11,11 @@ var hasher = new Hasher();
  */
 router.get('/', function(req, res, next) {
 
-	res.render('addlogin',
-			{
-				title: '初期パスワード発行画面',
-				query: req.query,
-				result: {}
-			});
+	res.render('addlogin', {
+		title: '初期パスワード発行画面',
+		query: req.query,
+		result: {}
+	});
 	return;
 });
 
