@@ -69,7 +69,6 @@ function nextLogin(req, res) {
 	// 初期表示
 	res.render('login',
 	{
-		title: 'ログイン画面',
 		query: req.query,
 		result: {}
 	});
@@ -87,7 +86,6 @@ router.post('/', function(req, res, next) {
 		var err = '社員No、パスワードが入力されていません。';
 		res.render('login',
 				{
-					title: 'ログイン画面',
 					query: req.body,
 					result: {'err': err}
 				});
@@ -105,7 +103,6 @@ router.post('/', function(req, res, next) {
 		if (rows.length == 0) {
 			var err = '社員No、または、パスワードが異なります。';
 			res.render('login', {
-				title: 'ログイン画面',
 				query: req.body,
 				result: {'err': err}
 			});
@@ -119,7 +116,6 @@ router.post('/', function(req, res, next) {
 			// 認証エラー
 			var err = '社員No、または、パスワードが異なります。';
 			res.render('login', {
-				title: 'ログイン画面',
 				query: req.body,
 				result: {'err': err}
 			});
