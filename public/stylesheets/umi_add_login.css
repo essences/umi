@@ -1,0 +1,15 @@
+.line {
+	background: #d5d4cd;
+	border-style: solid;
+	border-width: 1px;
+}
+.add_login_frame {
+	margin: 30px;
+	height: 220px;
+}
+.login_frame {
+	margin: 30px;
+}
+.add_login_item {
+	margin-bottom: 10px;
+}

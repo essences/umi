@@ -4,6 +4,7 @@
 <title>
 <%=title%>
 </title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_add_login.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
 <meta charset="UTF-8">
 </head>
@@ -12,38 +13,44 @@
 <!-- 会社ロゴ -->
 <img src="../../images/common/logo01.gif">
 
-<form method="post">
-	<div>
-	社員番号
-	<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001">
-	</div>
-	<div>
-	メールアドレス
-	<input type="text" name="email" value="<%= query.email%>" placeholder="例：XXXX@central-soft.co.jp">
-	</div>
-	<div>
-	生年月日
-	<input type="text" name="birthdate" value="<%= query.birthdate%>" placeholder="例：19870701">
-	</div>
-	<div>
-	<input type="submit" name="createInitPasswordButton" value="初期パスワードを発行する">
-	</div>
+<div class="line"></div>
 
-<% if (result.err) { %>
-	<div>
-	<%= result.err%>
-	</div>
-<% } %>
-<% if (result.pass) { %>
-	<div>
-	初期パスワード「<%= result.pass%>」
-	</div>
-<% } %>
-</form>
+<div class="add_login_frame">
+	<form method="post">
+		<div class="add_login_item">
+		社員番号<br>
+		<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001">
+		</div>
+		<div class="add_login_item">
+		メールアドレス<br>
+		<input type="text" name="email" value="<%= query.email%>" placeholder="例：XXXX@central-soft.co.jp">
+		</div>
+		<div class="add_login_item">
+		生年月日<br>
+		<input type="text" name="birthdate" value="<%= query.birthdate%>" placeholder="例：19870701">
+		</div>
+		<div>
+		<input type="submit" name="createInitPasswordButton" value="初期パスワードを発行する">
+		</div>
 
-<form method="get" action="/">
-	<input type="submit" name="loginButton" value="ログイン画面に戻る">
-</form>
+	<% if (result.err) { %>
+		<div>
+		<%= result.err%>
+		</div>
+	<% } %>
+	<% if (result.pass) { %>
+		<div>
+		初期パスワード「<%= result.pass%>」
+		</div>
+	<% } %>
+	</form>
+</div>
+
+<div class="login_frame">
+	<form method="get" action="/">
+		<input type="submit" name="loginButton" value="ログイン画面に戻る">
+	</form>
+</div>
 
 </body>
 </html>
