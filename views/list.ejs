@@ -27,7 +27,7 @@
 	<hr>
 	<div class="searchJoken-input-box">
 		<label>検索条件</label>
-		<input type="text" name="searchJoken" class="searchJoken-input-joken" id="searchJoken-input-text" value="<%= query.searchJoken%>">
+		<input type="text" name="searchJoken" class="searchJoken-input-joken" id="searchJoken-input-text" value="<%= query.searchJoken%>" autofocus>
 		<label>並び順</label>
 		<select name="searchSort" class="searchJoken-input-sort">
 			<option value="01"<%= (query.searchSort == "01") ? " selected" : ""%>>社員No</option>
