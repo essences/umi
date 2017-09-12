@@ -4,8 +4,9 @@
 <title>
 更新権限設定画面
 </title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_setauth.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../../javascripts/umi_set_auth.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_setauth.js"></script>
 <meta charset="UTF-8">
 </head>
 <body>
@@ -13,27 +14,33 @@
 <!-- 会社ロゴ -->
 <img src="../../images/common/logo01.gif">
 
-<form id="setauthForm" method="post" action="/setauth">
-	<div>
-		社員No
-		<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
-		<%= result.name%>
-	</div>
-	<div>
-	<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
-	<input type="button" name="setauthButton" id="setauthButton" value="更新権限にする">
-	</div>
-	<div>
-	<%= result.err%>
-	</div>
-	<div>
-	<%= result.msg%>
-	</div>
-</form>
+<div class="line"></div>
 
-<form method="get" action="/menu">
-	<input type="submit" name="menuButton" value="メニューへ戻る">
-</form>
+<div class="setauth_frame">
+	<form id="setauthForm" method="post" action="/setauth">
+		<div class="item">
+			社員No
+			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+			<%= result.name%>
+		</div>
+		<div>
+		<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
+		<input type="button" name="setauthButton" id="setauthButton" value="更新権限にする">
+		</div>
+		<div>
+		<%= result.err%>
+		</div>
+		<div>
+		<%= result.msg%>
+		</div>
+	</form>
+</div>
+
+<div class="menu_frame">
+	<form method="get" action="/menu">
+		<input type="submit" name="menuButton" value="メニューへ戻る">
+	</form>
+</div>
 
 </body>
 </html>

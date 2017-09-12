@@ -1,0 +1,15 @@
+.line {
+	background: #d5d4cd;
+	border-style: solid;
+	border-width: 1px;
+}
+.setauth_frame {
+	margin: 30px;
+	height: 80px;
+}
+.item {
+	margin-bottom: 10px;
+}
+.menu_frame {
+	margin: 30px;
+}
