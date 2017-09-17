@@ -1,6 +1,20 @@
+.scroll-form {
+	display: inline-block;
+	width: calc(95vw - 200px);
+	overflow-x: auto;
+}
+.input-form {
+	display: inline-block;
+	white-space: nowrap;
+}
+.row {
+	margin: 20px 20px;
+	line-height: 27px;
+	display: inline-block;
+	vertical-align: top;
+}
 .original {
 	display: none;
 }
-.left {
-	float: left;
+.row label {
 }
