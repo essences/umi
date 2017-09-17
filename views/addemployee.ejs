@@ -18,58 +18,69 @@
 <input type="button" id="add-button" value="フォーム追加">
 <input type="button" id="regist-button" value="まとめて登録する"><br>
 
-		<div class="row">
-			<label class="require">社員No</label><br>
-			<label class="require">会社</label><br>
-			<label class="require">姓</label><br>
-			<label class="require">名</label><br>
-			<label class="require">セイ</label><br>
-			<label class="require">メイ</label><br>
-			<label class="require">部署</label><br>
-			<label class="require">メールアドレス</label><br>
-			<label class="require">入社年月日</label><br>
-			<label class="require">性別</label><br>
-			<label class="require">生年月日</label><br>
-			<label class="require">郵便番号</label><br>
-			<label class="require">住所</label><br>
-			<label>電話番号</label><br>
-			<label>携帯電話番号</label><br>
-			<label class="require">郵便番号(緊急)</label><br>
-			<label class="require">住所(緊急)</label><br>
-			<label class="require">電話番号(緊急)</label><br>
-			<label class="require">最終学歴</label><br>
-			<label class="require">出身校</label><br>
-			<label>学科</label><br>
-		</div>
+<div class="row">
+	<label></label><br>
+	<label class="require">社員No</label><br>
+	<label class="require">会社</label><br>
+	<label class="require">姓</label><br>
+	<label class="require">名</label><br>
+	<label class="require">セイ</label><br>
+	<label class="require">メイ</label><br>
+	<label class="require">部署</label><br>
+	<label class="require">メールアドレス</label><br>
+	<label class="require">入社年月日</label><br>
+	<label class="require">性別</label><br>
+	<label class="require">生年月日</label><br>
+	<label class="require">郵便番号</label><br>
+	<label class="require">住所</label><br>
+	<label>電話番号</label><br>
+	<label>携帯電話番号</label><br>
+	<label class="require">郵便番号(緊急)</label><br>
+	<label class="require">住所(緊急)</label><br>
+	<label class="require">電話番号(緊急)</label><br>
+	<label class="require">最終学歴</label><br>
+	<label class="require">出身校</label><br>
+	<label>学科</label><br>
+</div>
 <div class="scroll-form">
 	<div id="input-form" class="input-form">
 		<div id="original-form" class="original row">
-			<input type="text" class="input" name="employeeNo"><br>
-			<select class="input" name="companyCd">
+			<input type="button" name="deleteButton" value="ここを消す"><br>
+			<input type="text" class="input require" name="employeeNo"><br>
+			<select class="input require" name="companyCd">
 				<option value="">-</option>
 				<option value="0001">セントラルソフト</option>
 				<option value="0002">ロイヤルネットワーク</option>
 			</select><br>
-			<input type="text" class="input" name="employeeFamilyName"><br>
-			<input type="text" class="input" name="employeeFirstName"><br>
-			<input type="text" class="input" name="employeeFamilyNameKana"><br>
-			<input type="text" class="input" name="employeeFirstNameKana"><br>
-			<select class="input" name="deptCd">
+			<input type="text" class="input require" name="employeeFamilyName"><br>
+			<input type="text" class="input require" name="employeeFirstName"><br>
+			<input type="text" class="input require" name="employeeFamilyNameKana"><br>
+			<input type="text" class="input require" name="employeeFirstNameKana"><br>
+			<select class="input require" name="deptCd">
+				<option value="">-</option>
 				<option value="0011">営業本部営業1部営業課</option>
 			</select><br>
-			<input type="text" class="input" name="email"><br>
-			<input type="text" class="input" name="employDate"><br>
-			<input type="radio" class="input" name="gender" value="0">男性<input type="radio" class="input" name=gender" value="1">女性<br>
-			<input type="text" class="input" name="birthDate"><br>
-			<input type="text" class="input" name="zip"><br>
-			<input type="text" class="input" name="address"><br>
+			<input type="text" class="input require" name="email"><br>
+			<input type="text" class="input require" name="employDate"><br>
+			<select class="input require" name="gender">
+				<option value="">-</option>
+				<option value="0">男性</option>
+				<option value="1">女性</option>
+			</select><br>
+			<input type="text" class="input require" name="birthDate"><br>
+			<input type="text" class="input require" name="zip"><br>
+			<input type="text" class="input require" name="address"><br>
 			<input type="text" class="input" name="telNo"><br>
 			<input type="text" class="input" name="cellTelNo"><br>
-			<input type="text" class="input" name="zipHome"><br>
-			<input type="text" class="input" name="addressHome"><br>
-			<input type="text" class="input" name="telNoHome"><br>
-			<input type="text" class="input" name="education"><br>
-			<input type="text" class="input" name="school"><br>
+			<input type="text" class="input require" name="zipHome"><br>
+			<input type="text" class="input require" name="addressHome"><br>
+			<input type="text" class="input require" name="telNoHome"><br>
+			<select class="input require" name="education">
+				<option value="">-</option>
+				<option value="大学卒業(4年)">大学卒業(4年)</option>
+				<option value="専門学校卒業(3年)">専門学校卒業(3年)</option>
+			</select><br>
+			<input type="text" class="input require" name="school"><br>
 			<input type="text" class="input" name="course"><br>
 		</div>
 	</div>
