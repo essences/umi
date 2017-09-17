@@ -44,29 +44,33 @@
 <div class="scroll-form">
 	<div id="input-form" class="input-form">
 		<div id="original-form" class="original row">
-			<input type="text" class="input require" name="employeeNo" value="<%= query.employeeNo%>"><br>
-			<input type="radio" class="input require" name="companyCd" value="00001">CS<input type="radio" class="input" name="companyCd" value="00002">RN<br>
-			<input type="text" class="input require" name="employeeFamilyName" value="<%= query.employeeFamilyName%>"><br>
-			<input type="text" class="input require" name="employeeFirstName" value="<%= query.employeeFirstName%>"><br>
-			<input type="text" class="input require" name="employeeFamilyNameKana" value="<%= query.employeeFamilyNameKana%>"><br>
-			<input type="text" class="input require" name="employeeFirstNameKana" value="<%= query.employeeFirstNameKana%>"><br>
-			<select class="input require" name="deptCd">
+			<input type="text" class="input" name="employeeNo"><br>
+			<select class="input" name="companyCd">
+				<option value="">-</option>
+				<option value="0001">セントラルソフト</option>
+				<option value="0002">ロイヤルネットワーク</option>
+			</select><br>
+			<input type="text" class="input" name="employeeFamilyName"><br>
+			<input type="text" class="input" name="employeeFirstName"><br>
+			<input type="text" class="input" name="employeeFamilyNameKana"><br>
+			<input type="text" class="input" name="employeeFirstNameKana"><br>
+			<select class="input" name="deptCd">
 				<option value="0011">営業本部営業1部営業課</option>
 			</select><br>
-			<input type="text" class="input require" name="email" value="<%= query.email%>"><br>
-			<input type="text" class="input require" name="employDate" value="<%= query.employDate%>"><br>
-			<input type="radio" class="input require" name="gender" value="0">男性<input type="radio" class="input require" name=gender" value="1">女性<br>
-			<input type="text" class="input require" name="birthDate" value="<%= query.birthDate%>"><br>
-			<input type="text" class="input require" name="zip" value="<%= query.zip%>"><br>
-			<input type="text" class="input require" name="address" value="<%= query.address%>"><br>
-			<input type="text" class="input" name="telNo" value="<%= query.telNo%>"><br>
-			<input type="text" class="input" name="cellTelNo" value="<%= query.cellTelNo%>"><br>
-			<input type="text" class="input require" name="zipHome" value="<%= query.zipHome%>"><br>
-			<input type="text" class="input require" name="addressHome" value="<%= query.addressHome%>"><br>
-			<input type="text" class="input require" name="telNoHome" value="<%= query.telNoHome%>"><br>
-			<input type="text" class="input require" name="education" value="<%= query.education%>"><br>
-			<input type="text" class="input require" name="school" value=""<%= query.school%>><br>
-			<input type="text" class="input" name="course" value="<%= query.course%>"><br>
+			<input type="text" class="input" name="email"><br>
+			<input type="text" class="input" name="employDate"><br>
+			<input type="radio" class="input" name="gender" value="0">男性<input type="radio" class="input" name=gender" value="1">女性<br>
+			<input type="text" class="input" name="birthDate"><br>
+			<input type="text" class="input" name="zip"><br>
+			<input type="text" class="input" name="address"><br>
+			<input type="text" class="input" name="telNo"><br>
+			<input type="text" class="input" name="cellTelNo"><br>
+			<input type="text" class="input" name="zipHome"><br>
+			<input type="text" class="input" name="addressHome"><br>
+			<input type="text" class="input" name="telNoHome"><br>
+			<input type="text" class="input" name="education"><br>
+			<input type="text" class="input" name="school"><br>
+			<input type="text" class="input" name="course"><br>
 		</div>
 	</div>
 </div>
