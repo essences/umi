@@ -44,7 +44,7 @@ $(function() {
 			});
 			if (duplicateCount > 1) {
 				dispError($(self), "重複しています");
-				return true;
+				return false;
 			}
 		});
 		// エラー状態が残っているかのチェック
