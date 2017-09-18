@@ -93,13 +93,38 @@ function render(req, res, next, companyList, deptList, educationList) {
 	});
 }
 
-router.post('/', function(req, res, next) {
+/**
+ * 重複した社員Noを返す
+ */
+router.post('/checkEmployeeNo', function(req, res, next) {
 
+	var employeeNoArr = [];
+	employeeNoArr.push(req.body.employeeNo);
+	var employeeNoSize = employeeNoArr.length;
+	var employeeNoQuery = "select employee_no from mst_employee_base where employee_no in (";
+
+	for (var employeeNo in employeeNoArr) {
+		employeeNoQuery += "?,";
+	}
+	employeeNoQuery = employeeNoQuery.substring(0, employeeNoQuery.length - 1) + ")";
+
+	connection.query(employeeNoQuery, employeeNoArr, function(err, rows) {
+		// エラー発生時はエラーハンドラをコールバックする
+		if (err) {
+			return next(err);
+		}
+
+		if (rows) {
+			var rejson = JSON.stringify(rows);
+			res.send(rejson);
+		}
+	});
+});
+
+router.post('/', function(req, res, next) {
 	res.render('addemployee', {
 		query: req.query
 	});
-
-
 });
 
 module.exports = router;

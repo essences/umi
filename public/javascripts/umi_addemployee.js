@@ -35,7 +35,7 @@ $(function() {
 		}
 
 		// 同じ社員Noが入力されているかのチェック
-		var $duplicate = $('.clone input[name="employeeNo"]').filter(function(i, self) {
+		$('.clone input[name="employeeNo"]').filter(function(i, self) {
 			var duplicateCount = 0;
 			$('.clone input[name="employeeNo"]').each(function(j, my) {
 				if (self.value == my.value) {
@@ -54,7 +54,35 @@ $(function() {
 
 		// 非表示のオリジナルを非活性状態にする
 		$('#original-form input, #original-form select').prop("disabled", true);
-		$('#regist-form').submit();
+
+		// ajax通信で同じ社員Noがすでに登録済みでないかのチェック
+		$.ajax({
+			async: true,
+			url: '/addemployee/checkEmployeeNo',
+			type: 'post',
+			data: $('#regist-form').serialize(),
+			dataType: 'json'
+		}).done(function(res){
+			// 社員Noの重複あり、エラー表示
+			if (res.length > 0) {
+				// 非表示のオリジナルを活性化
+				$('#original-form input, #original-form select').prop("disabled", false);
+
+				// 重複エラー表示
+				$('.clone input[name="employeeNo"]').filter(function(i, self) {
+					for (var i = 0; i < res.length; i++) {
+						if (self.value == res[i].employee_no) {
+							dispError($(self), "すでに登録されています");
+						}
+					}
+				});
+			} else {
+				// 本登録処理
+//				$('#regist-form').submit();
+			}
+		}).fail(function(xhr, status, error){
+			alert(status, error);
+		});
 	});
 });
 
@@ -323,6 +351,3 @@ function checkCource($obj) {
 		}
 	});
 }
-
-
-// 参考：https://www.tam-tam.co.jp/tipsnote/javascript/post3828.html
