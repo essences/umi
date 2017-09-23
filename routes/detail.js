@@ -175,11 +175,22 @@ router.get('/', function(req, res, next) {
 		// 郵便番号（緊急連絡先）
 		personalData.zipHome = formatZipCode(personalData.ZIP_HOME);
 
-		res.render('detail',
-		{
-			title: '詳細画面',
-			result: personalData,
-			qualify: qualify
+		// ローカルファイル操作
+		var fs = require('fs');
+		var sampleData;
+		fs.readFile(`D:/tmp/shainPhoto/${personalData.EMPLOYEE_NO}.jpg`, 'base64', function(err, data) {
+			if (err) {
+				data = "";
+			} else {
+				data = "data:image/jpg;base64," + data;
+			}
+
+			res.render('detail', {
+				title: '詳細画面',
+				result: personalData,
+				qualify: qualify,
+				data: data
+			});
 		});
 	});
 
