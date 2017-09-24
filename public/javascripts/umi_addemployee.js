@@ -78,7 +78,7 @@ $(function() {
 				});
 			} else {
 				// 本登録処理
-//				$('#regist-form').submit();
+				$('#regist-form').submit();
 			}
 		}).fail(function(xhr, status, error){
 			alert(status, error);
@@ -139,6 +139,8 @@ function checkEvent($clone) {
 	checkZip($clone.children(':text[name="zip"]'));
 	// 住所
 	checkAddress($clone.children(':text[name="address"]'));
+	// 最寄り駅
+	checkNearStation($clone.children(':text[name="nearStation"]'));
 	// 電話番号
 	checkTelNo($clone.children(':text[name="telNo"]'));
 	// 携帯電話番号
@@ -300,6 +302,22 @@ function checkAddress($obj) {
 			dispError($obj, "入力してください");
 		} else if ($obj.val().length > 200) {
 			dispError($obj, "200文字以内で入力してください");
+		}
+	});
+}
+
+/**
+ * 最寄り駅の入力チェック
+ * @param $obj
+ * @returns
+ */
+function checkNearStation($obj) {
+	$obj.on('blur', function() {
+		clearError($obj);
+		if ($obj.hasClass("require") && $obj.val() == "") {
+			dispError($obj, "入力してください");
+		} else if ($obj.val().length > 40) {
+			dispError($obj, "40文字以内で入力してください");
 		}
 	});
 }
