@@ -16,6 +16,9 @@
 .base-table-col3 {
 	background-color: #e3e8e3;
 }
+.photo {
+	text-align: center;
+}
 .hidden {
 	visibility: hidden;
 }
