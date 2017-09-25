@@ -180,7 +180,7 @@ router.get('/', function(req, res, next) {
 		// 社員No+名前の画像ファイルを探す
 		async.waterfall(
 				[function(callback) {
-					var reg = new RegExp(`${personalData.EMPLOYEE_NO}[ 　]*${personalData.EMPLOYEE_FAMILY_NAME}${personalData.EMPLOYEE_FIRST_NAME}\.jpg$`);
+					var reg = new RegExp(`\\\\${personalData.EMPLOYEE_NO}.*\.jpg$`);
 					var callbackFlg;
 					walk(jpgDir, function(path) {
 						if (path.match(reg)) {

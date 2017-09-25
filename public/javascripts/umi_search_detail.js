@@ -4,9 +4,11 @@ $(function() {
 	$('.resize').hide();
 
 	// 画像のリサイズ
-	$('.resize').each(function() {
-		var maxSize = 220;
-		setResize(this, maxSize);
+	$('.resize').each(function(i, img) {
+		if (img.width > 0 && img.height > 0) {
+			var maxSize = 220;
+			setResize(this, maxSize);
+		}
 	});
 
 });
