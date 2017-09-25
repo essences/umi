@@ -177,7 +177,7 @@ router.get('/', function(req, res, next) {
 		personalData.zipHome = formatZipCode(personalData.ZIP_HOME);
 
 		var jpgDir = "Z:/★★データ/社員証/写真/";
-		// 社員No+名前の画像ファイルを探す
+		// 社員Noの画像ファイルを探す
 		async.waterfall(
 				[function(callback) {
 					var reg = new RegExp(`\\\\${personalData.EMPLOYEE_NO}.*\.jpg$`);
