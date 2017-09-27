@@ -1,6 +1,7 @@
 var express = require('express');
 var connection = require('../model/mysqlConnection');
 var moment = require("moment");
+var async = require('async');
 
 var router = express.Router();
 
@@ -175,15 +176,75 @@ router.get('/', function(req, res, next) {
 		// 郵便番号（緊急連絡先）
 		personalData.zipHome = formatZipCode(personalData.ZIP_HOME);
 
-		res.render('detail',
-		{
-			title: '詳細画面',
-			result: personalData,
-			qualify: qualify
+		var jpgDir = "Z:/★★データ/社員証/写真/";
+		// 社員Noの画像ファイルを探す
+		async.waterfall(
+				[function(callback) {
+					var reg = new RegExp(`\\\\${personalData.EMPLOYEE_NO}.*\.jpg$`);
+					var callbackFlg;
+					walk(jpgDir, function(path) {
+						if (path.match(reg)) {
+							callbackFlg = 1;
+							callback(null, path);
+						}
+					}, function(err) {
+						callbackFlg = 1;
+						callback(err);
+					});
+					setTimeout(function() {
+						if (!callbackFlg) {
+							callback(null, "");
+						}
+					}, 100);
+				},
+				function(path, callback) {
+					// 該当画像ファイルをbase64エンコード文字列を取得する
+					fs.readFile(path, 'base64', function(err, data) {
+						if (err) {
+							data = "";
+						} else {
+							data = "data:image/jpg;base64," + data;
+						}
+						callback(null, data);
+					});
+				}
+				], function(err, jpgData) {
+					if (err) {
+						console.log(err);
+					}
+
+					res.render('detail', {
+						title: '詳細画面',
+						result: personalData,
+						qualify: qualify,
+						jpgData: jpgData
+					});
+				});
+	});
+});
+
+var fs = require("fs")
+, path = require("path")
+, dir = process.argv[2] || '.'; //引数が無いときはカレントディレクトリを対象とする
+
+var walk = function(p, fileCallback, errCallback) {
+
+	fs.readdir(p, function(err, files) {
+		if (err) {
+			errCallback(err);
+			return;
+		}
+
+		files.forEach(function(f) {
+			var fp = path.join(p, f); // to full-path
+			if(fs.statSync(fp).isDirectory()) {
+				walk(fp, fileCallback); // ディレクトリなら再帰
+			} else {
+				fileCallback(fp); // ファイルならコールバックで通知
+			}
 		});
 	});
-
-});
+};
 
 /**
  * 年月日 取得

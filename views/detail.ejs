@@ -6,6 +6,7 @@
 </title>
 <link rel="stylesheet" type="text/css" href="../../stylesheets/umi_search_detail.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_search_detail.js"></script>
 <meta charset="UTF-8">
 </head>
 <body>
@@ -32,7 +33,7 @@ if (result.retireDate) {
 	baseRowNum = 9;
 }
 %>
-			<td rowspan="<%= baseRowNum%>"><img src="../../images/shainPhoto/<%= result.EMPLOYEE_NO%>.jpg"></td>
+			<td rowspan="<%= baseRowNum%>"><div class="photo"><img src="<%= jpgData%>" class="resize"></div></td>
 		</tr>
 		<tr>
 			<td>名前</td>
