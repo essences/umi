@@ -180,22 +180,27 @@ router.get('/', function(req, res, next) {
 		// 社員Noの画像ファイルを探す
 		async.waterfall(
 				[function(callback) {
-					var reg = new RegExp(`\\\\${personalData.EMPLOYEE_NO}.*\.jpg$`);
+					var reg = new RegExp(`\\\\${personalData.EMPLOYEE_NO}.*\.[jpg|JPG]$`);
 					var callbackFlg;
 					walk(jpgDir, function(path) {
 						if (path.match(reg)) {
-							callbackFlg = 1;
-							callback(null, path);
+							if (!callbackFlg) {
+								callbackFlg = 1;
+								callback(null, path);
+							}
 						}
 					}, function(err) {
-						callbackFlg = 1;
-						callback(err);
+						if (!callbackFlg) {
+							callbackFlg = 1;
+							callback(err);
+						}
 					});
 					setTimeout(function() {
 						if (!callbackFlg) {
+							callbackFlg = 1;
 							callback(null, "");
 						}
-					}, 100);
+					}, 500);
 				},
 				function(path, callback) {
 					// 該当画像ファイルをbase64エンコード文字列を取得する

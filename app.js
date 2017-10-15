@@ -42,4 +42,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// 例外ハンドラ
+process.on('uncaughtException', function(err) {
+  console.log(err);
+});
+
 module.exports = app;
