@@ -1,5 +1,5 @@
 var express = require('express');
-var connection = require('../model/mysqlConnection');
+var pool = require('../model/mysqlConnection');
 
 var router = express.Router();
 
@@ -116,41 +116,46 @@ router.get('/', function(req, res, next) {
 
 	// 退社人数を検索
 	var countResigned;
-	connection.query(queryResigned, function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
-
-		if (rows) {
-			countResigned = rows[0];
-		}
-	});
-
-	// 全体検索
-	connection.query(query, function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
-
-		if (!rows) {
-			rows = [];
-		}
-
-		// 退社用のcssのclass定義を付与する
-		for (var i = 0; i < rows.length; i++) {
-			if (rows[i].DELETE_FLG === '1') {
-				rows[i].resigned = "resigned";
+	pool.getConnection(function(err, connection){
+		connection.query(queryResigned, function(err, rows) {
+			// エラー発生時はエラーハンドラをコールバックする
+			if (err) {
+				connection.release();
+				return next(err);
 			}
-		}
 
-		res.render('list',
-		{
-			title: '一覧画面',
-			result: rows,
-			query: req.query,
-			countResigned: countResigned
+			if (rows) {
+				countResigned = rows[0];
+			}
+		});
+
+		// 全体検索
+		connection.query(query, function(err, rows) {
+			// エラー発生時はエラーハンドラをコールバックする
+			if (err) {
+				connection.release();
+				return next(err);
+			}
+
+			if (!rows) {
+				rows = [];
+			}
+
+			// 退社用のcssのclass定義を付与する
+			for (var i = 0; i < rows.length; i++) {
+				if (rows[i].DELETE_FLG === '1') {
+					rows[i].resigned = "resigned";
+				}
+			}
+
+			connection.release();
+			res.render('list',
+			{
+				title: '一覧画面',
+				result: rows,
+				query: req.query,
+				countResigned: countResigned
+			});
 		});
 	});
 });
