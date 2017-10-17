@@ -7,5 +7,5 @@ var dbConfig = {
    database: 'umi_db'
 };
 
-var connection = mysql.createConnection(dbConfig);
+var connection = mysql.createPool(dbConfig);
 module.exports = connection;
