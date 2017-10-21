@@ -10,7 +10,7 @@ var author = new Author();
 router.get('/', function(req, res, next) {
 
 	// セッション認証
-	if (!author.auth(req, res)) {
+	if (!author.authWritable(req, res)) {
 		return;
 	}
 

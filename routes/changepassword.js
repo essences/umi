@@ -1,5 +1,5 @@
 var express = require('express');
-var connection = require('../model/mysqlConnection');
+var pool = require('../model/mysqlConnection');
 
 var router = express.Router();
 
@@ -41,28 +41,34 @@ router.post('/', function(req, res, next) {
 	// パスワードと現在日時で最終ログイン日時を更新
 	var currentDate = new Date(Date.now()).toLocaleString();
 	var lastLoginUpdateQuery = "update mst_login_user set PASSWORD = ?, LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
-	connection.query(lastLoginUpdateQuery, [hashedPassword, currentDate, shainNo], function(err, upresult) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			connection.rollback(function() {
-				return next(err);
-			});
-		}
-		connection.commit(function(err) {
-			if (err) {
-				connection.rollback(function() {
-					return next(err);
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(lastLoginUpdateQuery, [hashedPassword, currentDate, shainNo], function(err, upresult) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					connection.rollback(function() {
+						return next(err);
+					});
+				}
+				connection.commit(function(err) {
+					if (err) {
+						connection.rollback(function() {
+							return next(err);
+						});
+					}
+
+					// Cookieとセッションにログイン情報をセットする
+					setCookie(res, shainNo, hashedPassword, currentDate);
+					setSession(res, shainNo, '0');
+
+					// 更新権限なし：一覧画面に遷移する
+					res.redirect('list');
+					return;
 				});
-			}
-
-			// Cookieとセッションにログイン情報をセットする
-			setCookie(res, shainNo, hashedPassword, currentDate);
-			setSession(res, shainNo, '0');
-
-			// 更新権限なし：一覧画面に遷移する
-			res.redirect('list');
-			return;
-		});
+			});
+		} finally {
+			connection.release();
+		}
 	});
 });
 

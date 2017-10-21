@@ -1,5 +1,5 @@
 var express = require('express');
-var connection = require('../model/mysqlConnection');
+var pool = require('../model/mysqlConnection');
 
 var router = express.Router();
 
@@ -71,24 +71,29 @@ function searchUser(req, res, shainNo, email, birthdate) {
 		"and base.email = ? " +
 		"and personal.birth_date = STR_TO_DATE(?, '%Y%m%d') ";
 
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(searchUserQuery, [shainNo, email, birthdate], function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					return next(err);
+				}
+				if (rows.length == 0) {
+					var err = '社員No、メールアドレス、生年月日が異なります。';
+					res.render('addlogin', {
+						title: "初期パスワード発行画面",
+						query: req.body,
+						result: {'err': err}
+					});
+					return;
+				}
 
-	connection.query(searchUserQuery, [shainNo, email, birthdate], function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
-		if (rows.length == 0) {
-			var err = '社員No、メールアドレス、生年月日が異なります。';
-			res.render('addlogin', {
-				title: "初期パスワード発行画面",
-				query: req.body,
-				result: {'err': err}
+				// 既存のログインユーザを削除する
+				deleteExistingLoginUser(req, res, shainNo);
 			});
-			return;
+		} finally {
+			connection.release();
 		}
-
-		// 既存のログインユーザを削除する
-		deleteExistingLoginUser(req, res, shainNo);
 	});
 }
 
@@ -102,21 +107,27 @@ function deleteExistingLoginUser(req, res, shainNo) {
 
 	var deleteLoginUserQuery = "delete from mst_login_user where employee_no = ? ";
 
-	connection.query(deleteLoginUserQuery, [shainNo], function(err, delresult) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
-		connection.commit(function(err) {
-			if (err) {
-				connection.rollback(function() {
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(deleteLoginUserQuery, [shainNo], function(err, delresult) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
 					return next(err);
-				});
-			}
+				}
+				connection.commit(function(err) {
+					if (err) {
+						connection.rollback(function() {
+							return next(err);
+						});
+					}
 
-			// 初期パスワードでログインユーザを新規作成する
-			addLoginUser(req, res, shainNo);
-		});
+					// 初期パスワードでログインユーザを新規作成する
+					addLoginUser(req, res, shainNo);
+				});
+			});
+		} finally {
+			connection.release();
+		}
 	});
 }
 
@@ -134,25 +145,31 @@ function addLoginUser(req, res, shainNo) {
 
 	var insertLoginUserQuery = "insert into mst_login_user (employee_no, password, writable) values (?, ?, 0) ";
 
-	connection.query(insertLoginUserQuery, [shainNo, hashedInitPassword], function(err, insresult) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
-		connection.commit(function(err) {
-			if (err) {
-				connection.rollback(function() {
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(insertLoginUserQuery, [shainNo, hashedInitPassword], function(err, insresult) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
 					return next(err);
-				});
-			}
+				}
+				connection.commit(function(err) {
+					if (err) {
+						connection.rollback(function() {
+							return next(err);
+						});
+					}
 
-			// 初期パスワードを画面に返却する
-			res.render('addlogin', {
-				title: "初期パスワード発行画面",
-				query: req.body,
-				result: {'pass': initPassword}
+					// 初期パスワードを画面に返却する
+					res.render('addlogin', {
+						title: "初期パスワード発行画面",
+						query: req.body,
+						result: {'pass': initPassword}
+					});
+				});
 			});
-		});
+		} finally {
+			connection.release();
+		}
 	});
 }
 

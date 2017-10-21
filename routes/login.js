@@ -1,5 +1,5 @@
 var express = require('express');
-var connection = require('../model/mysqlConnection');
+var pool = require('../model/mysqlConnection');
 
 var router = express.Router();
 
@@ -24,32 +24,38 @@ router.get('/', function(req, res, next) {
 			// ログインマスタからハッシュ化パスワードと最終更新日時を取得
 			// その2つをハッシュ化したものとCokkieのものと比較して自動認証を行う
 			var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = ? ";
-			connection.query(queryLogin, [autoLoginUser], function(err, rows) {
-				// エラー発生時はエラーハンドラをコールバックする
-				if (err) {
-					return next(err);
-				}
-				if (rows.length == 1) {
-					if (autoLoginPass == hasher.hash256(rows[0].PASSWORD + new Date(rows[0].LAST_LOGIN).toLocaleString())) {
-						// 自動ログイン成功、ログイン情報をセッションに格納する
-						setSession(res, autoLoginUser, rows[0].WRITABLE);
+			pool.getConnection(function(err, connection){
+				try {
+					connection.query(queryLogin, [autoLoginUser], function(err, rows) {
+						// エラー発生時はエラーハンドラをコールバックする
+						if (err) {
+							return next(err);
+						}
+						if (rows.length == 1) {
+							if (autoLoginPass == hasher.hash256(rows[0].PASSWORD + new Date(rows[0].LAST_LOGIN).toLocaleString())) {
+								// 自動ログイン成功、ログイン情報をセッションに格納する
+								setSession(res, autoLoginUser, rows[0].WRITABLE);
 
-						if (rows[0].WRITABLE == '1') {
-							// 更新権限あり：メニュー画面に遷移する
-							res.redirect('menu');
-							return;
+								if (rows[0].WRITABLE == '1') {
+									// 更新権限あり：メニュー画面に遷移する
+									res.redirect('menu');
+									return;
+								} else {
+									// 更新権限なし：ログイン画面を表示する
+									nextLogin(req, res);
+									return;
+								}
+							} else {
+								nextLogin(req, res);
+								return;
+							}
 						} else {
-							// 更新権限なし：一覧画面に遷移する
-							res.redirect('list');
+							nextLogin(req, res);
 							return;
 						}
-					} else {
-						nextLogin(req, res);
-						return;
-					}
-				} else {
-					nextLogin(req, res);
-					return;
+					});
+				} finally {
+					connection.release();
 				}
 			});
 		} else {
@@ -95,75 +101,80 @@ router.post('/', function(req, res, next) {
 	// ログイン認証
 	var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = ? ";
 	var loginInfo;
-	connection.query(queryLogin, [shainNo], function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
-		if (rows.length == 0) {
-			var err = '社員No、または、パスワードが異なります。';
-			res.render('login', {
-				query: req.body,
-				result: {'err': err}
-			});
-			return;
-		}
-
-		// 入力されたパスワードをハッシュ化する
-		var hashedPassword = hasher.hash256(password);
-
-		if (hashedPassword != rows[0].PASSWORD) {
-			// 認証エラー
-			var err = '社員No、または、パスワードが異なります。';
-			res.render('login', {
-				query: req.body,
-				result: {'err': err}
-			});
-			return;
-		}
-
-		// 初回ログイン時はパスワード変更画面に遷移する
-		if (!rows[0].LAST_LOGIN) {
-			res.render('changepassword', {
-				query: {'shainNo': shainNo},
-				result: {}
-			});
-			return;
-		}
-
-		// 現在日時で最終ログイン日時を更新
-		var currentDate = new Date(Date.now()).toLocaleString();
-		var lastLoginUpdateQuery = "update mst_login_user set LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
-		connection.query(lastLoginUpdateQuery, [currentDate, shainNo], function(err, upresult) {
-			// エラー発生時はエラーハンドラをコールバックする
-			if (err) {
-				connection.rollback(function() {
-					return next(err);
-				});
-			}
-			connection.commit(function(err) {
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(queryLogin, [shainNo], function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
 				if (err) {
-					connection.rollback(function() {
-						return next(err);
+					return next(err);
+				}
+				if (rows.length == 0) {
+					var err = '社員No、または、パスワードが異なります。';
+					res.render('login', {
+						query: req.body,
+						result: {'err': err}
 					});
-				}
-
-				// Cookieとセッションにログイン情報をセットする
-				setCookie(res, shainNo, hashedPassword, currentDate);
-				setSession(res, shainNo, rows[0].WRITABLE);
-
-				if (rows[0].WRITABLE == '1') {
-					// 更新権限あり：メニュー画面に遷移する
-					res.redirect('menu');
-					return;
-				} else {
-					// 更新権限なし：一覧画面に遷移する
-					res.redirect('list');
 					return;
 				}
+
+				// 入力されたパスワードをハッシュ化する
+				var hashedPassword = hasher.hash256(password);
+
+				if (hashedPassword != rows[0].PASSWORD) {
+					// 認証エラー
+					var err = '社員No、または、パスワードが異なります。';
+					res.render('login', {
+						query: req.body,
+						result: {'err': err}
+					});
+					return;
+				}
+
+				// 初回ログイン時はパスワード変更画面に遷移する
+				if (!rows[0].LAST_LOGIN) {
+					res.render('changepassword', {
+						query: {'shainNo': shainNo},
+						result: {}
+					});
+					return;
+				}
+
+				// 現在日時で最終ログイン日時を更新
+				var currentDate = new Date(Date.now()).toLocaleString();
+				var lastLoginUpdateQuery = "update mst_login_user set LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
+				connection.query(lastLoginUpdateQuery, [currentDate, shainNo], function(err, upresult) {
+					// エラー発生時はエラーハンドラをコールバックする
+					if (err) {
+						connection.rollback(function() {
+							return next(err);
+						});
+					}
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								return next(err);
+							});
+						}
+
+						// Cookieとセッションにログイン情報をセットする
+						setCookie(res, shainNo, hashedPassword, currentDate);
+						setSession(res, shainNo, rows[0].WRITABLE);
+
+						if (rows[0].WRITABLE == '1') {
+							// 更新権限あり：メニュー画面に遷移する
+							res.redirect('menu');
+							return;
+						} else {
+							// 更新権限なし：一覧画面に遷移する
+							res.redirect('list');
+							return;
+						}
+					});
+				});
 			});
-		});
-
+		} finally {
+			connection.release();
+		}
 	});
 });
 
