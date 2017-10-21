@@ -55,3 +55,29 @@
 	font-size: 20px;
 	width: 200px;
 }
+.system_frame {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #0036bd;
+	border-radius: 10px;
+	width: 830px;
+	margin: auto;
+	margin-top: 50px;
+	padding: 0px 10px;
+	background-color: #dffbfb;
+}
+.system_title {
+	padding-left: 20px;
+	padding-right: 100px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.system_button {
+	margin: 10px 0px;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #ecfac2;
+	font-weight: bold;
+	font-size: 20px;
+	width: 610px;
+}
