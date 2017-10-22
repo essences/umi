@@ -1,10 +1,9 @@
 var express = require('express');
-var connection = require('../model/mysqlConnection');
+var pool = require('../model/mysqlConnection');
 
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-	// 会社を取得する
 	getCompany(req, res, next);
 });
 
@@ -16,15 +15,20 @@ router.get('/', function(req, res, next) {
  */
 function getCompany(req, res, next) {
 	var companyQuery = "select company_cd, company_name from mst_company order by company_cd ";
-	connection.query(companyQuery, function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(companyQuery, function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					return next(err);
+				}
 
-		if (rows) {
-			// 部署を取得する
-			getDept(req, res, next, rows);
+				if (rows) {
+					getDept(req, res, next, rows);
+				}
+			});
+		} finally {
+			connection.release();
 		}
 	});
 }
@@ -38,15 +42,20 @@ function getCompany(req, res, next) {
  */
 function getDept(req, res, next, companyList) {
 	var deptQuery = "select dept_cd, group_name, dept_name, section_name from mst_dept order by dept_cd ";
-	connection.query(deptQuery, function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(deptQuery, function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					return next(err);
+				}
 
-		if (rows) {
-			// 最終学歴を取得する
-			getEducation(req, res, next, companyList, rows);
+				if (rows) {
+					getEducation(req, res, next, companyList, rows);
+				}
+			});
+		} finally {
+			connection.release();
 		}
 	});
 }
@@ -61,14 +70,20 @@ function getDept(req, res, next, companyList) {
  */
 function getEducation(req, res, next, companyList, deptList) {
 	var educationQuery = "select distinct education as education from trn_education_background ";
-	connection.query(educationQuery, function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(educationQuery, function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					return next(err);
+				}
 
-		if (rows) {
-			render(req, res, next, companyList, deptList, rows);
+				if (rows) {
+					render(req, res, next, companyList, deptList, rows);
+				}
+			});
+		} finally {
+			connection.release();
 		}
 	});
 }
@@ -108,15 +123,21 @@ router.post('/checkEmployeeNo', function(req, res, next) {
 	}
 	employeeNoQuery = employeeNoQuery.substring(0, employeeNoQuery.length - 1) + ")";
 
-	connection.query(employeeNoQuery, employeeNoArr, function(err, rows) {
-		// エラー発生時はエラーハンドラをコールバックする
-		if (err) {
-			return next(err);
-		}
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(employeeNoQuery, employeeNoArr, function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					return next(err);
+				}
 
-		if (rows) {
-			var rejson = JSON.stringify(rows);
-			res.send(rejson);
+				if (rows) {
+					var rejson = JSON.stringify(rows);
+					res.send(rejson);
+				}
+			});
+		} finally {
+			connection.release();
 		}
 	});
 });
@@ -186,31 +207,35 @@ router.post('/', function(req, res, next) {
 	}
 	educationInsert = educationInsert.substring(0, educationInsert.length - 1);
 
-	connection.query(baseInsert, baseInsertValues, function(err, baseResult) {
-		if (err) {
-			connection.rollback(function() {
-				return next(err);
-			});
-		}
-
-		connection.query(personalInsert, personalInsertValues, function(err, personalResult) {
-			if (err) {
-				connection.rollback(function() {
-					return next(err);
-				});
-			}
-
-			connection.query(educationInsert, educationInsertValues, function(err, educationResult) {
+	pool.getConnection(function(err, connection){
+		try {
+			connection.query(baseInsert, baseInsertValues, function(err, baseResult) {
 				if (err) {
 					connection.rollback(function() {
 						return next(err);
 					});
 				}
-				connection.rollback(function() {
-				});
 
+				connection.query(personalInsert, personalInsertValues, function(err, personalResult) {
+					if (err) {
+						connection.rollback(function() {
+							return next(err);
+						});
+					}
+
+					connection.query(educationInsert, educationInsertValues, function(err, educationResult) {
+						if (err) {
+							connection.rollback(function() {
+								return next(err);
+							});
+						}
+						connection.commit();
+					});
+				});
 			});
-		});
+		} finally {
+			connection.release();
+		}
 	});
 
 	res.redirect('addemployee');
