@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<title>
+ログイン画面
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_login.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<a href="/"><img src="../../images/common/logo01.gif"></a>
+
+<div class="line"></div>
+
+<div class="login_frame">
+	<form method="post">
+		<div class="login_item">
+		社員番号<br>
+		<input type="text" name="shainNo" class="login_input" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+		</div>
+		<div class="login_item">
+		パスワード<br>
+		<input type="text" name="password" class="login_input">
+		</div>
+		<div>
+		<input type="submit" name="loginButton" class="login_input" value="ログインする">
+		</div>
+
+	<% if (result.err) { %>
+		<div>
+		<%= result.err%>
+		</div>
+	<% } %>
+	</form>
+</div>
+
+<div class="new_user_frame">
+	<form method="get" action="/addLogin">
+		<input type="submit" name="loginButton" value="新しくユーザを作る">
+		<input type="submit" name="loginButton" value="パスワードを忘れた方">
+	</form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<title>
+<%=title%>
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_add_login.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<a href="/"><img src="../../images/common/logo01.gif"></a>
+
+<div class="line"></div>
+
+<div class="add_login_frame">
+	<form method="post">
+		<div class="add_login_item">
+		社員番号<br>
+		<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+		</div>
+		<div class="add_login_item">
+		メールアドレス<br>
+		<input type="text" name="email" value="<%= query.email%>" placeholder="例：XXXX@central-soft.co.jp">
+		</div>
+		<div class="add_login_item">
+		生年月日<br>
+		<input type="text" name="birthdate" value="<%= query.birthdate%>" placeholder="例：19870701">
+		</div>
+		<div>
+		<input type="submit" name="createInitPasswordButton" value="初期パスワードを発行する">
+		</div>
+
+	<% if (result.err) { %>
+		<div>
+		<%= result.err%>
+		</div>
+	<% } %>
+	<% if (result.pass) { %>
+		<div>
+		初期パスワード「<%= result.pass%>」
+		</div>
+	<% } %>
+	</form>
+</div>
+
+</body>
+</html>
