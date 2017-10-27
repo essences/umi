@@ -12,7 +12,7 @@ var author = new Author();
 router.get('/', function(req, res, next) {
 
 	// セッション認証
-	if (!author.authWritable(req, res)) {
+	if (!author.authMaster(req, res)) {
 		return;
 	}
 
@@ -29,6 +29,7 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
 
 	var shainNo = req.body.shainNo;
+	var writable = req.body.writable;
 
 	var searchWritableQuery =
 		"select " +
@@ -50,8 +51,8 @@ router.post('/', function(req, res, next) {
 					return next(err);
 				}
 				if (rows.length == 1) {
-					if (rows[0].writable == '1') {
-						var err = "すでに更新権限を持っています。";
+					if (rows[0].writable == writable) {
+						var err = "すでに同じ権限が設定されています。";
 						res.render('setauth', {
 							query: req.body,
 							result:
@@ -64,8 +65,8 @@ router.post('/', function(req, res, next) {
 					}
 
 					// 更新権限を設定する
-					var updateWritableQuery = "update mst_login_user set writable = '1' where employee_no = ? ";
-					connection.query(updateWritableQuery, [shainNo], function(err, upresult) {
+					var updateWritableQuery = "update mst_login_user set writable = ? where employee_no = ? ";
+					connection.query(updateWritableQuery, [writable, shainNo], function(err, upresult) {
 						// エラー発生時はエラーハンドラをコールバックする
 						if (err) {
 							return next(err);
@@ -77,7 +78,7 @@ router.post('/', function(req, res, next) {
 								});
 							}
 
-							var msg = "更新権限を設定しました。";
+							var msg = "権限を設定しました。";
 							res.render('setauth', {
 								query: req.body,
 								result:

@@ -23,9 +23,18 @@
 			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
 			<%= result.name%>
 		</div>
+		<div class="item">
+			設定する権限
+			<select name="writable">
+				<option value="X"<%= (query.writable == "X") ? " selected" : ""%>>閲覧禁止</option>
+				<option value="0"<%= (query.writable == "0") ? " selected" : ""%>>参照のみ</option>
+				<option value="1"<%= (query.writable == "1") ? " selected" : ""%>>更新権限</option>
+				<option value="2"<%= (query.writable == "2") ? " selected" : ""%>>マスタ権限</option>
+			</select>
+		</div>
 		<div>
 		<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
-		<input type="button" name="setauthButton" id="setauthButton" value="更新権限にする">
+		<input type="button" name="setauthButton" id="setauthButton" value="権限を設定する">
 		</div>
 		<div>
 		<%= result.err%>

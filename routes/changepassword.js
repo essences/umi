@@ -59,10 +59,13 @@ router.post('/', function(req, res, next) {
 
 					// Cookieとセッションにログイン情報をセットする
 					setCookie(res, shainNo, hashedPassword, currentDate);
-					setSession(res, shainNo, '0');
+					setSession(res, shainNo, 'X');
 
-					// 更新権限なし：一覧画面に遷移する
-					res.redirect('list');
+					// 権限なし：ログイン画面に遷移する
+					res.render('login', {
+						query: req.body,
+						result: {}
+					});
 					return;
 				});
 			});

@@ -36,12 +36,12 @@ router.get('/', function(req, res, next) {
 								// 自動ログイン成功、ログイン情報をセッションに格納する
 								setSession(res, autoLoginUser, rows[0].WRITABLE);
 
-								if (rows[0].WRITABLE == '1') {
-									// 更新権限あり：メニュー画面に遷移する
+								if (rows[0].WRITABLE == '0' || rows[0].WRITABLE == '1' || rows[0].WRITABLE == '2') {
+									// 権限あり：メニュー画面に遷移する
 									res.redirect('menu');
 									return;
 								} else {
-									// 更新権限なし：ログイン画面を表示する
+									// 権限なし：ログイン画面を表示する
 									nextLogin(req, res);
 									return;
 								}
@@ -99,7 +99,7 @@ router.post('/', function(req, res, next) {
 	}
 
 	// ログイン認証
-	var queryLogin = "select EMPLOYEE_NO, PASSWORD, LAST_LOGIN, WRITABLE from mst_login_user where EMPLOYEE_NO = ? ";
+	var queryLogin = "select login.EMPLOYEE_NO, login.PASSWORD, login.LAST_LOGIN, WRITABLE from mst_login_user login inner join mst_employee_base base on login.employee_no = base.employee_no and base.delete_flg = '0' where login.employee_no = ? ";
 	var loginInfo;
 	pool.getConnection(function(err, connection){
 		try {
@@ -160,13 +160,13 @@ router.post('/', function(req, res, next) {
 						setCookie(res, shainNo, hashedPassword, currentDate);
 						setSession(res, shainNo, rows[0].WRITABLE);
 
-						if (rows[0].WRITABLE == '1') {
-							// 更新権限あり：メニュー画面に遷移する
+						if (rows[0].WRITABLE == '0' || rows[0].WRITABLE == '1' || rows[0].WRITABLE == '2') {
+							// 権限あり：メニュー画面に遷移する
 							res.redirect('menu');
 							return;
 						} else {
-							// 更新権限なし：一覧画面に遷移する
-							res.redirect('list');
+							// 権限なし：ログイン画面を表示する
+							nextLogin(req, res);
 							return;
 						}
 					});
