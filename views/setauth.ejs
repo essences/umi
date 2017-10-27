@@ -24,8 +24,8 @@
 			<%= result.name%>
 		</div>
 		<div class="item">
-			設定する権限
-			<select name="writable">
+			設定する権限<br>
+			<select name="writable" size="4">
 				<option value="X"<%= (query.writable == "X") ? " selected" : ""%>>閲覧禁止</option>
 				<option value="0"<%= (query.writable == "0") ? " selected" : ""%>>参照のみ</option>
 				<option value="1"<%= (query.writable == "1") ? " selected" : ""%>>更新権限</option>
