@@ -61,7 +61,12 @@ if (result.retireDate) {
 		</tr>
 		<tr>
 			<td>常駐先</td>
-			<td><%= result.WORK_PLACE_NAME%></td>
+			<td>
+				<%= result.WORK_PLACE_NAME%>
+				<% if(result.routeUrl != null) { %>
+					<a href="<%= result.routeUrl%>" target="route">定期</a>
+				<% } %>
+			</td>
 		</tr>
 		<tr>
 			<td>メールアドレス</td>

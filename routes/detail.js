@@ -9,6 +9,9 @@ var router = express.Router();
 var WarekiCreator = require('../public/javascripts/wareki.js');
 var warekiCreator = new WarekiCreator();
 
+// 駅すぱあとAPI用
+var ekispertApi = require('./util/ekispertApi');
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	console.log("【INFO】detail start");
@@ -18,7 +21,7 @@ router.get('/', function(req, res, next) {
 	var detailQuery = "select " +
 		"COMPANY.COMPANY_NAME, " +
 		"BASE.EMPLOYEE_TYPE, " +
-		"lpad(BASE.EMPLOYEE_NO, 5, '0') as EMPLOYEE_NO, " +
+		"BASE.EMPLOYEE_NO, " +
 		"BASE.EMPLOYEE_FAMILY_NAME, " +
 		"BASE.EMPLOYEE_FIRST_NAME, " +
 		"BASE.EMPLOYEE_FAMILY_NAME_KANA, " +
@@ -45,7 +48,9 @@ router.get('/', function(req, res, next) {
 		"PERSONAL.TEL_NO_HOME, " +
 		"EDUCATION.EDUCATION, " +
 		"EDUCATION.SCHOOL, " +
-		"EDUCATION.COURSE " +
+		"EDUCATION.COURSE, " +
+		"PERSONAL.NEAR_STATION as FROM_NEAR_STATION, " +
+		"PLACE.NEAR_STATION as TO_NEAR_STATION " +
 		"from " +
 		"MST_EMPLOYEE_BASE BASE " +
 		"INNER JOIN MST_COMPANY COMPANY " +
@@ -176,6 +181,9 @@ router.get('/', function(req, res, next) {
 
 			// 郵便番号（緊急連絡先）
 			personalData.zipHome = formatZipCode(personalData.ZIP_HOME);
+
+			// ルートURL
+			personalData.routeUrl = ekispertApi.getRouteUrl(personalData.FROM_NEAR_STATION, personalData.TO_NEAR_STATION);
 
 			var jpgDir = "Z:/★★データ/社員証/写真/";
 			// 社員Noの画像ファイルを探す
