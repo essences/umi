@@ -1,4 +1,4 @@
-var env = require('../../../env.js');
+var env = require('../../../umi_env.js');
 
 exports.getRouteUrl = function(from, to) {
 

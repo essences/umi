@@ -6,6 +6,6 @@
  * フォルダ
  * ┣umi
  * ┃┗.git
- * ┗env.js
+ * ┗umi_env.js
  */
 exports.ekispertApiAccesskey="XXXX";
