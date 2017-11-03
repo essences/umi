@@ -82,7 +82,7 @@ router.post('/', function(req, res, next) {
  * 有効期限　7日間
  */
 function setCookie(res, shainNo, hashedPassword, currentDate) {
-	res.cookie('autoLoginInfo', shainNo + ":" + hasher.hash256(hashedPassword + currentDate), {maxAge:7*24*60*60*1000});
+	res.cookie('autoLoginInfo', shainNo + ":" + hasher.hash256(hashedPassword + currentDate), {maxAge:1*24*60*60*1000});
 }
 
 /**
