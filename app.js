@@ -12,6 +12,7 @@ var menu = require('./routes/menu');
 var setauth = require('./routes/setauth');
 var list = require('./routes/list');
 var detail = require('./routes/detail');
+var comment = require('./routes/comment');
 
 var app = express();
 
@@ -35,6 +36,7 @@ app.use('/menu', menu);
 app.use('/setauth', setauth);
 app.use('/list', list);
 app.use('/detail', detail);
+app.use('/comment', comment);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
