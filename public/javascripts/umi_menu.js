@@ -5,4 +5,9 @@ $(function() {
 		$('#writeForm').submit();
 	});
 
+	$('#logoutButton').click(function(){
+		$('#logoutForm').attr('action', '/logout');
+		$('#logoutForm').submit();
+	});
+
 });
