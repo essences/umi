@@ -10,12 +10,9 @@ var author = new Author();
 router.get('/', function(req, res, next) {
 
 	// セッション認証
-	if (!author.authWritable(req, res)) {
+	if (!author.authReadable(req, res)) {
 		return;
 	}
-
-	console.log("【INFO】list start");
-	console.dir(req.query);
 
 	// 初期表示時は検索しない、検索条件なしのときは全件検索する
 	if (!req.query.searchJoken && req.query.searchJoken != "") {
@@ -121,7 +118,6 @@ router.get('/', function(req, res, next) {
 		query += fromStr + orderStr;
 		queryResigned += fromStr + whereStr + resignedStr;
 	}
-	console.log(query);
 
 	// 退社人数を検索
 	var countResigned;

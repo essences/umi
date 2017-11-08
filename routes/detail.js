@@ -5,14 +5,20 @@ var async = require('async');
 
 var router = express.Router();
 
+var Author = require('./util/auth.js');
+var author = new Author();
+
 // 和暦変換用
 var WarekiCreator = require('../public/javascripts/wareki.js');
 var warekiCreator = new WarekiCreator();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-	console.log("【INFO】detail start");
-	console.dir(req.query);
+
+	// セッション認証
+	if (!author.authReadable(req, res)) {
+		return;
+	}
 
 	// 詳細社員情報 検索SQL
 	var detailQuery = "select " +

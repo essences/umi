@@ -59,10 +59,13 @@ router.post('/', function(req, res, next) {
 
 					// Cookieとセッションにログイン情報をセットする
 					setCookie(res, shainNo, hashedPassword, currentDate);
-					setSession(res, shainNo, '0');
+					setSession(res, shainNo, 'X');
 
-					// 更新権限なし：一覧画面に遷移する
-					res.redirect('list');
+					// 権限なし：ログイン画面に遷移する
+					res.render('login', {
+						query: req.body,
+						result: {}
+					});
 					return;
 				});
 			});
@@ -79,7 +82,7 @@ router.post('/', function(req, res, next) {
  * 有効期限　7日間
  */
 function setCookie(res, shainNo, hashedPassword, currentDate) {
-	res.cookie('autoLoginInfo', shainNo + ":" + hasher.hash256(hashedPassword + currentDate), {maxAge:7*24*60*60*1000});
+	res.cookie('autoLoginInfo', shainNo + ":" + hasher.hash256(hashedPassword + currentDate), {maxAge:1*24*60*60*1000});
 }
 
 /**
