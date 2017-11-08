@@ -45,7 +45,7 @@ router.post('/', function(req, res, next) {
 	 * 初期パスワードを画面に返却する
 	 */
 	// ユーザマスタからユーザを検索する
-	searchUser(req, res, shainNo, email, birthdate);
+	searchUser(req, res, next, shainNo, email, birthdate);
 
 });
 
@@ -53,11 +53,12 @@ router.post('/', function(req, res, next) {
  * ユーザマスタからユーザを検索する
  * @param req
  * @param res
+ * @param next
  * @param shainNo
  * @param email
  * @param birthdate
  */
-function searchUser(req, res, shainNo, email, birthdate) {
+function searchUser(req, res, next, shainNo, email, birthdate) {
 
 	var searchUserQuery =
 		"select " +
@@ -69,7 +70,8 @@ function searchUser(req, res, shainNo, email, birthdate) {
 		"where " +
 		"base.employee_no = ? " +
 		"and base.email = ? " +
-		"and personal.birth_date = STR_TO_DATE(?, '%Y%m%d') ";
+		"and personal.birth_date = STR_TO_DATE(?, '%Y%m%d') " +
+		"and base.delete_flg = '0' ";
 
 	pool.getConnection(function(err, connection){
 		try {
@@ -89,7 +91,7 @@ function searchUser(req, res, shainNo, email, birthdate) {
 				}
 
 				// 既存のログインユーザを削除する
-				deleteExistingLoginUser(req, res, shainNo);
+				deleteExistingLoginUser(req, res, next, shainNo);
 			});
 		} finally {
 			connection.release();
@@ -101,9 +103,10 @@ function searchUser(req, res, shainNo, email, birthdate) {
  * 既存のログインユーザを削除する
  * @param req
  * @param res
+ * @param next
  * @param shainNo
  */
-function deleteExistingLoginUser(req, res, shainNo) {
+function deleteExistingLoginUser(req, res, next, shainNo) {
 
 	var deleteLoginUserQuery = "delete from mst_login_user where employee_no = ? ";
 
@@ -122,7 +125,7 @@ function deleteExistingLoginUser(req, res, shainNo) {
 					}
 
 					// 初期パスワードでログインユーザを新規作成する
-					addLoginUser(req, res, shainNo);
+					addLoginUser(req, res, next, shainNo);
 				});
 			});
 		} finally {
@@ -135,15 +138,16 @@ function deleteExistingLoginUser(req, res, shainNo) {
  * 初期パスワードでログインユーザを新規作成する
  * @param req
  * @param res
+ * @param next
  * @param shainNo
  */
-function addLoginUser(req, res, shainNo) {
+function addLoginUser(req, res, next, shainNo) {
 
 	// 初期パスワードを発行する
 	var initPassword = hasher.hash256(shainNo + new Date(Date.now()).toLocaleString());
 	var hashedInitPassword = hasher.hash256(initPassword);
 
-	var insertLoginUserQuery = "insert into mst_login_user (employee_no, password, writable) values (?, ?, 0) ";
+	var insertLoginUserQuery = "insert into mst_login_user (employee_no, password, writable) values (?, ?, 'X') ";
 
 	pool.getConnection(function(err, connection){
 		try {

@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>
-更新権限設定画面
+権限設定画面
 </title>
 <link rel="stylesheet" type="text/css" href="../../stylesheets/umi_setauth.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
@@ -23,9 +23,18 @@
 			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
 			<%= result.name%>
 		</div>
+		<div class="item">
+			設定する権限<br>
+			<select name="writable" size="4">
+				<option value="2"<%= (query.writable == "2") ? " selected" : ""%>>マスタ権限</option>
+				<option value="1"<%= (query.writable == "1") ? " selected" : ""%>>更新権限</option>
+				<option value="0"<%= (query.writable == "0") ? " selected" : ""%>>参照権限</option>
+				<option value="X"<%= (query.writable == "X" || query.writable == null) ? " selected" : ""%>>閲覧禁止</option>
+			</select>
+		</div>
 		<div>
 		<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
-		<input type="button" name="setauthButton" id="setauthButton" value="更新権限にする">
+		<input type="button" name="setauthButton" id="setauthButton" value="権限を設定する">
 		</div>
 		<div>
 		<%= result.err%>
