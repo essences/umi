@@ -6,6 +6,8 @@ var router = express.Router();
 var Author = require('./util/auth.js');
 var author = new Author();
 
+var env = require('../../umi_env.js');
+
 router.get('/', function(req, res, next) {
 	// セッション認証
 	if (!author.authWritable(req, res)) {
@@ -110,7 +112,8 @@ function render(req, res, next, companyList, deptList, educationList) {
 		result: {
 			'companyList': companyList,
 			'deptList': deptList,
-			'educationList': educationList
+			'educationList': educationList,
+			'accessKey': env.ekispertApiAccesskey
 		}
 	});
 }
