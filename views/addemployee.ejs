@@ -14,7 +14,12 @@
 <!-- 会社ロゴ -->
 <a href="/"><img src="../../images/common/logo01.gif"></a>
 
-<form method="post" id="regist-form">
+<div class="line"></div>
+
+<input type="hidden" id="access-key" value="<%= result.accessKey%>">
+
+<form method="post" id="regist-form" class="regist_frame">
+
 <input type="button" id="add-button" value="フォーム追加">
 <input type="button" id="regist-button" value="まとめて登録する"><br>
 
@@ -74,7 +79,10 @@
 			<input type="text" class="input require" name="birthDate"><br>
 			<input type="text" class="input require" name="zip"><br>
 			<input type="text" class="input require" name="address"><br>
-			<input type="text" class="input require" name="nearStation"><br>
+			<input type="text" name="nearStationSupport">
+			<select class="input require" name="nearStation">
+				<option value="">-</option>
+			</select><br>
 			<input type="text" class="input" name="telNo"><br>
 			<input type="text" class="input" name="cellTelNo"><br>
 			<input type="text" class="input require" name="zipHome"><br>

@@ -14,6 +14,7 @@ $(function() {
 		checkEvent($clone);
 		deleteEvent($clone);
 		$clone.insertAfter($original);
+		insertEvent($clone);
 	});
 
 	// まとめて登録ボタン押下
@@ -140,7 +141,7 @@ function checkEvent($clone) {
 	// 住所
 	checkAddress($clone.children(':text[name="address"]'));
 	// 最寄り駅
-	checkNearStation($clone.children(':text[name="nearStation"]'));
+	checkSelect($clone.children('select[name="nearStation"]'));
 	// 電話番号
 	checkTelNo($clone.children(':text[name="telNo"]'));
 	// 携帯電話番号
@@ -168,6 +169,61 @@ function deleteEvent($clone) {
 	$clone.children('input[name="deleteButton"]').click(function() {
 		$clone.remove();
 	});
+}
+
+/**
+ * イベントを挿入する
+ * @param $clone
+ * @returns
+ */
+function insertEvent($clone) {
+
+	// 最寄り駅の入力補助
+	$($clone.children(':text[name="nearStationSupport"]')).change(function() {
+
+		// 最寄り駅のプルダウンを初期化する
+		$clone.children('select[name="nearStation"]').children().nextAll().remove();
+
+		// 最寄り駅の入力補助文字列を取得する
+		var support = $clone.children(':text[name="nearStationSupport"]').val();
+		if (support.length == 0) {
+			return;
+		}
+
+		// アクセスキーを取得する
+		var accessKey = $('#access-key').val();
+
+		$.ajax({
+			type : 'get',
+			url : 'http://api.ekispert.jp/v1/json/station/light?key=' + accessKey + '&name=' + support + '&type=train'
+		})
+		.then(
+				// 正常時の処理
+				function(data) {
+					var point = JSON.parse(data).ResultSet.Point;
+					if (point) {
+						var stationName;
+						var prefectureName;
+						if (point.length > 1) {
+							for (var i = 0; i < point.length; i++) {
+								stationName = point[i].Station.Name;
+								prefectureName = point[i].Prefecture.Name;
+								$clone.children('select[name="nearStation"]').append($('<option>').val(stationName).text(stationName + "　：　" + prefectureName));
+							}
+						} else {
+							stationName = point.Station.Name;
+							prefectureName = point.Prefecture.Name;
+							$clone.children('select[name="nearStation"]').append($('<option>').val(stationName).text(stationName + "　：　" + prefectureName));
+						}
+					}
+				},
+				// 異常時の処理
+				function() {
+					alert("何かしらの問題によりAPI連携に失敗しました");
+				}
+		);
+	});
+
 }
 
 /**
@@ -302,22 +358,6 @@ function checkAddress($obj) {
 			dispError($obj, "入力してください");
 		} else if ($obj.val().length > 200) {
 			dispError($obj, "200文字以内で入力してください");
-		}
-	});
-}
-
-/**
- * 最寄り駅の入力チェック
- * @param $obj
- * @returns
- */
-function checkNearStation($obj) {
-	$obj.on('blur', function() {
-		clearError($obj);
-		if ($obj.hasClass("require") && $obj.val() == "") {
-			dispError($obj, "入力してください");
-		} else if ($obj.val().length > 40) {
-			dispError($obj, "40文字以内で入力してください");
 		}
 	});
 }

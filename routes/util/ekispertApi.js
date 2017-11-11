@@ -2,11 +2,6 @@ var env = require('../../../umi_env.js');
 
 exports.getRouteUrl = function(from, to) {
 
-	// 最寄り駅をコード体系で保持する課題あるため、リンクは出さないようにして一度リリースする
-	if (true) {
-		return null;
-	}
-
 	if (from == null || to == null || from == "-" || to == "-") {
 		return null;
 	}

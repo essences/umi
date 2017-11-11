@@ -1,6 +1,13 @@
-.scroll-form {
-	display: inline-block;
-	width: calc(95vw - 200px);
+.line {
+	background: #d5d4cd;
+	border-style: solid;
+	border-width: 1px;
+}
+.regist_frame {
+	margin: 30px;
+}
+.scroll-form {	display: inline-block;
+	width: calc(95vw - 230px);
 	overflow-x: auto;
 }
 .input-form {
@@ -16,8 +23,6 @@
 .original {
 	display: none;
 }
-.row label {
-}
 .row .error {
-	background-color: red;
+	background-color: #ff7f50;
 }
