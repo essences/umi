@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<title>
+国家資格マスタ画面
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_mstqualify.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_mstqualify.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<a href="/"><img src="../../images/common/logo01.gif"></a>
+
+<div class="line"></div>
+
+<div class="mstqualify_frame">
+
+<form method="post" id="updateForm" action="/mstqualify/update">
+<table border="1">
+	<tr>
+		<th>資格コード</th>
+		<th>資格名</th>
+		<th>ソート順</th>
+		<th>現役取得者</th>
+		<th>退職取得者</th>
+	</tr>
+<% for(var i = 0; i < result.length; i++) {%>
+	<tr>
+		<td><%= result[i].qualification_cd%><input type="hidden" name="qualificationCd" value="<%= result[i].qualification_cd%>"></td>
+		<td><%= result[i].qualify_name%></td>
+		<td><input type="text" name="order" value="<%= result[i].order%>"></td>
+		<td><%= result[i].active_count%></td>
+		<td><%= result[i].retired_count%></td>
+	</tr>
+<% }%>
+</table>
+
+<input type="submit" id="updateButton" value="ソート順変更">
+</form>
+
+</div>
+
+</body>
+</html>
