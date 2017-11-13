@@ -18,6 +18,20 @@
 
 <div class="mstqualify_frame">
 
+<form method="post" id="insertForm" action="/mstqualify/insert">
+<table border="1">
+	<tr>
+		<th>資格名</th>
+		<th>ソート順</th>
+	</tr>
+	<tr>
+		<td><input type="text" name="qualify_name"></td>
+		<td><input type="text" name="order"></td>
+	</tr>
+</table>
+<input type="submit" id="insertButton" value="新しく資格を登録する">
+</form>
+
 <form method="post" id="updateForm" action="/mstqualify/update">
 <table border="1">
 	<tr>
@@ -37,8 +51,7 @@
 	</tr>
 <% }%>
 </table>
-
-<input type="submit" id="updateButton" value="ソート順変更">
+<input type="submit" id="updateButton" value="ソート順を変更する">
 </form>
 
 </div>
