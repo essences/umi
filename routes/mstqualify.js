@@ -60,6 +60,51 @@ router.get('/', function(req, res, next) {
 });
 
 /**
+ * 登録処理
+ */
+router.post('/insert', function(req, res, next) {
+
+	var qualifyName = req.body.qualify_name;
+	var order = req.body.order;
+
+	var qualifyQuery = "select lpad(max(qualification_cd) + 1, 4, '0') as qualification_cd from mst_national_qualify ";
+	var insertQuery = "insert into mst_national_qualify (qualification_cd, qualify_name, `order`) values (?,?,?) ";
+
+	pool.getConnection(function(err, connection) {
+		try {
+			connection.query(qualifyQuery, function(err, rows) {
+				// エラー発生時はエラーハンドラをコールバックする
+				if (err) {
+					return next(err);
+				}
+
+				var qualificationCd = rows[0].qualification_cd;
+
+				connection.query(insertQuery, [qualificationCd, qualifyName, order], function(err, rows) {
+					// エラー発生時はエラーハンドラをコールバックする
+					if (err) {
+						connection.rollback(function() {
+							return next(err);
+						});
+					}
+
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								return next(err);
+							});
+						}
+						res.redirect('/mstqualify');
+					});
+				});
+			});
+		} finally {
+			connection.release();
+		}
+	});
+});
+
+/**
  * 更新処理
  */
 router.post('/update', function(req, res, next) {
