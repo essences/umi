@@ -13,6 +13,7 @@ var setauth = require('./routes/setauth');
 var list = require('./routes/list');
 var detail = require('./routes/detail');
 var comment = require('./routes/comment');
+var trnqualify = require('./routes/trnqualify');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/setauth', setauth);
 app.use('/list', list);
 app.use('/detail', detail);
 app.use('/comment', comment);
+app.use('/trnqualify', trnqualify);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
