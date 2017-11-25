@@ -192,8 +192,8 @@ router.get('/', function(req, res, next) {
 			personalData.routeUrl = ekispertApi.getRouteUrl(personalData.FROM_NEAR_STATION, personalData.TO_NEAR_STATION);
 
 			connection.release();
-			res.render('detail', {
-				title: '詳細画面',
+			res.render("detail", {
+				title: "詳細画面",
 				result: personalData,
 				qualify: qualify
 			});
@@ -204,7 +204,7 @@ router.get('/', function(req, res, next) {
 /**
  * 社員の写真を取得する
  */
-router.post('/getPhoto', function(req, res, next) {
+router.post("/getPhoto", function(req, res, next) {
 
 	var shainNo = req.body.shainNo;
 
@@ -236,7 +236,7 @@ router.post('/getPhoto', function(req, res, next) {
 			},
 			function(path, callback) {
 				// 該当画像ファイルをbase64エンコード文字列を取得する
-				fs.readFile(path, 'base64', function(err, data) {
+				fs.readFile(path, "base64", function(err, data) {
 					if (err) {
 						data = "";
 					} else {
