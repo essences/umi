@@ -2,8 +2,8 @@ $(function() {
 
 	// 社員画像のファイル読み込みを行う
 	$.ajax({
-		type : 'post',
-		url : '/detail/getPhoto',
+		type : "post",
+		url : "/detail/getPhoto",
 		data: {
 			"shainNo": $("#shainNo").val()
 		}
@@ -12,10 +12,10 @@ $(function() {
 			// 正常時の処理
 			function(data) {
 				// データソースの設定
-				$('.resize').attr("src", data.jpgData);
+				$(".resize").attr("src", data.jpgData);
 
 				// 画像のリサイズ
-				$('.resize').each(function(i, img) {
+				$(".resize").each(function(i, img) {
 					var maxSize = 220;
 					setResize(this, maxSize);
 				});
