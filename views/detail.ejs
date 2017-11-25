@@ -24,7 +24,10 @@
 		<colgroup class="base-table-col3"/>
 		<tr>
 			<td>社員No</td>
-			<td><%= result.EMPLOYEE_NO%></td>
+			<td>
+				<%= result.EMPLOYEE_NO%>
+				<input type="hidden" id="shainNo" value="<%= result.EMPLOYEE_NO%>">
+			</td>
 <%
 var baseRowNum;
 if (result.retireDate) {
@@ -33,7 +36,7 @@ if (result.retireDate) {
 	baseRowNum = 9;
 }
 %>
-			<td rowspan="<%= baseRowNum%>"><div class="photo"><img src="<%= jpgData%>" class="resize"></div></td>
+			<td rowspan="<%= baseRowNum%>"><div class="photo"><img src="" class="resize" style="display: none;"></div></td>
 		</tr>
 		<tr>
 			<td>名前</td>
