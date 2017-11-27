@@ -55,11 +55,7 @@ function resizeAndShow(obj, size) {
 }
 
 function setResize(obj, size) {
-	if (obj.width == 0 && obj.height == 0) {
-		obj.onload = function() {
-			resizeAndShow(obj, size);
-		}
-	} else {
+	obj.onload = function() {
 		resizeAndShow(obj, size);
 	}
 }
