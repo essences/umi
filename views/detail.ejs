@@ -28,9 +28,9 @@
 <%
 var baseRowNum;
 if (result.retireDate) {
-	baseRowNum = 10;
+	baseRowNum = 11;
 } else {
-	baseRowNum = 9;
+	baseRowNum = 10;
 }
 %>
 			<td rowspan="<%= baseRowNum%>"><div class="photo"><img src="<%= jpgData%>" class="resize"></div></td>
@@ -61,8 +61,12 @@ if (result.retireDate) {
 		</tr>
 		<tr>
 			<td>常駐先</td>
+			<td><%= result.WORK_PLACE_NAME%></td>
+		</tr>
+		<tr>
+			<td>最寄り駅</td>
 			<td>
-				<%= result.WORK_PLACE_NAME%>
+				<%= result.TO_NEAR_STATION%>
 				<% if(result.routeUrl != null) { %>
 					<a href="<%= result.routeUrl%>" target="route">定期</a>
 				<% } %>
@@ -97,7 +101,9 @@ if (result.retireDate) {
 		</tr>
 		<tr>
 			<td>郵便番号</td>
-			<td colspan="3"><%= result.zip%></td>
+			<td><%= result.zip%></td>
+			<td>最寄り駅</td>
+			<td><%= result.FROM_NEAR_STATION%></td>
 		</tr>
 		<tr>
 			<td>住所</td>
