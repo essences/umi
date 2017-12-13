@@ -69,7 +69,10 @@ router.get('/', function(req, res, next) {
 		"on BASE.CLIENT_CD = WORK.CLIENT_CD " +
 		"and BASE.WORK_PLACE_CD = WORK.WORK_PLACE_CD " +
 		"INNER JOIN MST_EMPLOYEE_PERSONAL PERSONAL " +
-		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO ";
+		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO " +
+		"LEFT OUTER JOIN TRN_EDUCATION_BACKGROUND EDU " +
+		"on BASE.EMPLOYEE_NO = EDU.EMPLOYEE_NO "
+		;
 
 	var whereStr = "where ";
 	var tmpWhereStr = "";
@@ -98,6 +101,9 @@ router.get('/', function(req, res, next) {
 	} else if (req.query.searchType == '04') {
 		// 部署で検索
 		tmpWhereStr = "DEPT.DEPT_NAME like '%" + searchJokenArr[0] + "%' ";
+	} else if (req.query.searchType == '05') {
+		// 出身校で検索
+		tmpWhereStr = "EDU.SCHOOL like '%" + searchJokenArr[0] + "%' ";
 	} else if (req.query.searchType == '06') {
 		// 退職年で検索
 		tmpWhereStr = "BASE.RETIREMENT_DATE between STR_TO_DATE('" + req.query.searchJoken + "0101', '%Y%m%d') and STR_TO_DATE('" + req.query.searchJoken + "1231', '%Y%m%d') ";
