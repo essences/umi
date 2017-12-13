@@ -96,6 +96,9 @@ router.get('/', function(req, res, next) {
 		if (searchJokenArr.length > 1) {
 			tmpWhereStr += "and WORK.WORK_PLACE_NAME like '" + searchJokenArr[1] + "%' ";
 		}
+	} else if (req.query.searchType == '04') {
+		// 部署で検索
+		tmpWhereStr = "DEPT.DEPT_NAME like '%" + searchJokenArr[0] + "%' ";
 	}
 
 	var orderStr = "order by ";
