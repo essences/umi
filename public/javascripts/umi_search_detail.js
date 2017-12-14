@@ -1,15 +1,31 @@
 $(function() {
 
-	// リサイズ前の画像の非表示
-	$('.resize').hide();
-
-	// 画像のリサイズ
-	$('.resize').each(function(i, img) {
-		if (img.width > 0 && img.height > 0) {
-			var maxSize = 220;
-			setResize(this, maxSize);
+	// 社員画像のファイル読み込みを行う
+	$.ajax({
+		type : "post",
+		url : "/detail/getPhoto",
+		data: {
+			"shainNo": $("#shainNo").val()
 		}
-	});
+	})
+	.then(
+			// 正常時の処理
+			function(data) {
+				// データソースの設定
+				$(".resize").attr("src", data.jpgData);
+
+				// 画像のリサイズ
+				$(".resize").each(function(i, img) {
+					var maxSize = 220;
+					setResize(this, maxSize);
+				});
+			},
+			// 異常時の処理
+			function() {
+				alert("画像取得処理に失敗しました。");
+			}
+	);
+
 
 });
 
@@ -33,17 +49,13 @@ function resizeImage(elem, size) {
 	}
 }
 
-function resizeAndShow(obj, size){
+function resizeAndShow(obj, size) {
 	resizeImage(obj, size);
 	$(obj).css('display', 'inline');
 }
 
-function setResize(obj, size){
-	if ( $(obj).width() == 0 && $(obj).height() == 0 ){
-		$(obj).load(function(){
-			resizeAndShow(obj, size);
-		});
-	} else {
+function setResize(obj, size) {
+	obj.onload = function() {
 		resizeAndShow(obj, size);
 	}
 }

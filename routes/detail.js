@@ -191,58 +191,68 @@ router.get('/', function(req, res, next) {
 			// ルートURL
 			personalData.routeUrl = ekispertApi.getRouteUrl(personalData.FROM_NEAR_STATION, personalData.TO_NEAR_STATION);
 
-			var jpgDir = "Z:/★★データ/社員証/写真/";
-			// 社員Noの画像ファイルを探す
-			async.waterfall(
-					[function(callback) {
-						var reg = new RegExp(`\\\\${personalData.EMPLOYEE_NO}.*\.[jpg|JPG]$`);
-						var callbackFlg;
-						walk(jpgDir, function(path) {
-							if (path.match(reg)) {
-								if (!callbackFlg) {
-									callbackFlg = 1;
-									callback(null, path);
-								}
-							}
-						}, function(err) {
-							if (!callbackFlg) {
-								callbackFlg = 1;
-								callback(err);
-							}
-						});
-						setTimeout(function() {
-							if (!callbackFlg) {
-								callbackFlg = 1;
-								callback(null, "");
-							}
-						}, 500);
-					},
-					function(path, callback) {
-						// 該当画像ファイルをbase64エンコード文字列を取得する
-						fs.readFile(path, 'base64', function(err, data) {
-							if (err) {
-								data = "";
-							} else {
-								data = "data:image/jpg;base64," + data;
-							}
-							callback(null, data);
-						});
-					}
-					], function(err, jpgData) {
-						if (err) {
-							console.log(err);
-						}
-
-						connection.release();
-						res.render('detail', {
-							title: '詳細画面',
-							result: personalData,
-							qualify: qualify,
-							jpgData: jpgData
-						});
-					});
+			connection.release();
+			res.render("detail", {
+				title: "詳細画面",
+				result: personalData,
+				qualify: qualify
+			});
 		});
 	});
+});
+
+/**
+ * 社員の写真を取得する
+ */
+router.post("/getPhoto", function(req, res, next) {
+
+	var shainNo = req.body.shainNo;
+
+	var jpgDir = "Z:/★★データ/社員証/写真/";
+	// 社員Noの画像ファイルを探す
+	async.waterfall(
+			[function(callback) {
+				var reg = new RegExp(`\\\\${shainNo}.*\.[jpg|JPG]$`);
+				var callbackFlg;
+				walk(jpgDir, function(path) {
+					if (path.match(reg)) {
+						if (!callbackFlg) {
+							callbackFlg = 1;
+							callback(null, path);
+						}
+					}
+				}, function(err) {
+					if (!callbackFlg) {
+						callbackFlg = 1;
+						callback(err);
+					}
+				});
+				setTimeout(function() {
+					if (!callbackFlg) {
+						callbackFlg = 1;
+						callback(null, "");
+					}
+				}, 10000);
+			},
+			function(path, callback) {
+				// 該当画像ファイルをbase64エンコード文字列を取得する
+				fs.readFile(path, "base64", function(err, data) {
+					if (err) {
+						data = "";
+					} else {
+						data = "data:image/jpg;base64," + data;
+					}
+					callback(null, data);
+				});
+			}
+			], function(err, jpgData) {
+				if (err) {
+					console.log(err);
+				}
+
+				res.contentType("application/json");
+				res.end(JSON.stringify({"jpgData": jpgData}));
+			});
 });
 
 var fs = require("fs")
