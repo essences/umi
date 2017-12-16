@@ -96,6 +96,10 @@ router.get('/', function(req, res, next) {
 		if (searchJokenArr.length > 1) {
 			tmpWhereStr += "and WORK.WORK_PLACE_NAME like '" + searchJokenArr[1] + "%' ";
 		}
+	} else if (req.query.searchType == '06') {
+		// 退職年で検索
+		tmpWhereStr = "BASE.RETIREMENT_DATE between STR_TO_DATE('" + req.query.searchJoken + "0101', '%Y%m%d') and STR_TO_DATE('" + req.query.searchJoken + "1231', '%Y%m%d') ";
+		tmpWhereStr += "and BASE.DELETE_FLG = '1' ";
 	}
 
 	var orderStr = "order by ";
