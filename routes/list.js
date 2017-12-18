@@ -20,8 +20,7 @@ router.get('/', function(req, res, next) {
 		{
 			title: '一覧画面',
 			result: [],
-			query: req.query,
-			countResigned: { COUNT : 0 }
+			query: req.query
 		});
 		return;
 	}
@@ -112,31 +111,29 @@ router.get('/', function(req, res, next) {
 		orderStr += "BASE.EMPLOYEE_FIRST_NAME_KANA asc ";
 	}
 
-	var queryResigned = "select count(*) as COUNT ";
+	var notResignedStr = "BASE.RETIREMENT_DATE IS NULL ";
+	notResignedStr += "and BASE.DELETE_FLG = '0' ";
 	var resignedStr = "BASE.DELETE_FLG = '1' ";
 
+	// 検索クエリ整形
 	if (req.query.searchJoken) {
+		// 退職者は基本的に検索対象外
+		if (req.query.searchType !== '06') {
+			tmpWhereStr += "and " + notResignedStr;
+		}
 		query += fromStr + whereStr + tmpWhereStr + orderStr;
-		queryResigned += fromStr + whereStr + tmpWhereStr + "and " + resignedStr;
 	} else {
-		query += fromStr + orderStr;
-		queryResigned += fromStr + whereStr + resignedStr;
+		query += fromStr + whereStr;
+		// 退職者は基本的に検索対象外
+		if (req.query.searchType !== '06') {
+			query += notResignedStr;
+		} else {
+			query += resignedStr;
+		}
+		query += orderStr;
 	}
 
-	// 退社人数を検索
-	var countResigned;
 	pool.getConnection(function(err, connection){
-		connection.query(queryResigned, function(err, rows) {
-			// エラー発生時はエラーハンドラをコールバックする
-			if (err) {
-				connection.release();
-				return next(err);
-			}
-
-			if (rows) {
-				countResigned = rows[0];
-			}
-		});
 
 		// 全体検索
 		connection.query(query, function(err, rows) {
@@ -162,8 +159,7 @@ router.get('/', function(req, res, next) {
 			{
 				title: '一覧画面',
 				result: rows,
-				query: req.query,
-				countResigned: countResigned
+				query: req.query
 			});
 		});
 	});
