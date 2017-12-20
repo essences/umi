@@ -101,10 +101,10 @@ router.get('/', function(req, res, next) {
 		}
 	} else if (req.query.searchType == '04') {
 		// 部署で検索
-		tmpWhereStr = "DEPT.DEPT_NAME like '%" + searchJokenArr[0] + "%' ";
+		tmpWhereStr = "DEPT.DEPT_NAME like '" + searchJokenArr[0] + "%' ";
 	} else if (req.query.searchType == '05') {
 		// 出身校で検索
-		tmpWhereStr = "EDU.SCHOOL like '%" + searchJokenArr[0] + "%' ";
+		tmpWhereStr = "EDU.SCHOOL like '" + searchJokenArr[0] + "%' ";
 	}
 
 	var orderStr = "order by ";
