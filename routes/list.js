@@ -71,8 +71,7 @@ router.get('/', function(req, res, next) {
 		"INNER JOIN MST_EMPLOYEE_PERSONAL PERSONAL " +
 		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO " +
 		"INNER JOIN JOIN TRN_EDUCATION_BACKGROUND EDU " +
-		"on BASE.EMPLOYEE_NO = EDU.EMPLOYEE_NO "
-		;
+		"on BASE.EMPLOYEE_NO = EDU.EMPLOYEE_NO ";
 
 	var whereStr = "where ";
 	var tmpWhereStr = "";
