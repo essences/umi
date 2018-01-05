@@ -16,6 +16,8 @@ $(function() {
 		$clone.insertAfter($original);
 		insertEvent($clone);
 	});
+	// 初回1回だけ追加ボタンを押した状態にする
+	$('#add-button').trigger("click");
 
 	// まとめて登録ボタン押下
 	$('#regist-button').click(function() {
