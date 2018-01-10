@@ -17,6 +17,65 @@
 <div class="line"></div>
 
 <div class="trnqualify_frame">
+
+	<form id="trnqualifyForm" method="post" action="/trnqualify">
+		<div class="item">
+			社員No
+			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+			<%= result.name%>
+		</div>
+		<div class="item">
+			<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
+		</div>
+		<div class="item">
+		<%= result.err%>
+		</div>
+		<div class="item">
+		<%= result.msg%>
+		</div>
+		
+		<div class="national_qualify_frame">
+			情報処理国家資格を登録します
+			<table>
+				<tr>
+					<td>・情報処理国家資格を選ぶ</td>
+					<td>
+						<select>
+							<option></option>
+							<% for(i=0; i<result.qualify.length; i++) { %>
+							<option name="<%= result.qualify[i].qualification_cd%>"><%= result.qualify[i].qualify_name%></option>
+							<% } %>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>・取得年月を設定する</td>
+					<td><input type="text" name="nationalQualifyDate" placeholder="例：yyyyMM"></td>
+				</tr>
+			</table>
+			
+			<div class="item">
+				<input type="button" name="nationalQualifyButton" id="nationalQualifyButton" value="情報処理国家資格を登録">
+			</div>
+		</div>
+		
+		<div class="national_qualify_frame">
+			その他資格を登録します
+			<table>
+				<tr>
+					<td>・その他資格を記入する</td>
+					<td><input type="text"></td>
+				</tr>
+				<tr>
+					<td>・取得年月を設定する</td>
+					<td><input type="text" name="subQualifyDate" placeholder="例：yyyyMM"></td>
+				</tr>
+			</table>
+			<div class="item">
+				<input type="button" name="subQualifyButton" id="subQualifyButton" value="その他資格を登録">
+			</div>
+		</div>
+	</form>
 </div>
 
 </body>
