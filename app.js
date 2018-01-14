@@ -14,6 +14,7 @@ var list = require('./routes/list');
 var detail = require('./routes/detail');
 var addemployee = require('./routes/addemployee');
 var comment = require('./routes/comment');
+var mstqualify = require('./routes/mstqualify');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use('/list', list);
 app.use('/detail', detail);
 app.use('/addemployee', addemployee);
 app.use('/comment', comment);
+app.use('/mstqualify', mstqualify);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
