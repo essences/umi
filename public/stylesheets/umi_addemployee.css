@@ -1,0 +1,28 @@
+.line {
+	background: #d5d4cd;
+	border-style: solid;
+	border-width: 1px;
+}
+.regist_frame {
+	margin: 30px;
+}
+.scroll-form {	display: inline-block;
+	width: calc(95vw - 230px);
+	overflow-x: auto;
+}
+.input-form {
+	display: inline-block;
+	white-space: nowrap;
+}
+.row {
+	margin: 20px 20px;
+	line-height: 28px;
+	display: inline-block;
+	vertical-align: top;
+}
+.original {
+	display: none;
+}
+.row .error {
+	background-color: #ff7f50;
+}

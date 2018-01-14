@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<title>
+社員登録画面
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_addemployee.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_addemployee.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<a href="/"><img src="../../images/common/logo01.gif"></a>
+
+<div class="line"></div>
+
+<input type="hidden" id="access-key" value="<%= result.accessKey%>">
+
+<form method="post" id="regist-form" class="regist_frame">
+
+<input type="button" id="add-button" value="フォーム追加">
+<input type="button" id="regist-button" value="まとめて登録する"><br>
+
+<div class="row">
+	<label></label><br>
+	<label class="require">社員No</label><br>
+	<label class="require">会社</label><br>
+	<label class="require">姓</label><br>
+	<label class="require">名</label><br>
+	<label class="require">セイ</label><br>
+	<label class="require">メイ</label><br>
+	<label class="require">部署</label><br>
+	<label class="require">メールアドレス</label><br>
+	<label class="require">入社年月日</label><br>
+	<label class="require">性別</label><br>
+	<label class="require">生年月日</label><br>
+	<label class="require">郵便番号</label><br>
+	<label class="require">住所</label><br>
+	<label class="require">最寄り駅</label><br>
+	<label>電話番号</label><br>
+	<label>携帯電話番号</label><br>
+	<label class="require">郵便番号(緊急)</label><br>
+	<label class="require">住所(緊急)</label><br>
+	<label class="require">電話番号(緊急)</label><br>
+	<label class="require">最終学歴</label><br>
+	<label class="require">出身校</label><br>
+	<label>学科</label><br>
+</div>
+<div class="scroll-form">
+	<div id="input-form" class="input-form">
+		<div id="original-form" class="original row">
+			<input type="button" name="deleteButton" value="ここを消す"><br>
+			<input type="text" class="input require" name="employeeNo"><br>
+			<select class="input require" name="companyCd">
+				<option value="">-</option>
+<% for(var i = 0; i < result.companyList.length; i++) {%>
+				<option value="<%= result.companyList[i].company_cd%>"><%= result.companyList[i].company_name%></option>
+<% } %>
+			</select><br>
+			<input type="text" class="input require" name="employeeFamilyName"><br>
+			<input type="text" class="input require" name="employeeFirstName"><br>
+			<input type="text" class="input require" name="employeeFamilyNameKana"><br>
+			<input type="text" class="input require" name="employeeFirstNameKana"><br>
+			<select class="input require" name="deptCd">
+				<option value="">-</option>
+<% for(var i = 0; i < result.deptList.length; i++) {%>
+				<option value="<%= result.deptList[i].dept_cd%>"><%= result.deptList[i].group_name%><%= result.deptList[i].dept_name%><%= result.deptList[i].section_name%></option>
+<% } %>
+			</select><br>
+			<input type="text" class="input require" name="email"><br>
+			<input type="text" class="input require" name="employDate"><br>
+			<select class="input require" name="gender">
+				<option value="">-</option>
+				<option value="0">男性</option>
+				<option value="1">女性</option>
+			</select><br>
+			<input type="text" class="input require" name="birthDate"><br>
+			<input type="text" class="input require" name="zip"><br>
+			<input type="text" class="input require" name="address"><br>
+			<input type="text" name="nearStationSupport">
+			<select class="input require" name="nearStation">
+				<option value="">-</option>
+			</select><br>
+			<input type="text" class="input" name="telNo"><br>
+			<input type="text" class="input" name="cellTelNo"><br>
+			<input type="text" class="input require" name="zipHome"><br>
+			<input type="text" class="input require" name="addressHome"><br>
+			<input type="text" class="input require" name="telNoHome"><br>
+			<select class="input require" name="education">
+				<option value="">-</option>
+<% for(var i = 0; i < result.educationList.length; i++) {%>
+				<option value="<%= result.educationList[i].education%>"><%= result.educationList[i].education%></option>
+<% } %>
+			</select><br>
+			<input type="text" class="input require" name="school"><br>
+			<input type="text" class="input" name="course"><br>
+		</div>
+	</div>
+</div>
+
+</form>
+
+</body>
+</html>
