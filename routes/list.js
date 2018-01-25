@@ -129,7 +129,7 @@ router.get('/', function(req, res, next) {
 		if (req.query.searchType !== '06') {
 			tmpWhereStr += "and " + notResignedStr;
 		}
-		query += fromStr + whereStr + tmpWhereStr + orderStr;
+		query += fromStr + whereStr + tmpWhereStr;
 	} else {
 		query += fromStr + whereStr;
 		// 退職者は基本的に検索対象外
@@ -138,8 +138,12 @@ router.get('/', function(req, res, next) {
 		} else {
 			query += resignedStr;
 		}
-		query += orderStr;
 	}
+	// 固定条件設定
+	query += "and (POSITION_UP.POSITION IS NULL or (POSITION_UP.POSITION not like '%会長%' and POSITION_UP.POSITION not like '%社長%')) ";
+
+	// 並び変え設定
+	query += orderStr;
 
 	pool.getConnection(function(err, connection){
 
