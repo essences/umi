@@ -33,8 +33,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 環境設定ファイルに本番だけ設定を行っているため、それを設定する
-if (env.emvironment != null && env.emvironment.length > 0) {
-	app.set('env', env.emvironment);
+if (env.environment != null && env.environment.length > 0) {
+	app.set('env', env.environment);
 }
 
 app.use('/', login);
