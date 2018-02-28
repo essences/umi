@@ -9,3 +9,4 @@
  * ┗umi_env.js
  */
 exports.ekispertApiAccesskey="XXXX";
+exports.environment="";

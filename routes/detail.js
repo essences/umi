@@ -93,7 +93,9 @@ router.get('/', function(req, res, next) {
 		"INNER JOIN TRN_EDUCATION_BACKGROUND EDUCATION " +
 		"on BASE.EMPLOYEE_NO = EDUCATION.EMPLOYEE_NO " +
 		"where " +
-		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "';";
+		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "' " +
+		"and POSITION_UP.POSITION not like '%会長%' " +
+		"and POSITION_UP.POSITION not like '%社長%' ";
 
 	// 情報処理国家資格 検索SQL
 	var qualifyQquery = "select " +
@@ -120,7 +122,6 @@ router.get('/', function(req, res, next) {
 	// 資格情報格納用
 	var qualify = [];
 
-	console.dir(qualifyQquery);
 	// 情報処理国家資格 の取得
 	pool.getConnection(function(err, connection){
 		connection.query(qualifyQquery, function(err, rows) {
@@ -131,7 +132,6 @@ router.get('/', function(req, res, next) {
 			qualify = rows;
 		});
 
-		console.dir(subQualifyQuery);
 		// その他資格情報の取得
 		connection.query(subQualifyQuery, function(err, rows) {
 			for (let row of rows) {
@@ -141,9 +141,19 @@ router.get('/', function(req, res, next) {
 			qualify = qualify.concat(rows);
 		});
 
-		console.dir(detailQuery);
 		// 詳細社員情報の取得
 		connection.query(detailQuery, function(err, rows) {
+			if (err) {
+				connection.release();
+				return next(err);
+			}
+
+			if (rows.length == 0) {
+				connection.release();
+				var err = new Error('社員情報が見つかりません');
+				return next(err);
+			}
+
 			var personalData = rows[0];
 
 			// 雇用形態（区分）
