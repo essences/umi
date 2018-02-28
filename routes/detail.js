@@ -36,6 +36,7 @@ router.get('/', function(req, res, next) {
 		"DEPT.DEPT_NAME, " +
 		"DEPT.SECTION_NAME, " +
 		"POSITION_UP.POSITION, " +
+		"POSITION_UP.STATUS, " +
 		"POSITION_UP.UPGRADE_DATE, " +
 		"CLIENT.CLIENT_NAME, " +
 		"PLACE.WORK_PLACE_NAME, " +

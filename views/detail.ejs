@@ -54,7 +54,7 @@ if (result.retireDate) {
 			<td>役職</td>
 			<td>
 <% if (result.POSITION) {%>
-			<%= result.POSITION%>(<%= result.upgradeDate.year%>年<%= result.upgradeDate.month%>月昇格)
+			<%= result.POSITION%>(<%= result.upgradeDate.year%>年<%= result.upgradeDate.month%>月<%= result.STATUS%>)
 <% }%>
 			</td>
 		</tr>
