@@ -94,8 +94,14 @@ router.get('/', function(req, res, next) {
 		"on BASE.EMPLOYEE_NO = EDUCATION.EMPLOYEE_NO " +
 		"where " +
 		"BASE.EMPLOYEE_NO = '" + req.query.shainNo + "' " +
-		"and POSITION_UP.POSITION not like '%会長%' " +
-		"and POSITION_UP.POSITION not like '%社長%' ";
+		"and " +
+		"( " +
+		"	POSITION_UP.POSITION is null " +
+		"	or ( " +
+		"		POSITION_UP.POSITION not like '%会長%' " +
+		"		and POSITION_UP.POSITION not like '%社長%' " +
+		"	) " +
+		") ";
 
 	// 情報処理国家資格 検索SQL
 	var qualifyQquery = "select " +
