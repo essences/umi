@@ -102,7 +102,7 @@ router.get('/', function(req, res, next) {
 		tmpWhereStr = "DEPT.DEPT_NAME like '" + searchJokenArr[0] + "%' ";
 	} else if (req.query.searchType == '05') {
 		// 出身校で検索
-		tmpWhereStr = "EDU.SCHOOL like '" + searchJokenArr[0] + "%' ";
+		tmpWhereStr = "EDU.SCHOOL like '%" + searchJokenArr[0] + "%' ";
 	} else if (req.query.searchType == '06') {
 		// 退職年(年度)で検索
 		tmpWhereStr = "BASE.RETIREMENT_DATE between STR_TO_DATE('" + req.query.searchJoken + "0401', '%Y%m%d') and STR_TO_DATE('" + (Number(req.query.searchJoken) + 1) + "0331', '%Y%m%d') ";
