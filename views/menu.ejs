@@ -17,19 +17,19 @@
 <div class="line"></div>
 
 <div class="read_frame">
-	<form method="get" action="/list">
+	<form method="get" id="readForm">
 		<div>
-		<label class="read_title">参照機能</label>
-		<input type="submit" name="listButton" class="read_button" value="一覧画面表示">
+		<label class="read_title">参照権限</label>
+		<input type="button" name="listButton" id="listButton" class="read_button" value="一覧画面表示">
+		<input type="button" name="commentButton" id="commentButton" class="read_button" value="意見箱">
 		</div>
 	</form>
 </div>
 
 <div class="write_frame">
-	<form method="get" id="writeForm" action="/setauth">
+	<form method="get" id="writeForm">
 		<div>
-		<label class="write_title">更新機能</label>
-		<input type="button" name="setauthButton" id="setauthButton" class="write_button" value="権限設定">
+		<label class="write_title">更新権限</label>
 		<input type="button" name="addEmployeeButton" id="addEmployeeButton" class="write_button" value="社員情報登録">
 		<input type="button" name="mstqualifyButton" id="mstqualifyButton" class="write_button" value="国家資格マスタ">
 		</div>
@@ -37,14 +37,14 @@
 </div>
 
 <div class="system_frame">
-	<form method="get" id="systemForm" action="/comment">
+	<form method="get" id="systemForm">
 		<div>
-		<label class="write_title">システム</label>
-		<input type="submit" name="commentButton" id="commentButton" class="system_button" value="意見箱">
+		<label class="write_title">管理権限</label>
+		<input type="button" name="setauthButton" id="setauthButton" class="write_button" value="権限設定">
 		</div>
   </form>
 </div>
-    
+
 <div class="logout_frame">
 	<form method="get" id="logoutForm" action="/logout">
 		<input type="button" id="logoutButton" value="ログアウト">
