@@ -115,6 +115,12 @@ function checkDate($obj) {
 			dispError($obj, "6桁で入力してください");
 		} else if (isNaN(new Date($obj.val().substring(0,4), $obj.val().substring(4,6)))) {
 			dispError($obj, "YYYYMM形式で入力してください");
+		} else if ($obj.val().substring(0,4) < 1000) {
+			dispError($obj, "YYYYMM形式で入力してください");
+		} else if ($obj.val().substring(4,6) > 12) {
+			dispError($obj, "YYYYMM形式で入力してください");
+		} else if ($obj.val().substring(4,6) < 1) {
+			dispError($obj, "YYYYMM形式で入力してください");
 		}
 	});
 }
