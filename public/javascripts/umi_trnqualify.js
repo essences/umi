@@ -22,7 +22,7 @@ $(function() {
 		$('.national_qualify_frame').find('.input').blur();
 
 		// エラー状態が残っているかのチェック
-		if ($('.national_qualify_frame').find('.input', '.error').length > 0) {
+		if ($('.national_qualify_frame').find('.input' + '.error').length > 0) {
 			return false;
 		}
 
@@ -40,7 +40,7 @@ $(function() {
 		$('.sub_qualify_frame').find('.input').blur();
 
 		// エラー状態が残っているかのチェック
-		if ($('.sub_qualify_frame').find('.input', '.error').length > 0) {
+		if ($('.sub_qualify_frame').find('.input' + '.error').length > 0) {
 			return false;
 		}
 
