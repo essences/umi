@@ -16,3 +16,6 @@
 	height: 150px;
 	padding: 10px;
 }
+.error {
+	background-color: #ff7f50;
+}
