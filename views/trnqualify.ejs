@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+<title>
+資格登録画面
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_trnqualify.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_trnqualify.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<a href="/"><img src="../../images/common/logo01.gif"></a>
+
+<div class="line"></div>
+
+<div class="trnqualify_frame">
+
+	<form id="trnqualifyForm" method="post" action="/trnqualify">
+		<div class="item">
+			社員No
+			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+			<%= result.name%>
+		</div>
+		<div class="item">
+			<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
+		</div>
+		<div class="item">
+		<%= result.err%>
+		</div>
+		<div class="item">
+		<%= result.msg%>
+		</div>
+
+		<div class="national_qualify_frame">
+			情報処理国家資格を登録します
+			<table>
+				<tr>
+					<td>・情報処理国家資格を選ぶ</td>
+					<td>
+						<select class="input require" name="nationalQualify">
+							<option></option>
+							<% for(i=0; i<result.qualify.length; i++) { %>
+							<option value="<%= result.qualify[i].qualification_cd%>"><%= result.qualify[i].qualify_name%></option>
+							<% } %>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>・取得年月を設定する</td>
+					<td><input type="text" class="input require" name="nationalQualifyDate" placeholder="例：YYYYMM"></td>
+				</tr>
+			</table>
+
+			<div class="item">
+				<input type="button" name="nationalQualifyButton" id="nationalQualifyButton" value="情報処理国家資格を登録">
+			</div>
+		</div>
+
+		<div class="sub_qualify_frame">
+			その他資格を登録します
+			<table>
+				<tr>
+					<td>・その他資格を記入する</td>
+					<td><input type="text" class="input require" name="subQualify"></td>
+				</tr>
+				<tr>
+					<td>・取得年月を設定する</td>
+					<td><input type="text" class="input require" name="subQualifyDate" placeholder="例：YYYYMM"></td>
+				</tr>
+			</table>
+			<div class="item">
+				<input type="button" name="subQualifyButton" id="subQualifyButton" value="その他資格を登録">
+			</div>
+		</div>
+	</form>
+</div>
+
+</body>
+</html>
