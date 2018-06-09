@@ -52,6 +52,7 @@
 	</div>
 	<table class="searchResult-table">
 		<tr>
+			<th class="searchResult-table-detail-header">詳細</th>
 			<th class="searchResult-table-no-header">No.</th>
 			<th class="searchResult-table-name-header">名前</th>
 			<th class="searchResult-table-busho-header">部署</th>
@@ -59,10 +60,10 @@
 			<th class="searchResult-table-keiyakusaki-header">契約先/常駐先</th>
 			<th class="searchResult-table-email-header">メールアドレス</th>
 			<th class="searchResult-table-telno-header">電話番号</th>
-			<th class="searchResult-table-detail-header">詳細</th>
 		</tr>
 <% for(var i = 0; i < result.length; i++) {%>
 		<tr class="<%= result[i].resigned%>">
+			<td class="searchResult-table-detail-body"><input type="button" class="detail-button" data-key="<%= result[i].EMPLOYEE_NO%>"></td>
 			<td><%= result[i].EMPLOYEE_NO%></td>
 			<td><%= result[i].EMPLOYEE_FAMILY_NAME%> <%= result[i].EMPLOYEE_FIRST_NAME%></td>
 			<td><%= result[i].DEPT_NAME%></td>
@@ -73,7 +74,6 @@
 				<%= result[i].EMAIL%>
 			</td>
 			<td><%= result[i].CELL_TEL_NO%></td>
-			<td class="searchResult-table-detail-body"><input type="button" class="detail-button" data-key="<%= result[i].EMPLOYEE_NO%>"></td>
 		</tr>
 <% }%>
 	</table>
