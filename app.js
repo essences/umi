@@ -16,6 +16,8 @@ var addemployee = require('./routes/addemployee');
 var comment = require('./routes/comment');
 var mstqualify = require('./routes/mstqualify');
 var trnqualify = require('./routes/trnqualify');
+var addposition = require('./routes/addPosition');
+
 
 // 環境設定ファイル
 var env = require('../umi_env.js');
@@ -51,6 +53,7 @@ app.use('/addemployee', addemployee);
 app.use('/comment', comment);
 app.use('/mstqualify', mstqualify);
 app.use('/trnqualify', trnqualify);
+app.use('/addposition', addposition);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
