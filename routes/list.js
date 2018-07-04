@@ -83,6 +83,7 @@ router.get('/', function(req, res, next) {
 			tmpWhereStr += "or BASE.EMPLOYEE_FIRST_NAME like '" + searchJokenArr[i] + "%' ";
 			tmpWhereStr += "or BASE.EMPLOYEE_FAMILY_NAME_KANA like '" + searchJokenArr[i] + "%' ";
 			tmpWhereStr += "or BASE.EMPLOYEE_FIRST_NAME_KANA like '" + searchJokenArr[i] + "%' ";
+			tmpWhereStr += "or BASE.EMAIL like '%" + searchJokenArr[i] + "%' ";
 		}
 		if (tmpWhereStr.length > 0) {
 			// 最初のorの文字列分を削除する
