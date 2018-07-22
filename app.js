@@ -16,7 +16,7 @@ var addemployee = require('./routes/addemployee');
 var comment = require('./routes/comment');
 var mstqualify = require('./routes/mstqualify');
 var trnqualify = require('./routes/trnqualify');
-var addposition = require('./routes/addPosition');
+var addposition = require('./routes/addposition');
 
 
 // 環境設定ファイル

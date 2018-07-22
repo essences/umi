@@ -16,7 +16,64 @@
 
 <div class="line"></div>
 
-なん
+<div class="addposition_frame">
+
+	<form id="addpositionForm" method="post" action="/addposition/confirm">
+		<div class="item">
+			社員No
+			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+			<%= result.name%>
+		</div>
+		<div class="item">
+			<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
+		</div>
+		<div class="item">
+			<%= result.err%>
+		</div>
+		<div class="item">
+			<%= result.msg%>
+		</div>
+
+		<% if(query.shainNo != null && query.shainNo.length > 0 && result.name != null) { %>
+		<input type="hidden" name="registerShainNo" value="<%= query.shainNo%>">
+		<table id="insertTable">
+			<tr>
+				<th>日付</th>
+				<th>役職</th>
+				<th>状態</th>
+			<tr>
+			<% for(i=0; i<result.positionList.length; i++) { %>
+			<tr>
+				<td><%= result.positionList[i].upgrade_date%></td>
+				<td><%= result.positionList[i].position%></td>
+				<td><%= result.positionList[i].status%></td>
+			</tr>
+			<% } %>
+			<tr>
+				<td><input type="text" class="input position require" name="date" placeholder="例：YYYYMMDD" size="12"></td>
+				<td><input type="text" class="input position require" name="position" size="15"></td>
+				<td><input type="text" class="input position require" name="status" size="10"></td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<input type="button" name="addPositionButton" id="addPositionButton" value="役職を登録">
+				</td>
+			</tr>
+			<tr>
+				<td><input type="text" class="input general require" name="generalDate" placeholder="例：YYYYMMDD" size="12"></td>
+				<td><input type="text" class="input general require" name="generalPosition" size="15" value="-" readonly></td>
+				<td><input type="text" class="input general require" name="generalStatus" size="10"></td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<input type="button" name="addGeneralButton" id="addGeneralButton" value="役職なし登録">
+				</td>
+			</tr>
+		</table>
+		<% } %>
+
+	</form>
+</div>
 
 </body>
 </html>
