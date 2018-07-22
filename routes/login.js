@@ -33,10 +33,11 @@ router.get('/', function(req, res, next) {
 						}
 						if (rows.length == 1) {
 							if (autoLoginPass == hasher.hash256(rows[0].PASSWORD + new Date(rows[0].LAST_LOGIN).toLocaleString())) {
-								// 自動ログイン成功、ログイン情報をセッションに格納する
-								setSession(res, autoLoginUser, rows[0].WRITABLE);
 
 								if (rows[0].WRITABLE == '0' || rows[0].WRITABLE == '1' || rows[0].WRITABLE == '2') {
+									// 自動ログイン成功、ログイン情報をセッションに格納する
+									setSession(res, autoLoginUser, rows[0].WRITABLE);
+
 									// 権限あり：メニュー画面に遷移する
 									res.redirect('menu');
 									return;
@@ -156,11 +157,11 @@ router.post('/', function(req, res, next) {
 							});
 						}
 
-						// Cookieとセッションにログイン情報をセットする
-						setCookie(res, shainNo, hashedPassword, currentDate);
-						setSession(res, shainNo, rows[0].WRITABLE);
-
 						if (rows[0].WRITABLE == '0' || rows[0].WRITABLE == '1' || rows[0].WRITABLE == '2') {
+							// Cookieとセッションにログイン情報をセットする
+							setCookie(res, shainNo, hashedPassword, currentDate);
+							setSession(res, shainNo, rows[0].WRITABLE);
+
 							// 権限あり：メニュー画面に遷移する
 							res.redirect('menu');
 							return;
@@ -191,8 +192,8 @@ function setCookie(res, shainNo, hashedPassword, currentDate) {
 /**
  * ログイン情報をセッションに格納する
  * キー　loginInfo
- * 値　社員No:0 or 1
- * ※0:参照権限、1:更新権限
+ * 値　社員No:0 or 1 or 2
+ * ※0:参照権限、1:更新権限、2:マスタ権限
  */
 function setSession(res, shainNo, writable) {
 	res.cookie('loginInfo', shainNo + ":" + writable);

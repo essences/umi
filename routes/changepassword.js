@@ -57,10 +57,6 @@ router.post('/', function(req, res, next) {
 						});
 					}
 
-					// Cookieとセッションにログイン情報をセットする
-					setCookie(res, shainNo, hashedPassword, currentDate);
-					setSession(res, shainNo, 'X');
-
 					// 権限なし：ログイン画面に遷移する
 					res.render('login', {
 						query: req.body,
@@ -74,25 +70,5 @@ router.post('/', function(req, res, next) {
 		}
 	});
 });
-
-/**
- * 自動ログイン情報をCookieに格納する
- * キー　autoLoginInfo
- * 値　社員No:ハッシュ化されたパスワードと最終更新日時をさらにハッシュ化した値
- * 有効期限　7日間
- */
-function setCookie(res, shainNo, hashedPassword, currentDate) {
-	res.cookie('autoLoginInfo', shainNo + ":" + hasher.hash256(hashedPassword + currentDate), {maxAge:1*24*60*60*1000});
-}
-
-/**
- * ログイン情報をセッションに格納する
- * キー　loginInfo
- * 値　社員No:0 or 1
- * ※0:参照権限、1:更新権限
- */
-function setSession(res, shainNo, writable) {
-	res.cookie('loginInfo', shainNo + ":" + writable);
-}
 
 module.exports = router;
