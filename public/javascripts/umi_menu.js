@@ -16,37 +16,20 @@ $(function() {
 		$('#writeForm').attr('action', '/mstqualify');
 		$('#writeForm').submit();
 	});
-	$('#mstqualifyButton').click(function(){
-		$('#writeForm').attr('action', '/mstqualify');
+	$('#trnqualifyButton').click(function(){
+		$('#writeForm').attr('action', '/trnqualify');
 		$('#writeForm').submit();
 	});
-	$('#mstqualifyButton').click(function(){
-		$('#writeForm').attr('action', '/mstqualify');
+	$('#addpositionButton').click(function(){
+		$('#writeForm').attr('action', '/addposition');
 		$('#writeForm').submit();
 	});
 	$('#setauthButton').click(function(){
 		$('#systemForm').attr('action', '/setauth');
 		$('#systemForm').submit();
 	});
-
-	$('#trnqualifyButton').click(function(){
-		$('#writeForm').attr('action', '/trnqualify');
-		$('#writeForm').submit();
-	});
-
-	$('#trnqualifyButton').click(function(){
-		$('#writeForm').attr('action', '/trnqualify');
-		$('#writeForm').submit();
-	});
-
-	$('#trnqualifyButton').click(function(){
-		$('#writeForm').attr('action', '/trnqualify');
-		$('#writeForm').submit();
-	});
-
 	$('#logoutButton').click(function(){
 		$('#logoutForm').attr('action', '/logout');
 		$('#logoutForm').submit();
 	});
-
 });
