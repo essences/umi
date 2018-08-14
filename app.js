@@ -18,6 +18,9 @@ var mstqualify = require('./routes/mstqualify');
 var trnqualify = require('./routes/trnqualify');
 var addposition = require('./routes/addposition');
 
+const RewriteUtil = require('./routes/util/rewrite');
+var maintenancePage = '/maintenance.html';
+
 
 // 環境設定ファイル
 var env = require('../umi_env.js');
@@ -39,6 +42,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 if (env.environment != null && env.environment.length > 0) {
 	app.set('env', env.environment);
 }
+
+// 【前処理】メンテページへのリダイレクト
+app.use( function( req, res, next ) {
+  rewriteutil = new RewriteUtil();
+  if( rewriteutil.isRewritable(path.join(__dirname, 'public') + maintenancePage) === true) {
+    console.log('---MAINTENANCE MODE---');
+    res.redirect(maintenancePage);
+  } else {
+    console.log('---NORMAL MODE---');
+    next();
+  }
+});
 
 app.use('/', login);
 app.use('/login', login);
