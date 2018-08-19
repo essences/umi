@@ -1,0 +1,14 @@
+.line {
+	background: #d5d4cd;
+	border-style: solid;
+	border-width: 1px;
+}
+.updatepersonal_frame {
+	margin: 30px;
+}
+.item {
+	margin-bottom: 10px;
+}
+.error {
+	background-color: #ff7f50;
+}

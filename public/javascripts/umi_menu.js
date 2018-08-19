@@ -12,6 +12,10 @@ $(function() {
 		$('#writeForm').attr('action', '/addemployee');
 		$('#writeForm').submit();
 	});
+	$('#updatepersonalButton').click(function(){
+		$('#writeForm').attr('action', '/updatepersonal');
+		$('#writeForm').submit();
+	});
 	$('#mstqualifyButton').click(function(){
 		$('#writeForm').attr('action', '/mstqualify');
 		$('#writeForm').submit();
