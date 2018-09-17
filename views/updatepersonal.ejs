@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+<title>
+社員情報変更画面
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_updatepersonal.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_updatepersonal.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<a href="/"><img src="../../images/common/logo01.gif"></a>
+
+<div class="line"></div>
+
+<input type="hidden" id="access-key" value="<%= result.accessKey%>">
+
+<div class="updatepersonal_frame">
+
+	<form id="updatepersonalConfirmForm" method="post" action="/updatepersonal/confirm">
+		<div class="item">
+			社員No
+			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+			<%= result.name%>
+		</div>
+		<div class="item">
+			<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
+		</div>
+		<div class="item">
+			<%= result.err%>
+		</div>
+		<div class="item">
+			<%= result.msg%>
+		</div>
+	</form>
+
+	<form id="updatepersonalNameForm" method="post" action="/updatepersonal/updateName">
+		<input type="hidden" name="employeeNo" id="employeeNo" value="<%= result.personalInfo.employee_no%>">
+		<div class="input-form">
+			<table>
+				<tr>
+					<td>
+						<label class="require">姓</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="employeeFamilyName" value="<%= result.personalInfo.employee_family_name%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">名</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="employeeFirstName" value="<%= result.personalInfo.employee_first_name%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">セイ</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="employeeFamilyNameKana" value="<%= result.personalInfo.employee_family_name_kana%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">メイ</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="employeeFirstNameKana" value="<%= result.personalInfo.employee_first_name_kana%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">メールアドレス</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="email" value="<%= result.personalInfo.email%>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<input type="submit" id="registNameButton" class="item" value="名前変更">
+	</form>
+
+	<form id="updatepersonalAddressForm" method="post" action="/updatepersonal/updateAddress">
+		<input type="hidden" name="employeeNo" id="employeeNo" value="<%= result.personalInfo.employee_no%>">
+		<div class="input-form">
+			<table>
+				<tr>
+					<td>
+						<label class="require">郵便番号</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="zip" value="<%= result.personalInfo.zip%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">住所</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="address" value="<%= result.personalInfo.address%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">最寄り駅</label>
+					</td>
+					<td>
+						<input type="text" name="nearStationSupport" value="<%= result.personalInfo.near_station%>">
+						<select class="input require" name="nearStation">
+							<option value="">-</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						電話番号
+					</td>
+					<td>
+						<input type="text" class="input" name="telNo" value="<%= result.personalInfo.tel_no%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						携帯電話番号
+					</td>
+					<td>
+						<input type="text" class="input" name="cellTelNo" value="<%= result.personalInfo.cell_tel_no%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">郵便番号(緊急)</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="zipHome" value="<%= result.personalInfo.zip_home%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">住所(緊急)</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="addressHome" value="<%= result.personalInfo.address_home%>">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label class="require">電話番号(緊急)</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="telNoHome" value="<%= result.personalInfo.tel_no_home%>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<input type="submit" id="registAddressButton" class="item" value="住所・電話番号変更">
+	</form>
+</div>
+
+</body>
+</html>
