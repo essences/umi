@@ -118,7 +118,6 @@ router.post('/updateAddress', function(req, res, next) {
 	Promise.resolve()
 		.then((result) => updateAddress(employeeNo, zip, address, nearStation, telNo, cellTelNo, zipHome, addressHome, telNoHome))
 		.then((result) => {
-			console.log(10);
 			if (hoge.returnFlg) return;
 			hoge.err = result;
 			if (hoge.err != null) {
@@ -127,19 +126,15 @@ router.post('/updateAddress', function(req, res, next) {
 		})
 		.then((result) => searchName(employeeNo))
 		.then((result) => {
-			console.log(20);
-			console.dir(result);
 			if (hoge.returnFlg) return;
 			hoge.shainName = result[0];
 			hoge.err = result[1];
 			if (hoge.err != null) {
-				console.log(25);
 				render(req, res, next, hoge);
 			}
 		})
 		.then((result) => searchPersonal(employeeNo))
 		.then((result) => {
-			console.log(30);
 			if (hoge.returnFlg) return;
 			hoge.personalInfo = result[0];
 			hoge.err = result[1];
