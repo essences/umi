@@ -262,7 +262,7 @@ function updateName(employeeNo, employeeFamilyName, employeeFirstName, employeeF
 		"employee_first_name = ?, " +
 		"employee_family_name_kana = ?, " +
 		"employee_first_name_kana = ?, " +
-		"email = ? "
+		"email = ? " +
 		"where " +
 		"employee_no = ? ";
 
