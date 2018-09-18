@@ -22,11 +22,11 @@ $(function() {
 				"text": $("#comment").val(),
 				"username": "UMI利用者",
 				"icon_emoji": ":raising_hand:",
-				"channel": "#sr-team"
+				"channel": $("#channel").val()
 		};
 		$.ajax({
 			type : 'post',
-			url : 'https://hooks.slack.com/services/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',
+			url : $("#url").val(),
 			data: {
 				"payload": JSON.stringify(JSONData)
 			},
