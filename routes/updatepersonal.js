@@ -143,7 +143,86 @@ router.post('/updateAddress', function(req, res, next) {
 		.catch(function(err) {
 			return next(err);
 		});
-})
+});
+
+/**
+ * 契約先・常駐先を更新する
+ */
+router.post('/updateWorkPlace', function(req, res, next) {
+
+	var employeeNo = req.body.employeeNo;
+	var clientCd = req.body.clientCd;
+	var workPlaceCd = req.body.workPlaceCd;
+
+	var hoge = {};
+	hoge.returnFlg = false;
+
+	Promise.resolve()
+		.then((result) => updateWorkPlace(employeeNo, clientCd, workPlaceCd))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.err = result;
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchName(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.shainName = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchPersonal(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.personalInfo = result[0];
+			hoge.err = result[1];
+		})
+		.then((result) => render(req, res, next, hoge))
+		.catch(function(err) {
+			return next(err);
+		});
+});
+
+/**
+ * ajax通信：契約先の入力サポート情報を取得する
+ */
+router.post('/getClientSupport', function(req, res, next) {
+
+	var clientCdSupport = req.body.clientCdSupport;
+
+	Promise.resolve()
+		.then((result) => searchClientSupport(clientCdSupport))
+		.then((result) => {
+			var rejson = JSON.stringify(result);
+			res.send(rejson);
+		})
+		.catch(function(err) {
+			return next(err);
+		});
+});
+
+/**
+ * ajax通信：常駐先の入力サポート情報を取得する
+ */
+router.post('/getWorkPlaceSupport', function(req, res, next) {
+
+	var clientCd = req.body.clientCd;
+	var workPlaceCdSupport = req.body.workPlaceCdSupport;
+
+	Promise.resolve()
+		.then((result) => searchWorkPlaceSupport(clientCd, workPlaceCdSupport))
+		.then((result) => {
+			var rejson = JSON.stringify(result);
+			res.send(rejson);
+		})
+		.catch(function(err) {
+			return next(err);
+		});
+});
 
 /**
  * 画面表示する
@@ -213,11 +292,18 @@ function searchPersonal(shainNo) {
 			"personal.cell_tel_no, " +
 			"personal.zip_home, " +
 			"personal.address_home, " +
-			"personal.tel_no_home " +
+			"personal.tel_no_home, " +
+			"client.client_name, " +
+			"work.work_place_name " +
 			"from " +
 			"mst_employee_base base " +
 			"inner join mst_employee_personal personal " +
 			"on base.employee_no = personal.employee_no " +
+			"left outer join mst_client client " +
+			"on base.client_cd = client.client_cd " +
+			"left outer join mst_work_place work " +
+			"on base.client_cd = work.client_cd " +
+			"and base.work_place_cd = work.work_place_cd " +
 			"where " +
 			"base.employee_no = ? ";
 
@@ -328,6 +414,105 @@ function updateAddress(employeeNo, zip, address, nearStation, telNo, cellTelNo, 
 						resolve();
 					})
 				});
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 名前を更新する
+ * @param employeeNo
+ * @param employeeFamilyName
+ * @param employeeFirstName
+ * @param employeeFamilyNameKana
+ * @param employeeFirstNameKana
+ * @param email
+ */
+function updateWorkPlace(employeeNo, clientCd, workPlaceCd) {
+	var updateWorkPlaceQuery =
+		"update mst_employee_base " +
+		"set " +
+		"client_cd = ?, " +
+		"work_place_cd = ? " +
+		"where " +
+		"employee_no = ? ";
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(updateWorkPlaceQuery, [clientCd, workPlaceCd, employeeNo], function(err, result) {
+					if (err) {
+						reject(err);
+					}
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								reject(err);
+							})
+						}
+						resolve();
+					})
+				});
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 名前にマッチした契約先を取得する
+ * @param clientName
+ * @returns
+ */
+function searchClientSupport(clientName) {
+	var searchClientQuery =
+		"select client_cd, client_name from mst_client where client_name like ? order by client_name asc ";
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(searchClientQuery, ["%" + clientName + "%"], function(err, rows) {
+					if (err) {
+						reject(err);
+					}
+					if (rows.length > 0) {
+						resolve(rows);
+					} else {
+						resolve([]);
+					}
+				})
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 名前にマッチした常駐先を取得する
+ * @param clientName
+ * @returns
+ */
+function searchWorkPlaceSupport(clientCd, workPlaceName) {
+	var searchWorkPlaceQuery =
+		"select work_place_cd, work_place_name from mst_work_place where client_cd = ? and work_place_name like ? order by work_place_name asc ";
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(searchWorkPlaceQuery, [clientCd, "%" + workPlaceName + "%"], function(err, rows) {
+					if (err) {
+						reject(err);
+					}
+					if (rows.length > 0) {
+						resolve(rows);
+					} else {
+						resolve([]);
+					}
+				})
 			} finally {
 				connection.release();
 			}

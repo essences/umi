@@ -67,7 +67,7 @@ function clearError($obj) {
  * @returns
  */
 function dispError($obj, msg) {
-	$obj.after(`<span>${msg}</span>`)
+	$obj.after(`<span>${msg}</span>`);
 	$obj.addClass("error");
 }
 
