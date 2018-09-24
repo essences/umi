@@ -153,12 +153,21 @@ router.post('/updateWorkPlace', function(req, res, next) {
 	var employeeNo = req.body.employeeNo;
 	var clientCd = req.body.clientCd;
 	var workPlaceCd = req.body.workPlaceCd;
+	var workingTelNo = req.body.workingTelNo;
 
 	var hoge = {};
 	hoge.returnFlg = false;
 
 	Promise.resolve()
 		.then((result) => updateWorkPlace(employeeNo, clientCd, workPlaceCd))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.err = result;
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => updateWorkingTelNo(employeeNo, workingTelNo))
 		.then((result) => {
 			if (hoge.returnFlg) return;
 			hoge.err = result;
@@ -294,7 +303,8 @@ function searchPersonal(shainNo) {
 			"personal.address_home, " +
 			"personal.tel_no_home, " +
 			"client.client_name, " +
-			"work.work_place_name " +
+			"work.work_place_name, " +
+			"personal.working_tel_no " +
 			"from " +
 			"mst_employee_base base " +
 			"inner join mst_employee_personal personal " +
@@ -422,13 +432,11 @@ function updateAddress(employeeNo, zip, address, nearStation, telNo, cellTelNo, 
 }
 
 /**
- * 名前を更新する
+ * 契約先・常駐先を更新する
  * @param employeeNo
- * @param employeeFamilyName
- * @param employeeFirstName
- * @param employeeFamilyNameKana
- * @param employeeFirstNameKana
- * @param email
+ * @param clientCd
+ * @param workPlaceCd
+ * @returns
  */
 function updateWorkPlace(employeeNo, clientCd, workPlaceCd) {
 	var updateWorkPlaceQuery =
@@ -443,6 +451,43 @@ function updateWorkPlace(employeeNo, clientCd, workPlaceCd) {
 		pool.getConnection(function(err, connection){
 			try {
 				connection.query(updateWorkPlaceQuery, [clientCd, workPlaceCd, employeeNo], function(err, result) {
+					if (err) {
+						reject(err);
+					}
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								reject(err);
+							})
+						}
+						resolve();
+					})
+				});
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 業務中電話番号を更新する
+ * @param employeeNo
+ * @param workingTelNo
+ * @returns
+ */
+function updateWorkingTelNo(employeeNo, workingTelNo) {
+	var updateWorkingTelNoQuery =
+		"update mst_employee_personal " +
+		"set " +
+		"working_tel_no = ? " +
+		"where " +
+		"employee_no = ? ";
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(updateWorkingTelNoQuery, [workingTelNo, employeeNo], function(err, result) {
 					if (err) {
 						reject(err);
 					}
