@@ -306,6 +306,8 @@ function checkEvent($obj) {
 	checkSelect($obj.find('select[name="clientCd"]'));
 	// 常駐先
 	checkSelect($obj.find('select[name="workPlaceCd"]'));
+	// 業務用電話番号
+	checkTelNo($obj.find(':text[name="workingTelNo"]'));
 }
 
 /**
