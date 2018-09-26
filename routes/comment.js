@@ -5,6 +5,8 @@ var router = express.Router();
 var Author = require('./util/auth.js');
 var author = new Author();
 
+var env = require('../../umi_env.js');
+
 /**
  * 意見箱画面を表示
  */
@@ -17,7 +19,10 @@ router.get('/', function(req, res, next) {
 
 	res.render('comment', {
 		query: req.query,
-		result: {}
+		result: {
+			'url': env.slackCommentUrl,
+			'channel': env.slackCommentChannel,
+		}
 	});
 	return;
 });

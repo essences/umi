@@ -10,3 +10,5 @@
  */
 exports.ekispertApiAccesskey="XXXX";
 exports.environment="";
+exports.slackCommentUrl="https://hooks.slack.com/services/XXXX/";
+exports.slackCommentChannel="#wg_情報基盤";
