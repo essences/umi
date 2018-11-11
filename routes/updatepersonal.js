@@ -8,13 +8,34 @@ var author = new Author();
 
 var env = require('../../umi_env.js');
 
+/**
+ * 初期表示
+ */
 router.get('/', function(req, res, next) {
 
 	// セッション認証
 	if (!author.authWritable(req, res)) {
 		return;
 	}
-	render(req, res, next, []);
+
+	var hoge = {};
+	hoge.returnFlg = false;
+
+	Promise.resolve()
+	.then((result) => searchDept())
+	.then((result) => {
+		if (hoge.returnFlg) return;
+
+		hoge.deptList = result[0];
+		hoge.err = result[1];
+		if (hoge.err != null) {
+			render(req, res, next, hoge);
+		}
+	})
+	.then((result) => render(req, res, next, hoge))
+	.catch(function(err) {
+		return next(err);
+	});
 });
 
 /**
@@ -27,6 +48,16 @@ router.post('/confirm', function(req, res, next) {
 	hoge.returnFlg = false;
 
 	Promise.resolve()
+		.then((result) => searchDept())
+		.then((result) => {
+			if (hoge.returnFlg) return;
+
+			hoge.deptList = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
 		.then((result) => searchName(shainNo))
 		.then((result) => {
 			if (hoge.returnFlg) return;
@@ -68,6 +99,16 @@ router.post('/updateName', function(req, res, next) {
 	hoge.returnFlg = false;
 
 	Promise.resolve()
+		.then((result) => searchDept())
+		.then((result) => {
+			if (hoge.returnFlg) return;
+
+			hoge.deptList = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
 		.then((result) => updateName(employeeNo, employeeFamilyName, employeeFirstName, employeeFamilyNameKana, employeeFirstNameKana, email))
 		.then((result) => {
 			if (hoge.returnFlg) return;
@@ -116,6 +157,16 @@ router.post('/updateAddress', function(req, res, next) {
 	hoge.returnFlg = false;
 
 	Promise.resolve()
+		.then((result) => searchDept())
+		.then((result) => {
+			if (hoge.returnFlg) return;
+
+			hoge.deptList = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
 		.then((result) => updateAddress(employeeNo, zip, address, nearStation, telNo, cellTelNo, zipHome, addressHome, telNoHome))
 		.then((result) => {
 			if (hoge.returnFlg) return;
@@ -159,6 +210,16 @@ router.post('/updateWorkPlace', function(req, res, next) {
 	hoge.returnFlg = false;
 
 	Promise.resolve()
+		.then((result) => searchDept())
+		.then((result) => {
+			if (hoge.returnFlg) return;
+
+			hoge.deptList = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
 		.then((result) => updateWorkPlace(employeeNo, clientCd, workPlaceCd))
 		.then((result) => {
 			if (hoge.returnFlg) return;
@@ -168,6 +229,57 @@ router.post('/updateWorkPlace', function(req, res, next) {
 			}
 		})
 		.then((result) => updateWorkingTelNo(employeeNo, workingTelNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.err = result;
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchName(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.shainName = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchPersonal(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.personalInfo = result[0];
+			hoge.err = result[1];
+		})
+		.then((result) => render(req, res, next, hoge))
+		.catch(function(err) {
+			return next(err);
+		});
+});
+
+/**
+ * 部署を更新する
+ */
+router.post('/updateDept', function(req, res, next) {
+
+	var employeeNo = req.body.employeeNo;
+	var deptCd = req.body.deptCd;
+
+	var hoge = {};
+	hoge.returnFlg = false;
+
+	Promise.resolve()
+		.then((result) => searchDept())
+		.then((result) => {
+			if (hoge.returnFlg) return;
+
+			hoge.deptList = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => updateDeptCd(employeeNo, deptCd))
 		.then((result) => {
 			if (hoge.returnFlg) return;
 			hoge.err = result;
@@ -241,6 +353,7 @@ router.post('/getWorkPlaceSupport', function(req, res, next) {
  * @param hoge
  */
 function render(req, res, next, hoge) {
+	if (hoge.returnFlg) return;
 	if (hoge.personalInfo == null) hoge.personalInfo = [];
 	hoge.returnFlg = true;
 	res.render('updatepersonal', {
@@ -248,6 +361,7 @@ function render(req, res, next, hoge) {
 		result: {
 			'name': hoge.shainName,
 			'personalInfo': hoge.personalInfo,
+			'deptList': hoge.deptList,
 			'err': hoge.err,
 			'accessKey': env.ekispertApiAccesskey
 		}
@@ -304,7 +418,11 @@ function searchPersonal(shainNo) {
 			"personal.tel_no_home, " +
 			"client.client_name, " +
 			"work.work_place_name, " +
-			"personal.working_tel_no " +
+			"personal.working_tel_no, " +
+			"dept.dept_cd, " +
+			"dept.group_name, " +
+			"dept.dept_name, " +
+			"dept.section_name " +
 			"from " +
 			"mst_employee_base base " +
 			"inner join mst_employee_personal personal " +
@@ -314,6 +432,8 @@ function searchPersonal(shainNo) {
 			"left outer join mst_work_place work " +
 			"on base.client_cd = work.client_cd " +
 			"and base.work_place_cd = work.work_place_cd " +
+			"inner join mst_dept dept " +
+			"on base.dept_cd = dept.dept_cd " +
 			"where " +
 			"base.employee_no = ? ";
 
@@ -334,6 +454,34 @@ function searchPersonal(shainNo) {
 			}
 		})
 	})
+}
+
+/**
+ * 部署を取得する
+ * @param deptList
+ */
+function searchDept() {
+	return new Promise((resolve, reject) => {
+		var deptQuery = "select dept_cd, group_name, dept_name, section_name from mst_dept order by dept_cd ";
+
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(deptQuery, function(err, rows) {
+					if (err) {
+						return next(err);
+					}
+
+					if (rows) {
+						resolve([rows, null]);
+					} else {
+						resolve([null, "部署が取得できません。"]);
+					}
+				});
+			} finally {
+				connection.release();
+			}
+		});
+	});
 }
 
 /**
@@ -488,6 +636,45 @@ function updateWorkingTelNo(employeeNo, workingTelNo) {
 		pool.getConnection(function(err, connection){
 			try {
 				connection.query(updateWorkingTelNoQuery, [workingTelNo, employeeNo], function(err, result) {
+					if (err) {
+						reject(err);
+					}
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								reject(err);
+							})
+						}
+						resolve();
+					})
+				});
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+
+
+/**
+ * 部署を更新する
+ * @param employeeNo
+ * @param deptCd
+ * @returns
+ */
+function updateDeptCd(employeeNo, deptCd) {
+	var updateDeptCdQuery =
+		"update mst_employee_base " +
+		"set " +
+		"dept_cd = ? " +
+		"where " +
+		"employee_no = ? ";
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(updateDeptCdQuery, [deptCd, employeeNo], function(err, result) {
 					if (err) {
 						reject(err);
 					}

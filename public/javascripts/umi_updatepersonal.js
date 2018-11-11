@@ -9,12 +9,17 @@ $(function() {
 		$('#updatepersonalConfirmForm').submit();
 	});
 
+	// 部署初期状態設定
+	$('#deptSelect').val($('#deptOrig').val());
+
 	// 名前変更入力項目
 	$nameObj = $('#updatepersonalNameForm');
 	// 住所・電話番号変更入力項目
 	$addressObj = $('#updatepersonalAddressForm');
 	// 契約先・常駐先変更入力項目
 	$workPlaceObj = $('#updatepersonalWorkPlaceForm');
+	// 部署変更入力項目
+	$deptObj = $('#updatepersonalDeptForm');
 
 	// 名前の入力チェックイベント追加
 	checkEvent($nameObj);
@@ -22,6 +27,8 @@ $(function() {
 	checkEvent($addressObj);
 	// 契約先・常駐先の入力チェックイベント追加
 	checkEvent($workPlaceObj);
+	// 部署の入力チェックイベント追加
+	checkEvent($deptObj);
 
 	// その他イベント追加
 	insertEvent($addressObj);
@@ -39,6 +46,7 @@ $(function() {
 		clearError($nameObj.find('.input'));
 		clearError($addressObj.find('.input'));
 		clearError($workPlaceObj.find('.input'));
+		clearError($deptObj.find('.input'));
 
 		// 入力フォームのフォーカスアウトイベントを起こす
 		$nameObj.find('.input').blur();
@@ -61,6 +69,7 @@ $(function() {
 		clearError($nameObj.find('.input'));
 		clearError($addressObj.find('.input'));
 		clearError($workPlaceObj.find('.input'));
+		clearError($deptObj.find('.input'));
 
 		// 入力フォームのフォーカスアウトイベントを起こす
 		$addressObj.find('.input').blur();
@@ -83,11 +92,35 @@ $(function() {
 		clearError($nameObj.find('.input'));
 		clearError($addressObj.find('.input'));
 		clearError($workPlaceObj.find('.input'));
+		clearError($deptObj.find('.input'));
 
 		// 入力フォームのフォーカスアウトイベントを起こす
 		$workPlaceObj.find('.input').blur();
 		// エラー状態が残っているかのチェック
 		if ($workPlaceObj.find('.input.error').length > 0) {
+			return false;
+		}
+
+	});
+
+	// 部署変更ボタン押下
+	$('#registDeptButton').click(function() {
+
+		// 検索済みチェック
+		if ($('#employeeNo').val() == "") {
+			return false;
+		}
+
+		// エラー状態を解除する
+		clearError($nameObj.find('.input'));
+		clearError($addressObj.find('.input'));
+		clearError($workPlaceObj.find('.input'));
+		clearError($deptObj.find('.input'));
+
+		// 入力フォームのフォーカスアウトイベントを起こす
+		$deptObj.find('.input').blur();
+		// エラー状態が残っているかのチェック
+		if ($deptObj.find('.input.error').length > 0) {
 			return false;
 		}
 
@@ -308,6 +341,8 @@ function checkEvent($obj) {
 	checkSelect($obj.find('select[name="workPlaceCd"]'));
 	// 業務用電話番号
 	checkTelNo($obj.find(':text[name="workingTelNo"]'));
+	// 部署
+	checkSelect($obj.find('select[name="deptCd"]'));
 }
 
 /**

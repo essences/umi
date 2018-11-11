@@ -200,6 +200,29 @@
 		</div>
 		<input type="submit" id="registWorkPlaceButton" class="item" value="契約先・常駐先変更">
 	</form>
+
+	<form id="updatepersonalDeptForm" method="post" action="/updatepersonal/updateDept">
+		<input type="hidden" name="employeeNo" id="employeeNo" value="<%= result.personalInfo.employee_no%>">
+		<div class="input-form">
+			<table>
+				<tr>
+					<td>
+						<label class="require">部署</label>
+					</td>
+					<td>
+						<input type="hidden" id="deptOrig" value="<%= result.personalInfo.dept_cd%>">
+						<select class="input require" name="deptCd" id="deptSelect">
+							<option value="">-</option>
+							<% for(var i = 0; i < result.deptList.length; i++) {%>
+								<option value="<%= result.deptList[i].dept_cd%>"><%= result.deptList[i].group_name%><%= result.deptList[i].dept_name%><%= result.deptList[i].section_name%></option>
+							<% } %>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<input type="submit" id="registDeptButton" class="item" value="部署変更">
+	</form>
 </div>
 
 </body>
