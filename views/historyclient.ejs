@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+<title>
+契約先・常駐先履歴画面
+</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheets/umi_historyclient.css">
+<script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/umi_historyclient.js"></script>
+<meta charset="UTF-8">
+</head>
+<body>
+
+<!-- 会社ロゴ -->
+<a href="/"><img src="../../images/common/logo01.gif"></a>
+
+<div class="line"></div>
+
+<div class="historyclient_frame">
+
+	<form id="historyclientConfirmForm" method="post" action="/historyclient/confirm">
+		<div class="item">
+			社員No
+			<input type="text" name="shainNo" value="<%= query.shainNo%>" placeholder="例：00001" autofocus>
+			<%= result.name%>
+		</div>
+		<div class="item">
+			<input type="button" name="confirmButton" id="confirmButton" value="名前を確認する">
+		</div>
+		<div class="item">
+			<%= result.err%>
+		</div>
+		<div class="item">
+			<%= result.msg%>
+		</div>
+	</form>
+
+	<form id="historyclientInsertForm" method="post">
+		<table id="insertTable">
+			<tr>
+				<th>開始年月日</th>
+				<th>契約先</th>
+				<th>常駐先</th>
+			</tr>
+			<tr>
+				<td><input type="text" placeholder="例：YYYYMMDD"></td>
+				<td>
+					<input type="text" name="clientCdSupport">
+					<select class="input require" name="clientCd">
+						<option value="">-</option>
+					</select>
+				</td>
+				<td>
+					<input type="text" name="workPlaceCdSupport">
+					<select class="input require" name="workPlaceCd">
+						<option value="">-</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4"><input type="button" id="insertButton" value="新しく登録する"></td>
+			</tr>
+		</table>
+	</form>
+
+</div>
+
+</body>
+</html>
