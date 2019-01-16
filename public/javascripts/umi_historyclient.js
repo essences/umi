@@ -9,9 +9,31 @@ $(function() {
 	// 登録Obj
 	$insertObj = $('#historyclientInsertForm');
 
+	// 登録の入力チェックイベント追加
+	checkEvent($insertObj);
+
 	// その他イベント追加
 	insertEvent($insertObj);
 
+	// 登録ボタン押下
+	$('#registButton').click(function() {
+
+		// 検索済みチェック
+		if ($('#employeeNo').val() == "") {
+			return false;
+		}
+
+		// エラー状態を解除する
+		clearError($insertObj.find('.input'));
+
+		// 入力フォームのフォーカスアウトイベントを起こす
+		$insertObj.find('.input').blur();
+		// エラー状態が残っているかのチェック
+		if ($insertObj.find('.input.error').length > 0) {
+			return false;
+		}
+
+	});
 });
 
 /**
@@ -135,5 +157,51 @@ function insertEvent($obj) {
 
 		$obj.find(':text[name="workPlaceCdSupport"]').change();
 
+	});
+}
+
+/**
+ * 入力チェックする
+ * @param $clone
+ * @returns
+ */
+function checkEvent($obj) {
+	// 開始年月日
+	checkDate($obj.find(':text[name="startDate"]'));
+	// 契約先
+	checkSelect($obj.find('select[name="clientCd"]'));
+	// 常駐先
+	checkSelect($obj.find('select[name="workPlaceCd"]'));
+}
+
+/**
+ * 日付項目の入力チェック
+ * @param $obj
+ * @returns
+ */
+function checkDate($obj) {
+	$obj.on('blur', function() {
+		clearError($obj);
+		if ($obj.hasClass("require") && $obj.val() == "") {
+			dispError($obj, "入力してください");
+		} else if ($obj.val().length != 0 && $obj.val().length != 8) {
+			dispError($obj, "8桁で入力してください");
+		} else if (isNaN(new Date($obj.val().substring(0,4), $obj.val().substring(4,6), $obj.val().substring(6,8)))) {
+			dispError($obj, "YYYYMMDD形式で入力してください");
+		}
+	});
+}
+
+/**
+ * プルダウン項目の入力チェック
+ * @param $obj
+ * @returns
+ */
+function checkSelect($obj) {
+	$obj.on('blur', function() {
+		clearError($obj);
+		if ($obj.hasClass("require") && $obj.val() == "") {
+			dispError($obj, "選択してください");
+		}
 	});
 }

@@ -45,6 +45,18 @@ router.post('/confirm', function(req, res, next) {
 			hoge.err = result[1];
 			if (hoge.err != null) {
 				render(req, res, next, hoge);
+			} else {
+				hoge.shainNo = shainNo;
+			}
+		})
+		.then((result) => searchClientHistory(shainNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+
+			hoge.info = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
 			}
 		})
 		.then((result) => render(req, res, next, hoge))
@@ -91,6 +103,51 @@ router.post('/getWorkPlaceSupport', function(req, res, next) {
 });
 
 /**
+ * 契約先・常駐先履歴を登録する
+ */
+router.post('/insert', function(req, res, next) {
+
+	var employeeNo = req.body.employeeNo;
+	var startDate = req.body.startDate;
+	var clientCd = req.body.clientCd;
+	var workPlaceCd = req.body.workPlaceCd;
+
+	var hoge = {};
+	hoge.returnFlg = false;
+
+	Promise.resolve()
+		.then((result) => insertClientHistory(employeeNo, startDate, clientCd, workPlaceCd))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.err = result;
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchName(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.shainName = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			} else {
+				hoge.shainNo = employeeNo;
+			}
+		})
+		.then((result) => searchClientHistory(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.info = result[0];
+			hoge.err = result[1];
+		})
+		.then((result) => render(req, res, next, hoge))
+		.catch(function(err) {
+			return next(err);
+		});
+});
+
+/**
  * 画面表示する
  * @param req
  * @param res
@@ -99,15 +156,15 @@ router.post('/getWorkPlaceSupport', function(req, res, next) {
  */
 function render(req, res, next, hoge) {
 	if (hoge.returnFlg) return;
-	if (hoge.personalInfo == null) hoge.personalInfo = [];
+	if (hoge.info == null) hoge.info = [];
 	hoge.returnFlg = true;
 	res.render('historyclient', {
 		query: req.body,
 		result: {
+			'shainNo': hoge.shainNo,
 			'name': hoge.shainName,
-			'historyList': hoge.historyList,
-			'err': hoge.err,
-			'accessKey': env.ekispertApiAccesskey
+			'info': hoge.info,
+			'err': hoge.err
 		}
 	});
 }
@@ -189,6 +246,80 @@ function searchWorkPlaceSupport(clientCd, workPlaceName) {
 						resolve([]);
 					}
 				})
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 社員Noから契約先・常駐先履歴を取得
+ * @param shainNo 社員No
+ */
+function searchClientHistory(shainNo) {
+	return new Promise((resolve, reject) => {
+		var searchQuery =
+			"select " +
+			"history.employee_no, " +
+			"history.start_date, " +
+			"history.end_date, " +
+			"history.client_cd, " +
+			"history.work_place_cd " +
+			"from " +
+			"trn_client_history history " +
+			"where " +
+			"history.employee_no = ? ";
+
+		pool.getConnection(function(err, connection) {
+			try {
+				connection.query(searchQuery, [shainNo], function(err, rows) {
+					if (err) {
+						reject(err);
+					}
+					if (rows.length > 0) {
+						resolve([rows, null]);
+					} else {
+						resolve([null, "契約先・常駐先の履歴が存在しません。"]);
+					}
+				});
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 契約先・常駐先履歴を登録する
+ * @param employeeNo
+ * @param startDate
+ * @param clientCd
+ * @param workPlaceCd
+ * @returns
+ */
+function insertClientHistory(employeeNo, startDate, clientCd, workPlaceCd) {
+	var insertQuery =
+		"insert into trn_client_history " +
+		"(employee_no, start_date, client_cd, work_place_cd) " +
+		"values (?,?,?,?) "
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(insertQuery, [employeeNo, startDate, clientCd, workPlaceCd], function(err, result) {
+					if (err) {
+						reject(err);
+					}
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								reject(err);
+							})
+						}
+						resolve();
+					})
+				});
 			} finally {
 				connection.release();
 			}

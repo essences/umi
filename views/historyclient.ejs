@@ -35,7 +35,8 @@
 		</div>
 	</form>
 
-	<form id="historyclientInsertForm" method="post">
+	<form id="historyclientInsertForm" method="post" action="/historyclient/insert">
+		<input type="hidden" name="employeeNo" id="employeeNo" value="<%= result.shainNo%>">
 		<table id="insertTable">
 			<tr>
 				<th>開始年月日</th>
@@ -43,7 +44,7 @@
 				<th>常駐先</th>
 			</tr>
 			<tr>
-				<td><input type="text" placeholder="例：YYYYMMDD"></td>
+				<td><input type="text" class="input require" name="startDate" placeholder="例：YYYYMMDD"></td>
 				<td>
 					<input type="text" name="clientCdSupport">
 					<select class="input require" name="clientCd">
@@ -58,10 +59,16 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="4"><input type="button" id="insertButton" value="新しく登録する"></td>
+				<td colspan="4"><input type="submit" id="registButton" value="新しく登録する"></td>
 			</tr>
 		</table>
 	</form>
+
+<% for(var i = 0; i < result.info.length; i++) {%>
+<%= result.info[i].start_date%>
+<%= result.info[i].client_cd%>
+<%= result.info[i].work_place_cd%>
+<% }%>
 
 </div>
 
