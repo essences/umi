@@ -156,7 +156,9 @@ function checkEvent($obj) {
 	// 開始年月日
 	checkDate($obj.find(':text[name="startDate"]'));
 	// 終了年月日
-	checkDate($obj.find(':text[name="endDate"]'));
+	$.each($obj.find(':text[name="endDate"]'), function(){
+		checkDate($(this));
+	});
 	// 契約先
 	checkSelect($obj.find('select[name="clientCd"]'));
 	// 常駐先

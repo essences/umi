@@ -26,22 +26,28 @@ function dispError($obj, msg) {
  */
 function checkDate($obj) {
 	$obj.on('blur', function() {
-		clearError($(this));
-		if ($(this).hasClass("require") && $(this).val() == "") {
-			dispError($(this), "入力してください");
-		} else if ($(this).val().length != 0 && $(this).val().length != 8) {
-			dispError($(this), "8桁で入力してください");
-		} else {
-			var newDate = new Date($(this).val().substring(0,4), $(this).val().substring(4,6) - 1, $(this).val().substring(6,8));
-			if (isNaN(newDate)) {
-				dispError($(this), "YYYYMMDD形式で入力してください");
-			} else {
-				if ($(this).val().substring(0,4) != newDate.getFullYear()
-						|| $(this).val().substring(4,6) - 0 != newDate.getMonth() + 1
-						|| $(this).val().substring(6,8) - 0 != newDate.getDate()) {
-					dispError($(this), "正しい日付を入力してください");
-				}
-			}
+		clearError($obj);
+		if (!$obj.hasClass("require") && $obj.val() == "") {
+			// 任意項目で空のときはチェックOKとする
+			return;
+		}
+		if ($obj.hasClass("require") && $obj.val() == "") {
+			dispError($obj, "入力してください");
+			return;
+		}
+		if ($obj.val().length != 8) {
+			dispError($obj, "8桁で入力してください");
+			return;
+		}
+		var newDate = new Date($obj.val().substring(0,4), $obj.val().substring(4,6) - 1, $obj.val().substring(6,8));
+		if (isNaN(newDate)) {
+			dispError($obj, "YYYYMMDD形式で入力してください");
+			return;
+		}
+		if ($obj.val().substring(0,4) != newDate.getFullYear()
+				|| $obj.val().substring(4,6) - 0 != newDate.getMonth() + 1
+				|| $obj.val().substring(6,8) - 0 != newDate.getDate()) {
+			dispError($obj, "正しい日付を入力してください");
 		}
 	});
 }
@@ -53,9 +59,9 @@ function checkDate($obj) {
  */
 function checkSelect($obj) {
 	$obj.on('blur', function() {
-		clearError($(this));
-		if ($(this).hasClass("require") && $(this).val() == "") {
-			dispError($(this), "選択してください");
+		clearError($obj);
+		if ($obj.hasClass("require") && $obj.val() == "") {
+			dispError($obj, "選択してください");
 		}
 	});
 }
