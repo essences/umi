@@ -8,16 +8,19 @@ $(function() {
 
 	// 登録Obj
 	$insertObj = $('#historyclientInsertForm');
+	// 更新Obj
+	$updateObj = $('#historyclientUpdateForm');
 
 	// 登録の入力チェックイベント追加
 	checkEvent($insertObj);
+	// 更新の入力チェックイベント追加
+	checkEvent($updateObj);
 
 	// その他イベント追加
 	insertEvent($insertObj);
 
 	// 登録ボタン押下
-	$('#registButton').click(function() {
-
+	$('#insertButton').click(function() {
 		// 検索済みチェック
 		if ($('#employeeNo').val() == "") {
 			return false;
@@ -32,30 +35,26 @@ $(function() {
 		if ($insertObj.find('.input.error').length > 0) {
 			return false;
 		}
+	});
 
+	// 更新ボタン押下
+	$('#updateButton').click(function() {
+		// 検索済みチェック
+		if ($('#employeeNo').val() == "") {
+			return false;
+		}
+
+		// エラー状態を解除する
+		clearError($updateObj.find('.input'));
+
+		// 入力フォームのフォーカスアウトイベントを起こす
+		$updateObj.find('.input').blur();
+		// エラー状態が残っているかのチェック
+		if ($updateObj.find('.input.error').length > 0) {
+			return false;
+		}
 	});
 });
-
-/**
- * エラー表示をクリアする
- * @param $obj
- * @returns
- */
-function clearError($obj) {
-	$obj.next('span').remove();
-	$obj.removeClass("error");
-}
-
-/**
- * エラー表示状態にする
- * @param $obj
- * @param msg
- * @returns
- */
-function dispError($obj, msg) {
-	$obj.after(`<span>${msg}</span>`);
-	$obj.addClass("error");
-}
 
 /**
  * イベントを挿入する
@@ -107,19 +106,14 @@ function insertEvent($obj) {
 	});
 
 	// 常駐先の入力補助
-	$($obj.find(':text[name="workPlaceCdSupport"]')).change(function() {
+	$($obj.find('select[name="clientCd"]')).change(function() {
 
 		// 常駐先のプルダウンを初期化する
 		$obj.find('select[name="workPlaceCd"]').children().nextAll().remove();
 
 		// 契約先の選択を取得する
 		var clientCd = $obj.find(':text[name="clientCd"], option:selected').val();
-		// 常駐先の入力補助文字列を取得する
-		var support = $obj.find(':text[name="workPlaceCdSupport"]').val();
 		if (clientCd.length == 0) {
-			return;
-		}
-		if (support.length == 0) {
 			return;
 		}
 
@@ -151,13 +145,6 @@ function insertEvent($obj) {
 				}
 		);
 	});
-
-	// 契約先を変えたときに常駐先Changeイベントを発生させる
-	$($obj.find('select[name="clientCd"]')).change(function() {
-
-		$obj.find(':text[name="workPlaceCdSupport"]').change();
-
-	});
 }
 
 /**
@@ -168,40 +155,10 @@ function insertEvent($obj) {
 function checkEvent($obj) {
 	// 開始年月日
 	checkDate($obj.find(':text[name="startDate"]'));
+	// 終了年月日
+	checkDate($obj.find(':text[name="endDate"]'));
 	// 契約先
 	checkSelect($obj.find('select[name="clientCd"]'));
 	// 常駐先
 	checkSelect($obj.find('select[name="workPlaceCd"]'));
-}
-
-/**
- * 日付項目の入力チェック
- * @param $obj
- * @returns
- */
-function checkDate($obj) {
-	$obj.on('blur', function() {
-		clearError($obj);
-		if ($obj.hasClass("require") && $obj.val() == "") {
-			dispError($obj, "入力してください");
-		} else if ($obj.val().length != 0 && $obj.val().length != 8) {
-			dispError($obj, "8桁で入力してください");
-		} else if (isNaN(new Date($obj.val().substring(0,4), $obj.val().substring(4,6), $obj.val().substring(6,8)))) {
-			dispError($obj, "YYYYMMDD形式で入力してください");
-		}
-	});
-}
-
-/**
- * プルダウン項目の入力チェック
- * @param $obj
- * @returns
- */
-function checkSelect($obj) {
-	$obj.on('blur', function() {
-		clearError($obj);
-		if ($obj.hasClass("require") && $obj.val() == "") {
-			dispError($obj, "選択してください");
-		}
-	});
 }

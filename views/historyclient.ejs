@@ -6,6 +6,7 @@
 </title>
 <link rel="stylesheet" type="text/css" href="../../stylesheets/umi_historyclient.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/util/inputCheck.js"></script>
 <script type="text/javascript" src="../../javascripts/umi_historyclient.js"></script>
 <meta charset="UTF-8">
 </head>
@@ -52,24 +53,48 @@
 					</select>
 				</td>
 				<td>
-					<input type="text" name="workPlaceCdSupport">
 					<select class="input require" name="workPlaceCd">
 						<option value="">-</option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="4"><input type="submit" id="registButton" value="新しく登録する"></td>
+				<td colspan="3"><input type="submit" id="insertButton" value="新しく登録する"></td>
 			</tr>
 		</table>
 	</form>
-
+	
+	<form id="historyclientUpdateForm" method="post" action="/historyclient/update">
+		<input type="hidden" name="employeeNo" id="employeeNo" value="<%= result.shainNo%>">
+		<table id="updateTable">
+			<tr>
+				<th>開始年月日</th>
+				<th>終了年月日</th>
+				<th>契約先</th>
+				<th>常駐先</th>
+			</tr>
 <% for(var i = 0; i < result.info.length; i++) {%>
-<%= result.info[i].start_date%>
-<%= result.info[i].client_cd%>
-<%= result.info[i].work_place_cd%>
+			<tr>
+				<td><%= result.info[i].start_date%></td>
+				<td>
+					<% if(result.info[i].end_date == null) {%>
+						<input type="hidden" name="startDate" value="<%= result.info[i].start_date%>">
+						<input type="text" class="input" name="endDate" placeholder="例：YYYYMMDD">
+						<input type="hidden" name="clientCd" value="<%= result.info[i].client_cd%>">
+						<input type="hidden" name="workPlaceCd" value="<%= result.info[i].work_place_cd%>">
+					<% } else {%>
+						<%= result.info[i].end_date%>
+					<% }%>
+				</td>
+				<td><%= result.info[i].client_name%></td>
+				<td><%= result.info[i].work_place_name%></td>
+			</tr>
 <% }%>
-
+			<tr>
+				<td colspan="4"><input type="submit" id="updateButton" value="終了年月日を設定する"></td>
+			</tr>
+		</table>
+	</form>
 </div>
 
 </body>

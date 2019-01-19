@@ -14,7 +14,7 @@ var env = require('../../umi_env.js');
 router.get('/', function(req, res, next) {
 
 	// セッション認証
-	if (!author.authWritable(req, res)) {
+	if (!author.authReadable(req, res)) {
 		return;
 	}
 
@@ -89,10 +89,9 @@ router.post('/getClientSupport', function(req, res, next) {
 router.post('/getWorkPlaceSupport', function(req, res, next) {
 
 	var clientCd = req.body.clientCd;
-	var workPlaceCdSupport = req.body.workPlaceCdSupport;
 
 	Promise.resolve()
-		.then((result) => searchWorkPlaceSupport(clientCd, workPlaceCdSupport))
+		.then((result) => searchWorkPlaceSupport(clientCd))
 		.then((result) => {
 			var rejson = JSON.stringify(result);
 			res.send(rejson);
@@ -106,6 +105,11 @@ router.post('/getWorkPlaceSupport', function(req, res, next) {
  * 契約先・常駐先履歴を登録する
  */
 router.post('/insert', function(req, res, next) {
+
+	// セッション認証
+	if (!author.authWritable(req, res)) {
+		return;
+	}
 
 	var employeeNo = req.body.employeeNo;
 	var startDate = req.body.startDate;
@@ -146,6 +150,65 @@ router.post('/insert', function(req, res, next) {
 			return next(err);
 		});
 });
+
+/**
+ * 契約先・常駐先履歴を更新する
+ */
+router.post('/update', function(req, res, next) {
+
+	// セッション認証
+	if (!author.authWritable(req, res)) {
+		return;
+	}
+
+	var employeeNo = req.body.employeeNo;
+	var startDate = req.body.startDate;
+	var endDate = req.body.endDate;
+	var clientCd = req.body.clientCd;
+	var workPlaceCd = req.body.workPlaceCd;
+
+	var hoge = {};
+	hoge.returnFlg = false;
+
+	Promise.resolve()
+		.then((result) => {
+			for (var i=0; i<startDate.length; i++) {
+				if (endDate[i] != "") {
+					updateClientHistory(employeeNo, startDate[i], endDate[i], clientCd[i], workPlaceCd[i]);
+				}
+			}
+		})
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.err = result;
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchName(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.shainName = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			} else {
+				hoge.shainNo = employeeNo;
+			}
+		})
+		.then((result) => searchClientHistory(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.info = result[0];
+			hoge.err = result[1];
+		})
+		.then((result) => render(req, res, next, hoge))
+		.catch(function(err) {
+			return next(err);
+		});
+});
+
+
 
 /**
  * 画面表示する
@@ -225,18 +288,18 @@ function searchClientSupport(clientName) {
 }
 
 /**
- * 名前にマッチした常駐先を取得する
- * @param clientName
+ * 契約先配下の常駐先を取得する
+ * @param clientCd
  * @returns
  */
-function searchWorkPlaceSupport(clientCd, workPlaceName) {
+function searchWorkPlaceSupport(clientCd) {
 	var searchWorkPlaceQuery =
-		"select work_place_cd, work_place_name from mst_work_place where client_cd = ? and work_place_name like ? order by work_place_name asc ";
+		"select work_place_cd, work_place_name from mst_work_place where client_cd = ? order by work_place_name asc ";
 
 	return new Promise((resolve, reject) => {
 		pool.getConnection(function(err, connection){
 			try {
-				connection.query(searchWorkPlaceQuery, [clientCd, "%" + workPlaceName + "%"], function(err, rows) {
+				connection.query(searchWorkPlaceQuery, [clientCd], function(err, rows) {
 					if (err) {
 						reject(err);
 					}
@@ -262,14 +325,22 @@ function searchClientHistory(shainNo) {
 		var searchQuery =
 			"select " +
 			"history.employee_no, " +
-			"history.start_date, " +
-			"history.end_date, " +
+			"date_format(history.start_date, '%Y/%m/%d') as start_date, " +
+			"date_format(history.end_date, '%Y/%m/%d') as end_date, " +
 			"history.client_cd, " +
-			"history.work_place_cd " +
+			"client.client_name, " +
+			"history.work_place_cd, " +
+			"work.work_place_name " +
 			"from " +
 			"trn_client_history history " +
+			"inner join mst_client client " +
+			"on history.client_cd = client.client_cd " +
+			"inner join mst_work_place work " +
+			"on history.client_cd = work.client_cd " +
+			"and history.work_place_cd = work.work_place_cd " +
 			"where " +
-			"history.employee_no = ? ";
+			"history.employee_no = ? " +
+			"order by history.start_date, history.end_date, history.client_cd, history.work_place_cd "
 
 		pool.getConnection(function(err, connection) {
 			try {
@@ -308,6 +379,51 @@ function insertClientHistory(employeeNo, startDate, clientCd, workPlaceCd) {
 		pool.getConnection(function(err, connection){
 			try {
 				connection.query(insertQuery, [employeeNo, startDate, clientCd, workPlaceCd], function(err, result) {
+					if (err) {
+						if (err.code = 'ER_DUP_ENTRY') {
+							resolve("すでに登録済みです。やり直してください。");
+						}
+						reject(err);
+					}
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								reject(err);
+							})
+						}
+						resolve();
+					})
+				});
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 契約先・常駐先履歴を更新する
+ * @param employeeNo
+ * @param startDate
+ * @param endDate
+ * @param clientCd
+ * @param workPlaceCd
+ * @returns
+ */
+function updateClientHistory(employeeNo, startDate, endDate, clientCd, workPlaceCd) {
+	var updateQuery =
+		"update trn_client_history " +
+		"set end_date = ? " +
+		"where " +
+		"employee_no = ? " +
+		"and start_date = ? " +
+		"and client_cd = ? " +
+		"and work_place_cd = ? ";
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(updateQuery, [endDate, employeeNo, startDate, clientCd, workPlaceCd], function(err, result) {
 					if (err) {
 						reject(err);
 					}

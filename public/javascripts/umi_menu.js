@@ -1,42 +1,42 @@
 $(function() {
 
-	$('#listButton').click(function(){
+	$('input[name="listButton"]').click(function(){
 		$('#readForm').attr('action', '/list');
 		$('#readForm').submit();
 	});
-	$('#commentButton').click(function(){
+	$('input[name="commentButton"]').click(function(){
 		$('#readForm').attr('action', '/comment');
 		$('#readForm').submit();
 	});
-	$('#addEmployeeButton').click(function(){
+	$('input[name="addEmployeeButton"]').click(function(){
 		$('#writeForm').attr('action', '/addemployee');
 		$('#writeForm').submit();
 	});
-	$('#updatepersonalButton').click(function(){
+	$('input[name="updatepersonalButton"]').click(function(){
 		$('#writeForm').attr('action', '/updatepersonal');
 		$('#writeForm').submit();
 	});
-	$('#historyclientButton').click(function(){
+	$('input[name="historyclientButton"]').click(function(){
 		$('#writeForm').attr('action', '/historyclient');
 		$('#writeForm').submit();
 	});
-	$('#mstqualifyButton').click(function(){
+	$('input[name="mstqualifyButton"]').click(function(){
 		$('#writeForm').attr('action', '/mstqualify');
 		$('#writeForm').submit();
 	});
-	$('#trnqualifyButton').click(function(){
+	$('input[name="trnqualifyButton"]').click(function(){
 		$('#writeForm').attr('action', '/trnqualify');
 		$('#writeForm').submit();
 	});
-	$('#addpositionButton').click(function(){
+	$('input[name="addpositionButton"]').click(function(){
 		$('#writeForm').attr('action', '/addposition');
 		$('#writeForm').submit();
 	});
-	$('#setauthButton').click(function(){
+	$('input[name="setauthButton"]').click(function(){
 		$('#systemForm').attr('action', '/setauth');
 		$('#systemForm').submit();
 	});
-	$('#logoutButton').click(function(){
+	$('input[name="logoutButton"]').click(function(){
 		$('#logoutForm').attr('action', '/logout');
 		$('#logoutForm').submit();
 	});
