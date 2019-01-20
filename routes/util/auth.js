@@ -7,14 +7,14 @@ module.exports = class Author {
 	authReadable(req, res) {
 		var loginInfo = req.cookies.loginInfo;
 		if (!loginInfo) {
-			res.redirect('login');
+			res.redirect('/');
 			return 0;
 		} else {
 			var loginInfoArr = loginInfo.split(":");
 			if (loginInfoArr[1] == '0' || loginInfoArr[1] == '1' || loginInfoArr[1] == '2') {
 				return 1;
 			} else {
-				res.redirect('login');
+				res.redirect('/');
 				return 0;
 			}
 		}
@@ -27,14 +27,14 @@ module.exports = class Author {
 	authWritable(req, res) {
 		var loginInfo = req.cookies.loginInfo;
 		if (!loginInfo) {
-			res.redirect('login');
+			res.redirect('/');
 			return 0;
 		} else {
 			var loginInfoArr = loginInfo.split(":");
 			if (loginInfoArr[1] == '1' || loginInfoArr[1] == '2') {
 				return 1;
 			} else {
-				res.redirect('login');
+				res.redirect('/');
 				return 0;
 			}
 		}
@@ -47,14 +47,14 @@ module.exports = class Author {
 	authMaster(req, res) {
 		var loginInfo = req.cookies.loginInfo;
 		if (!loginInfo) {
-			res.redirect('login');
+			res.redirect('/');
 			return 0;
 		} else {
 			var loginInfoArr = loginInfo.split(":");
 			if (loginInfoArr[1] == '2') {
 				return 1;
 			} else {
-				res.redirect('login');
+				res.redirect('/');
 				return 0;
 			}
 		}
