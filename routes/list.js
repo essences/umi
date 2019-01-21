@@ -101,7 +101,7 @@ router.get('/', function(req, res, next) {
 	} else if (req.query.searchType == '04') {
 		// 部署で検索
 		if (searchJokenArr.length == 1) {
-			tmpWhereStr = "DEPT.DEPT_NAME like '" + searchJokenArr[0] + "%' ";
+			tmpWhereStr = "DEPT.GROUP_NAME like '" + searchJokenArr[0] + "%' ";
 		} else {
 			tmpWhereStr = "DEPT.GROUP_NAME like '" + searchJokenArr[0] + "%' ";
 			tmpWhereStr += "and DEPT.DEPT_NAME like '" + searchJokenArr[1] + "%' ";
