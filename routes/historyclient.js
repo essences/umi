@@ -172,9 +172,15 @@ router.post('/update', function(req, res, next) {
 
 	Promise.resolve()
 		.then((result) => {
-			for (var i=0; i<startDate.length; i++) {
-				if (endDate[i] != "") {
-					updateClientHistory(employeeNo, startDate[i], endDate[i], clientCd[i], workPlaceCd[i]);
+			if (Array.isArray(startDate)) {
+				for (var i=0; i<startDate.length; i++) {
+					if (endDate[i] != "") {
+						updateClientHistory(employeeNo, startDate[i], endDate[i], clientCd[i], workPlaceCd[i]);
+					}
+				}
+			} else {
+				if (endDate != "") {
+					updateClientHistory(employeeNo, startDate, endDate, clientCd, workPlaceCd);
 				}
 			}
 		})
