@@ -19,6 +19,7 @@ var mstqualify = require('./routes/mstqualify');
 var trnqualify = require('./routes/trnqualify');
 var addposition = require('./routes/addposition');
 var updatepersonal = require('./routes/updatepersonal');
+var addclient = require('./routes/addclient');
 
 const RewriteUtil = require('./routes/util/rewrite');
 var maintenancePage = '/maintenance.html';
@@ -73,6 +74,7 @@ app.use('/mstqualify', mstqualify);
 app.use('/trnqualify', trnqualify);
 app.use('/addposition', addposition);
 app.use('/updatepersonal', updatepersonal);
+app.use('/addclient', addclient);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
