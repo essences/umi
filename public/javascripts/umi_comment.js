@@ -20,7 +20,7 @@ $(function() {
 		// 内容送信
 		var JSONData = {
 				"text": $("#comment").val(),
-				"username": "UMI利用者",
+				"username": "UMI利用者の" + $("#shainName").val() + "さん",
 				"icon_emoji": ":raising_hand:",
 				"channel": $("#channel").val()
 		};
