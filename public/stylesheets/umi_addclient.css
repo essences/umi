@@ -1,0 +1,34 @@
+.line {
+	background: #d5d4cd;
+	border-style: solid;
+	border-width: 1px;
+}
+.addclient_frame {
+	margin: 30px;
+}
+.addworkplace_frame {
+	margin: 30px;
+}
+.error {
+	background-color: #ff7f50;
+}
+
+.item {
+	margin-bottom: 10px;
+}
+
+#insertTable {
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+#insertTable th {
+	background: #a8a8a8;
+	border-style: solid;
+	border-width: 1px;
+}
+
+#insertTable td {
+	border-style: solid;
+	border-width: 1px;
+}

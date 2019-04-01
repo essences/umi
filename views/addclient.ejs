@@ -17,12 +17,50 @@
 
 <div class="line"></div>
 
-<div class="addclient_frame">
+<div class="item">
+	<%= result.err%>
+</div>
+<div class="item">
+	<%= result.msg%>
+</div>
 
-契約先を登録する
+<div class="addclient_frame">
+	<form id="addclientForm" method="post">
+		契約先を登録する
+		<input type="text" class="require" name="clientCd" placeholder="例：0123">
+		<input type="text" class="require" name="clientName" placeholder="契約先名">
+		<input type="submit" id="addClientButton" value="契約先を登録する">
+	</form>
+
+	<table id="insertTable">
+		<tr>
+			<th>契約先コード</th>
+			<th>契約先名</th>
+		</tr>
+<% for(var i = 0; i < result.info.length; i++) {%>
+		<tr>
+			<td><%= result.info[i].client_cd%></td>
+			<td><%= result.info[i].client_name%></td>
+		</tr>
+<% } %>
+	</table>
+</div>
+
+
+
+
+<div class="addworkplace_frame">
 
 常駐先を登録する
 
+<input type="text">
+
+
+
+<input type="text">
+
+
+</div>
 
 </body>
 </html>
