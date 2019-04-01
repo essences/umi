@@ -1,19 +1,23 @@
 var eraDataList=
 	[{
+		text:'令和',
+		firstDate:'2019/05/01',
+	},
+	{
 		text:'平成',
-		firstDate:'1989-01-08',
+		firstDate:'1989/01/08',
 	},
 	{
 		text:'昭和',
-		firstDate:'1926-12-25',
+		firstDate:'1926/12/25',
 	},
 	{
 		text:'大正',
-		firstDate:'1912-07-30',
+		firstDate:'1912/07/30',
 	},
 	{
 		text:'明治',
-		firstDate:'1873-01-01'
+		firstDate:'1873/01/01'
 	}];
 
 module.exports = class WarekiCreator {
