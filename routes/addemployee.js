@@ -169,9 +169,10 @@ router.post('/', function(req, res, next) {
 		count = 1;
 	}
 	for (var i = 0; i < count; i++) {
-		baseInsert += "(?,?,'0',?,?,?,?,?,?,?,sysdate(),'0'),";
+		baseInsert += "(?,?,?,?,?,?,?,?,?,?,sysdate(),'0'),";
 		baseInsertValues.push(getArrayValue(req.body.employeeNo, i));
 		baseInsertValues.push(getArrayValue(req.body.companyCd, i));
+		baseInsertValues.push(getArrayValue(req.body.employeeType, i));
 		baseInsertValues.push(getArrayValue(req.body.employeeFamilyName, i));
 		baseInsertValues.push(getArrayValue(req.body.employeeFirstName, i));
 		baseInsertValues.push(getArrayValue(req.body.employeeFamilyNameKana, i));

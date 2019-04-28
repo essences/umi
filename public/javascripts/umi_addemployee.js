@@ -120,6 +120,8 @@ function checkEvent($clone) {
 	checkEmployeeNo($clone.children(':text[name="employeeNo"]'));
 	// 会社
 	checkSelect($clone.children('select[name="companyCd"]'));
+	// 雇用形態
+	checkSelect($clone.children('select[name="employeeType"]'));
 	// 姓
 	checkEmployeeName($clone.children(':text[name="employeeFamilyName"]'));
 	// 名
