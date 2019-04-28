@@ -17,6 +17,8 @@
 
 <div class="line"></div>
 
+<input type="hidden" id="access-key" value="<%= result.accessKey%>">
+
 <div class="item">
 	<%= result.err%>
 </div>
@@ -26,13 +28,12 @@
 
 <div class="addclient_frame">
 	<form id="addclientForm" method="post">
-		契約先を登録する
-		<input type="text" class="require" name="clientCd" placeholder="例：0123">
-		<input type="text" class="require" name="clientName" placeholder="契約先名">
+		<input type="text" class="input require" name="clientCd" placeholder="契約先コード 例：0123"><br>
+		<input type="text" class="input require" name="clientName" placeholder="契約先名"><br>
 		<input type="submit" id="addClientButton" value="契約先を登録する">
 	</form>
 
-	<table id="insertTable">
+	<table id="clientTable">
 		<tr>
 			<th>契約先コード</th>
 			<th>契約先名</th>
@@ -46,20 +47,27 @@
 	</table>
 </div>
 
-
-
-
 <div class="addworkplace_frame">
-
-常駐先を登録する
-
-<input type="text">
-
-
-
-<input type="text">
-
-
+	<form id="addworkplaceForm" method="post">
+		<input type="hidden" id="selectedClientCd" name="clientCd">
+		<input type="text" class="input require" name="workplaceCd" placeholder="常駐先コード 例：0123"><br>
+		<input type="text" class="input require" name="workplaceName" placeholder="常駐先名"><br>
+		<input type="text" id="nearStationSupport" name="nearStationSupport" placeholder="最寄り駅">
+		<select class="input require" id="nearStation" name="nearStation">
+			<option value="">-</option>
+		</select><br>
+		<input type="text" class="input require" name="address" placeholder="住所"><br>
+		<input type="submit" id="addWorkplaceButton" value="常駐先を登録する">
+	</form>
+	
+	<table id="workplaceTable">
+		<tr>
+			<th>常駐先コード</th>
+			<th>常駐先名</th>
+			<th>最寄り駅</th>
+			<th>住所</th>
+		</tr>
+	</table>
 </div>
 
 </body>
