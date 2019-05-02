@@ -20,6 +20,8 @@ $(function() {
 	$workPlaceObj = $('#updatepersonalWorkPlaceForm');
 	// 部署変更入力項目
 	$deptObj = $('#updatepersonalDeptForm');
+	// 退職設定入力項目
+	$retireObj = $("#updatepersonalRetireForm");
 
 	// 名前の入力チェックイベント追加
 	checkEvent($nameObj);
@@ -29,6 +31,8 @@ $(function() {
 	checkEvent($workPlaceObj);
 	// 部署の入力チェックイベント追加
 	checkEvent($deptObj);
+	// 退職の入力チェックイベント追加
+	checkEvent($retireObj);
 
 	// その他イベント追加
 	insertEvent($addressObj);
@@ -47,6 +51,7 @@ $(function() {
 		clearError($addressObj.find('.input'));
 		clearError($workPlaceObj.find('.input'));
 		clearError($deptObj.find('.input'));
+		clearError($retireObj.find('.input'));
 
 		// 入力フォームのフォーカスアウトイベントを起こす
 		$nameObj.find('.input').blur();
@@ -70,6 +75,7 @@ $(function() {
 		clearError($addressObj.find('.input'));
 		clearError($workPlaceObj.find('.input'));
 		clearError($deptObj.find('.input'));
+		clearError($retireObj.find('.input'));
 
 		// 入力フォームのフォーカスアウトイベントを起こす
 		$addressObj.find('.input').blur();
@@ -93,6 +99,7 @@ $(function() {
 		clearError($addressObj.find('.input'));
 		clearError($workPlaceObj.find('.input'));
 		clearError($deptObj.find('.input'));
+		clearError($retireObj.find('.input'));
 
 		// 入力フォームのフォーカスアウトイベントを起こす
 		$workPlaceObj.find('.input').blur();
@@ -116,6 +123,7 @@ $(function() {
 		clearError($addressObj.find('.input'));
 		clearError($workPlaceObj.find('.input'));
 		clearError($deptObj.find('.input'));
+		clearError($retireObj.find('.input'));
 
 		// 入力フォームのフォーカスアウトイベントを起こす
 		$deptObj.find('.input').blur();
@@ -125,28 +133,31 @@ $(function() {
 		}
 
 	});
+
+	// 退職設定ボタン押下
+	$('#registRetireButton').click(function() {
+
+		// 検索済みチェック
+		if ($('#employeeNo').val() == "") {
+			return false;
+		}
+
+		// エラー状態を解除する
+		clearError($nameObj.find('.input'));
+		clearError($addressObj.find('.input'));
+		clearError($workPlaceObj.find('.input'));
+		clearError($deptObj.find('.input'));
+		clearError($retireObj.find('.input'));
+
+		// 入力フォームのフォーカスアウトイベントを起こす
+		$retireObj.find('.input').blur();
+		// エラー状態が残っているかのチェック
+		if ($retireObj.find('.input.error').length > 0) {
+			return false;
+		}
+
+	});
 });
-
-/**
- * エラー表示をクリアする
- * @param $obj
- * @returns
- */
-function clearError($obj) {
-	$obj.next('span').remove();
-	$obj.removeClass("error");
-}
-
-/**
- * エラー表示状態にする
- * @param $obj
- * @param msg
- * @returns
- */
-function dispError($obj, msg) {
-	$obj.after(`<span>${msg}</span>`);
-	$obj.addClass("error");
-}
 
 /**
  * イベントを挿入する
@@ -343,20 +354,8 @@ function checkEvent($obj) {
 	checkTelNo($obj.find(':text[name="workingTelNo"]'));
 	// 部署
 	checkSelect($obj.find('select[name="deptCd"]'));
-}
-
-/**
- * プルダウン項目の入力チェック
- * @param $obj
- * @returns
- */
-function checkSelect($obj) {
-	$obj.on('blur', function() {
-		clearError($obj);
-		if ($obj.hasClass("require") && $obj.val() == "") {
-			dispError($obj, "選択してください");
-		}
-	});
+	// 退職年月日
+	checkDate($obj.find(":text[name='retirementDate']"));
 }
 
 /**

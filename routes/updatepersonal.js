@@ -309,6 +309,57 @@ router.post('/updateDept', function(req, res, next) {
 });
 
 /**
+ * 退職設定する
+ */
+router.post('/updateRetire', function(req, res, next) {
+
+	var employeeNo = req.body.employeeNo;
+	var retirementDate = req.body.retirementDate;
+
+	var hoge = {};
+	hoge.returnFlg = false;
+
+	Promise.resolve()
+		.then((result) => searchDept())
+		.then((result) => {
+			if (hoge.returnFlg) return;
+
+			hoge.deptList = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => updateRetire(employeeNo, retirementDate))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.err = result;
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchName(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.shainName = result[0];
+			hoge.err = result[1];
+			if (hoge.err != null) {
+				render(req, res, next, hoge);
+			}
+		})
+		.then((result) => searchPersonal(employeeNo))
+		.then((result) => {
+			if (hoge.returnFlg) return;
+			hoge.personalInfo = result[0];
+			hoge.err = result[1];
+		})
+		.then((result) => render(req, res, next, hoge))
+		.catch(function(err) {
+			return next(err);
+		});
+});
+
+/**
  * ajax通信：契約先の入力サポート情報を取得する
  */
 router.post('/getClientSupport', function(req, res, next) {
@@ -422,7 +473,8 @@ function searchPersonal(shainNo) {
 			"dept.dept_cd, " +
 			"dept.group_name, " +
 			"dept.dept_name, " +
-			"dept.section_name " +
+			"dept.section_name, " +
+			"date_format(base.retirement_date, '%Y%m%d') as retirement_date " +
 			"from " +
 			"mst_employee_base base " +
 			"inner join mst_employee_personal personal " +
@@ -655,8 +707,6 @@ function updateWorkingTelNo(employeeNo, workingTelNo) {
 	});
 }
 
-
-
 /**
  * 部署を更新する
  * @param employeeNo
@@ -745,6 +795,44 @@ function searchWorkPlaceSupport(clientCd, workPlaceName) {
 						resolve([]);
 					}
 				})
+			} finally {
+				connection.release();
+			}
+		});
+	});
+}
+
+/**
+ * 退職設定する
+ * @param employeeNo
+ * @param retirementDate
+ * @returns
+ */
+function updateRetire(employeeNo, retirementDate) {
+	var updateQuery =
+		"update mst_employee_base " +
+		"set " +
+		"retirement_date = ?, " +
+		"delete_flg = '1' " +
+		"where " +
+		"employee_no = ? ";
+
+	return new Promise((resolve, reject) => {
+		pool.getConnection(function(err, connection){
+			try {
+				connection.query(updateQuery, [retirementDate, employeeNo], function(err, result) {
+					if (err) {
+						reject(err);
+					}
+					connection.commit(function(err) {
+						if (err) {
+							connection.rollback(function() {
+								reject(err);
+							})
+						}
+						resolve();
+					})
+				});
 			} finally {
 				connection.release();
 			}
