@@ -6,6 +6,7 @@
 </title>
 <link rel="stylesheet" type="text/css" href="../../stylesheets/umi_updatepersonal.css">
 <script type="text/javascript" src="../../javascripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../javascripts/util/inputCheck.js"></script>
 <script type="text/javascript" src="../../javascripts/umi_updatepersonal.js"></script>
 <meta charset="UTF-8">
 </head>
@@ -222,6 +223,23 @@
 			</table>
 		</div>
 		<input type="submit" id="registDeptButton" class="item" value="部署変更">
+	</form>
+	
+	<form id="updatepersonalRetireForm" method="post" action="/updatepersonal/updateRetire">
+		<input type="hidden" name="employeeNo" id="employeeNo" value="<%= result.personalInfo.employee_no%>">
+		<div class="input-form">
+			<table>
+				<tr>
+					<td>
+						<label class="require">退職年月日</label>
+					</td>
+					<td>
+						<input type="text" class="input require" name="retirementDate" value="<%= result.personalInfo.retirement_date%>">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<input type="submit" id="registRetireButton" class="item" value="退職設定">
 	</form>
 </div>
 
