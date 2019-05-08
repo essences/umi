@@ -27,6 +27,7 @@
 	<label></label><br>
 	<label class="require">社員No</label><br>
 	<label class="require">会社</label><br>
+	<label class="require">雇用形態</label><br>
 	<label class="require">姓</label><br>
 	<label class="require">名</label><br>
 	<label class="require">セイ</label><br>
@@ -58,6 +59,11 @@
 <% for(var i = 0; i < result.companyList.length; i++) {%>
 				<option value="<%= result.companyList[i].company_cd%>"><%= result.companyList[i].company_name%></option>
 <% } %>
+			</select><br>
+			<select class="input require" name="employeeType">
+				<option value="">-</option>
+				<option value="0">社員</option>
+				<option value="1">契約社員</option>
 			</select><br>
 			<input type="text" class="input require" name="employeeFamilyName"><br>
 			<input type="text" class="input require" name="employeeFirstName"><br>
