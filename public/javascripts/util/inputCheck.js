@@ -65,3 +65,39 @@ function checkSelect($obj) {
 		}
 	});
 }
+
+/**
+ * コードの入力チェック
+ * @param $obj
+ * @param length
+ * @returns
+ */
+function checkCd($obj, length) {
+	$obj.on('blur', function() {
+		clearError($obj);
+		if ($obj.hasClass("require") && $obj.val() == "") {
+			dispError($obj, "入力してください");
+		} else if ($obj.val().length != length) {
+			dispError($obj, length + "文字で入力してください");
+		} else if (isNaN($obj.val())) {
+			dispError($obj, "数値で入力してください");
+		}
+	});
+}
+
+/**
+ * 名の入力チェック
+ * @param $obj
+ * @param length
+ * @returns
+ */
+function checkName($obj, length) {
+	$obj.on('blur', function() {
+		clearError($obj);
+		if ($obj.hasClass("require") && $obj.val() == "") {
+			dispError($obj, "入力してください");
+		} else if ($obj.val().length > length) {
+			dispError($obj, length + "文字以内で入力してください");
+		}
+	});
+}

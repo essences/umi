@@ -16,6 +16,10 @@ $(function() {
 		$('#writeForm').attr('action', '/updatepersonal');
 		$('#writeForm').submit();
 	});
+	$('input[name="addclientButton"]').click(function(){
+		$('#writeForm').attr('action', '/addclient');
+		$('#writeForm').submit();
+	});
 	$('input[name="historyclientButton"]').click(function(){
 		$('#writeForm').attr('action', '/historyclient');
 		$('#writeForm').submit();
