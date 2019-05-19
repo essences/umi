@@ -348,6 +348,8 @@ router.post('/updateRetire', function(req, res, next) {
 			return next(err);
 		});
 });
+
+/**
  * 画面表示する
  * @param req
  * @param res
