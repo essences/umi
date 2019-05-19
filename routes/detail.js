@@ -39,7 +39,7 @@ router.get('/', function(req, res, next) {
 		"POSITION_UP.STATUS, " +
 		"POSITION_UP.UPGRADE_DATE, " +
 		"CLIENT.CLIENT_NAME, " +
-		"PLACE.WORK_PLACE_NAME, " +
+		"CLIENT.WORK_PLACE_NAME, " +
 		"BASE.EMAIL, " +
 		"BASE.EMPLOY_DATE, " +
 		"BASE.RETIREMENT_DATE, " +
@@ -57,7 +57,7 @@ router.get('/', function(req, res, next) {
 		"EDUCATION.SCHOOL, " +
 		"EDUCATION.COURSE, " +
 		"PERSONAL.NEAR_STATION as FROM_NEAR_STATION, " +
-		"PLACE.NEAR_STATION as TO_NEAR_STATION " +
+		"CLIENT.NEAR_STATION as TO_NEAR_STATION " +
 		"from " +
 		"MST_EMPLOYEE_BASE BASE " +
 		"INNER JOIN MST_COMPANY COMPANY " +
@@ -83,11 +83,26 @@ router.get('/', function(req, res, next) {
 		"	and POS1.UPGRADE_DATE = POS2.UPGRADE_DATE " +
 		") POSITION_UP " +
 		"on BASE.EMPLOYEE_NO = POSITION_UP.EMPLOYEE_NO " +
-		"LEFT OUTER JOIN MST_CLIENT CLIENT " +
-		"on BASE.CLIENT_CD = CLIENT.CLIENT_CD " +
-		"LEFT OUTER JOIN MST_WORK_PLACE PLACE " +
-		"on BASE.CLIENT_CD = PLACE.CLIENT_CD " +
-		"and BASE.WORK_PLACE_CD = PLACE.WORK_PLACE_CD " +
+		"left outer join " +
+		"( " +
+		"	select " +
+		"	history.employee_no, " +
+		"	group_concat(client.client_name) as client_name, " +
+		"	group_concat(workplace.work_place_name) as work_place_name, " +
+		"	group_concat(workplace.near_station) as near_station " +
+		"	from " +
+		"	trn_client_history history " +
+		"	inner join mst_client client " +
+		"	on history.client_cd = client.client_cd " +
+		"	inner join mst_work_place workplace " +
+		"	on history.client_cd = workplace.client_cd " +
+		"	and history.work_place_cd = workplace.work_place_cd " +
+		"	where " +
+		"	history.end_date is null " +
+		"	group by employee_no " +
+		"	order by history.start_date asc " +
+		") client " +
+		"on base.employee_no = client.employee_no " +
 		"INNER JOIN MST_EMPLOYEE_PERSONAL PERSONAL " +
 		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO " +
 		"INNER JOIN TRN_EDUCATION_BACKGROUND EDUCATION " +
