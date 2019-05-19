@@ -169,28 +169,6 @@
 			<table>
 				<tr>
 					<td>
-						<label class="require">契約先</label>
-					</td>
-					<td>
-						<input type="text" name="clientCdSupport" value="<%= result.personalInfo.client_name%>">
-						<select class="input require" name="clientCd">
-							<option value="">-</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label class="require">常駐先</label>
-					</td>
-					<td>
-						<input type="text" name="workPlaceCdSupport" value="<%= result.personalInfo.work_place_name%>">
-						<select class="input require" name="workPlaceCd">
-							<option value="">-</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
 						<label>業務中電話番号</label>
 					</td>
 					<td>
@@ -199,7 +177,7 @@
 				</tr>
 			</table>
 		</div>
-		<input type="submit" id="registWorkPlaceButton" class="item" value="契約先・常駐先変更">
+		<input type="submit" id="registWorkPlaceButton" class="item" value="業務中電話番号変更">
 	</form>
 
 	<form id="updatepersonalDeptForm" method="post" action="/updatepersonal/updateDept">
