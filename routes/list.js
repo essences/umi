@@ -34,7 +34,6 @@ router.get('/', function(req, res, next) {
 		"DEPT.DEPT_NAME, " +
 		"POSITION_UP.POSITION, " +
 		"ifNull(CLIENT.CLIENT_NAME, '-') as CLIENT_NAME, " +
-		"ifNull(WORK.WORK_PLACE_NAME, '-') as WORK_PLACE_NAME, " +
 		"ifNull(PERSONAL.WORKING_TEL_NO, PERSONAL.CELL_TEL_NO) as CELL_TEL_NO, " +
 		"BASE.EMAIL, " +
 		"BASE.DELETE_FLG ";
@@ -63,11 +62,24 @@ router.get('/', function(req, res, next) {
 		"	and POS1.UPGRADE_DATE = POS2.UPGRADE_DATE " +
 		") POSITION_UP " +
 		"on BASE.EMPLOYEE_NO = POSITION_UP.EMPLOYEE_NO " +
-		"LEFT OUTER JOIN MST_CLIENT CLIENT " +
-		"on BASE.CLIENT_CD = CLIENT.CLIENT_CD " +
-		"LEFT OUTER JOIN MST_WORK_PLACE WORK " +
-		"on BASE.CLIENT_CD = WORK.CLIENT_CD " +
-		"and BASE.WORK_PLACE_CD = WORK.WORK_PLACE_CD " +
+		"left outer join " +
+		"( " +
+		"	select " +
+		"	history.employee_no, " +
+		"	group_concat(concat(client.client_name, '/', workplace.work_place_name)) as client_name " +
+		"	from " +
+		"	trn_client_history history " +
+		"	inner join mst_client client " +
+		"	on history.client_cd = client.client_cd " +
+		"	inner join mst_work_place workplace " +
+		"	on history.client_cd = workplace.client_cd " +
+		"	and history.work_place_cd = workplace.work_place_cd " +
+		"	where " +
+		"	history.end_date is null " +
+		"	group by employee_no " +
+		"	order by history.start_date asc " +
+		") client " +
+		"on base.employee_no = client.employee_no " +
 		"INNER JOIN MST_EMPLOYEE_PERSONAL PERSONAL " +
 		"on BASE.EMPLOYEE_NO = PERSONAL.EMPLOYEE_NO " +
 		"INNER JOIN TRN_EDUCATION_BACKGROUND EDU " +
