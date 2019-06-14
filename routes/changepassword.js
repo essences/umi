@@ -1,5 +1,6 @@
 var express = require('express');
 var pool = require('../model/mysqlConnection');
+var moment = require("moment");
 
 var router = express.Router();
 
@@ -39,7 +40,8 @@ router.post('/', function(req, res, next) {
 	var hashedPassword = hasher.hash256(password);
 
 	// パスワードと現在日時で最終ログイン日時を更新
-	var currentDate = new Date(Date.now()).toLocaleString();
+	var currentDate = moment().format("YYYY-MM-DD");
+
 	var lastLoginUpdateQuery = "update mst_login_user set PASSWORD = ?, LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
 	pool.getConnection(function(err, connection){
 		try {

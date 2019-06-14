@@ -1,5 +1,6 @@
 var express = require('express');
 var pool = require('../model/mysqlConnection');
+var moment = require("moment");
 
 var router = express.Router();
 
@@ -32,7 +33,7 @@ router.get('/', function(req, res, next) {
 							return next(err);
 						}
 						if (rows.length == 1) {
-							if (autoLoginPass == hasher.hash256(rows[0].PASSWORD + new Date(rows[0].LAST_LOGIN).toLocaleString())) {
+							if (autoLoginPass == hasher.hash256(rows[0].PASSWORD + moment(rows[0].LAST_LOGIN).format("YYYY-MM-DD"))) {
 
 								if (rows[0].WRITABLE == '0' || rows[0].WRITABLE == '1' || rows[0].WRITABLE == '2') {
 									// 自動ログイン成功、ログイン情報をセッションに格納する
@@ -141,7 +142,7 @@ router.post('/', function(req, res, next) {
 				}
 
 				// 現在日時で最終ログイン日時を更新
-				var currentDate = new Date(Date.now()).toLocaleString();
+				var currentDate = moment().format("YYYY-MM-DD");
 				var lastLoginUpdateQuery = "update mst_login_user set LAST_LOGIN = ? where EMPLOYEE_NO = ? ";
 				connection.query(lastLoginUpdateQuery, [currentDate, shainNo], function(err, upresult) {
 					// エラー発生時はエラーハンドラをコールバックする
