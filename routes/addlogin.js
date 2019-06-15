@@ -1,5 +1,6 @@
 var express = require('express');
 var pool = require('../model/mysqlConnection');
+var moment = require("moment");
 
 var router = express.Router();
 
@@ -144,7 +145,8 @@ function deleteExistingLoginUser(req, res, next, shainNo) {
 function addLoginUser(req, res, next, shainNo) {
 
 	// 初期パスワードを発行する
-	var initPassword = hasher.hash256(shainNo + new Date(Date.now()).toLocaleString());
+	var initPassword = hasher.hash256(shainNo + moment().format("YYYY-MM-DD"));
+
 	var hashedInitPassword = hasher.hash256(initPassword);
 
 	var insertLoginUserQuery = "insert into mst_login_user (employee_no, password, writable) values (?, ?, 'X') ";
