@@ -125,6 +125,20 @@ router.get('/', function(req, res, next) {
 		// 退職年(年度)で検索
 		tmpWhereStr = "BASE.RETIREMENT_DATE between STR_TO_DATE('" + req.query.searchJoken + "0401', '%Y%m%d') and STR_TO_DATE('" + (Number(req.query.searchJoken) + 1) + "0331', '%Y%m%d') ";
 		tmpWhereStr += "and BASE.DELETE_FLG = '1' ";
+	} else if (req.query.searchType == '07') {
+		// 名前で検索
+		for (var i=0; i<searchJokenArr.length; i++) {
+			tmpWhereStr += "or BASE.EMPLOYEE_FAMILY_NAME like '" + searchJokenArr[i] + "%' ";
+			tmpWhereStr += "or BASE.EMPLOYEE_FIRST_NAME like '" + searchJokenArr[i] + "%' ";
+			tmpWhereStr += "or BASE.EMPLOYEE_FAMILY_NAME_KANA like '" + searchJokenArr[i] + "%' ";
+			tmpWhereStr += "or BASE.EMPLOYEE_FIRST_NAME_KANA like '" + searchJokenArr[i] + "%' ";
+			tmpWhereStr += "or BASE.EMAIL like '%" + searchJokenArr[i] + "%' ";
+		}
+		if (tmpWhereStr.length > 0) {
+			// 最初のorの文字列分を削除する
+			tmpWhereStr = "(" + tmpWhereStr.substring(3, tmpWhereStr.length) + ") ";
+		}
+		tmpWhereStr += "and BASE.DELETE_FLG = '1' ";
 	}
 
 	var orderStr = "order by ";
@@ -144,14 +158,14 @@ router.get('/', function(req, res, next) {
 	// 検索クエリ整形
 	if (req.query.searchJoken) {
 		// 退職者は基本的に検索対象外
-		if (req.query.searchType !== '06') {
+		if (req.query.searchType !== '06' && req.query.searchType !== '07') {
 			tmpWhereStr += "and " + notResignedStr;
 		}
 		query += fromStr + whereStr + tmpWhereStr;
 	} else {
 		query += fromStr + whereStr;
 		// 退職者は基本的に検索対象外
-		if (req.query.searchType !== '06') {
+		if (req.query.searchType !== '06' && req.query.searchType !== '07') {
 			query += notResignedStr;
 		} else {
 			query += resignedStr;
