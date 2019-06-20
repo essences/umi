@@ -122,11 +122,11 @@ router.get('/', function(req, res, next) {
 		// 出身校で検索
 		tmpWhereStr = "EDU.SCHOOL like '%" + searchJokenArr[0] + "%' ";
 	} else if (req.query.searchType == '06') {
-		// 退職年(年度)で検索
+		// [退職]年(年度)で検索
 		tmpWhereStr = "BASE.RETIREMENT_DATE between STR_TO_DATE('" + req.query.searchJoken + "0401', '%Y%m%d') and STR_TO_DATE('" + (Number(req.query.searchJoken) + 1) + "0331', '%Y%m%d') ";
 		tmpWhereStr += "and BASE.DELETE_FLG = '1' ";
 	} else if (req.query.searchType == '07') {
-		// 名前で検索
+		// [退職]名前で検索
 		for (var i=0; i<searchJokenArr.length; i++) {
 			tmpWhereStr += "or BASE.EMPLOYEE_FAMILY_NAME like '" + searchJokenArr[i] + "%' ";
 			tmpWhereStr += "or BASE.EMPLOYEE_FIRST_NAME like '" + searchJokenArr[i] + "%' ";
@@ -139,6 +139,9 @@ router.get('/', function(req, res, next) {
 			tmpWhereStr = "(" + tmpWhereStr.substring(3, tmpWhereStr.length) + ") ";
 		}
 		tmpWhereStr += "and BASE.DELETE_FLG = '1' ";
+	} else if (req.query.searchType == '08') {
+		// 住所で検索
+		tmpWhereStr = "(PERSONAL.ADDRESS like '%" + req.query.searchJoken + "%' or PERSONAL.ADDRESS_HOME like '%" + req.query.searchJoken + "%') ";
 	}
 
 	var orderStr = "order by ";
